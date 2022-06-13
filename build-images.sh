@@ -7,6 +7,27 @@ set -e
 images=()
 # The image will be pushed to GitHub container registry
 repobase="${REPOBASE:-ghcr.io/nethserver}"
+#Get WebTop version
+webtop_version=$(cat ${PWD}/webtop5-build/VERSION)
+
+# Reuse existing webtopbuilder container, to speed up builds
+if ! buildah containers --format "{{.ContainerName}}" | grep -q webtopbuilder; then
+    echo "Pulling maven runtime..."
+    buildah from --name webtopbuilder-tmp docker.io/library/maven:3.6-openjdk-8
+    buildah run webtopbuilder-tmp  apt-get  update
+    buildah run webtopbuilder-tmp  apt-get  install -y  nodejs make
+    buildah commit --rm webtopbuilder-tmp webtopbuilder-image
+    buildah from --name webtopbuilder \
+	    -v "${PWD}/webtop5-build:/webtop5-build:z" \
+	    localhost/webtopbuilder-image
+fi
+
+if [ ! -e ${PWD}/webtop5-build/webtop-webapp-5.war ]; then
+    buildah run webtopbuilder sh -c "mkdir -p ~/.m2"
+    buildah run webtopbuilder sh -c "cp webtop5-build/settings.xml  ~/.m2/"
+    buildah run webtopbuilder sh -c "cd webtop5-build/ && ./prep-sources"
+fi
+
 # Configure the image name
 reponame="webtop"
 
