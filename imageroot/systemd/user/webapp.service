@@ -1,0 +1,33 @@
+#
+# This systemd unit starts a webtop instance using Podman.
+# Most parts of this file come from podman-generate-systemd.
+#
+[Unit]
+Description=WeTop webapp
+Wants=postgres.service
+After=postgres.service
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+EnvironmentFile=%S/state/environment
+WorkingDirectory=%S/state
+Restart=always
+ExecStartPre=/bin/rm -f %t/webapp.pid %t/webapp.ctr-id
+ExecStart=/usr/bin/podman run \
+    --env=CATALINA_OPTS="-server -Djava.security.egd=file:/dev/./urandom -Dfile.encoding=UTF8 -Dcom.sun.jndi.ldap.object.disableEndpointIdentification=true -Dmail.mime.address.strict=false -Dwebtop.etc.dir=/etc/webtop" \
+    --volume=webtop-home:/var/lib/nethserver/webtop \
+    --pod=webtop \
+    --detach \
+    --conmon-pidfile=%t/webapp.pid \
+    --cidfile=%t/webapp.ctr-id \
+    --cgroups=no-conmon \
+    --replace --name=%N \
+    ${WEBTOP_WEBAPP_IMAGE}
+ExecStop=/usr/bin/podman stop --ignore --cidfile %t/webapp.ctr-id -t 10
+ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/webapp.ctr-id
+PIDFile=%t/webapp.pid
+Type=forking
+SuccessExitStatus=143
+
+[Install]
+WantedBy=default.target
