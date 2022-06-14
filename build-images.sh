@@ -28,6 +28,16 @@ if [ ! -e ${PWD}/webtop5-build/webtop-webapp-5.war ]; then
     buildah run webtopbuilder sh -c "cd webtop5-build/ && ./prep-sources"
 fi
 
+#Create webtop-webapp container
+reponame="webtop-webapp"
+container=$(buildah from docker.io/library/tomcat:8-jre8)
+buildah add ${container} ${PWD}/webtop5-build/webtop-webapp-5.war /usr/local/tomcat/webapps/webtop.war
+# Commit the image
+buildah commit --rm "${container}" "${repobase}/${reponame}"
+
+# Append the image URL to the images array
+images+=("${repobase}/${reponame}")
+
 # Configure the image name
 reponame="webtop"
 
@@ -51,7 +61,7 @@ buildah config --entrypoint=/ \
     --label="org.nethserver.authorizations=traefik@any:routeadm" \
     --label="org.nethserver.tcp-ports-demand=1" \
     --label="org.nethserver.rootfull=0" \
-    --label="org.nethserver.images=docker.io/jmalloc/echo-server:latest" \
+    --label="org.nethserver.images=${repobase}/webtop-webapp:${IMAGETAG:-latest}" \
     "${container}"
 # Commit the image
 buildah commit "${container}" "${repobase}/${reponame}"
