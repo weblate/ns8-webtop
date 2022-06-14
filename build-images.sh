@@ -38,6 +38,21 @@ buildah commit --rm "${container}" "${repobase}/${reponame}"
 # Append the image URL to the images array
 images+=("${repobase}/${reponame}")
 
+#Create webtop-postgres container
+reponame="webtop-postgres"
+container=$(buildah from docker.io/library/postgres:9.2)
+buildah add ${container} ${PWD}/webtop5-build/sql-scripts.tar.gz /docker-entrypoint-initdb.d/
+buildah add ${container} ${PWD}/postgres/data /docker-entrypoint-initdb.d/data
+buildah add ${container} ${PWD}/postgres/postgres /docker-entrypoint-initdb.d/postgres
+buildah add ${container} ${PWD}/postgres/webtop-init.sh /docker-entrypoint-initdb.d/
+buildah run ${container} chmod 755 /docker-entrypoint-initdb.d
+buildah config -e POSTGRES_DB=webtop5 ${container}
+# Commit the image
+buildah commit --rm "${container}" "${repobase}/${reponame}"
+
+# Append the image URL to the images array
+images+=("${repobase}/${reponame}")
+
 # Configure the image name
 reponame="webtop"
 
@@ -61,7 +76,8 @@ buildah config --entrypoint=/ \
     --label="org.nethserver.authorizations=traefik@any:routeadm" \
     --label="org.nethserver.tcp-ports-demand=1" \
     --label="org.nethserver.rootfull=0" \
-    --label="org.nethserver.images=${repobase}/webtop-webapp:${IMAGETAG:-latest}" \
+    --label="org.nethserver.images=${repobase}/webtop-webapp:${IMAGETAG:-latest} \
+    ${repobase}/webtop-postgres:${IMAGETAG:-latest}" \
     "${container}"
 # Commit the image
 buildah commit "${container}" "${repobase}/${reponame}"
