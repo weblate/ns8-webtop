@@ -4,8 +4,8 @@
 #
 [Unit]
 Description=WebTop pod service
-Requires=webapp.service postgres.service
-Before=webapp.service postgres.service
+Requires=webapp.service postgres.service apache.service
+Before=webapp.service postgres.service apache.service
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
@@ -17,7 +17,7 @@ ExecStartPre=/usr/bin/podman pod create \
     --infra-conmon-pidfile=%t/webtop.pid \
     --pod-id-file=%t/webtop.pod-id \
     --name=webtop \
-    --publish=8080:${TCP_PORT} \
+    --publish=${TCP_PORT}:8081 \
     --replace
 ExecStart=/usr/bin/podman pod start --pod-id-file %t/webtop.pod-id
 ExecStop=/usr/bin/podman pod stop --ignore --pod-id-file %t/webtop.pod-id -t 10

@@ -1,0 +1,28 @@
+#
+# This systemd unit starts a webtop instance using Podman.
+# Most parts of this file come from podman-generate-systemd.
+#
+[Unit]
+Description=WeTop apache
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+EnvironmentFile=%S/state/environment
+WorkingDirectory=%S/state
+Restart=always
+ExecStartPre=/bin/rm -f %t/apache.pid %t/apache.ctr-id
+ExecStart=/usr/bin/podman run \
+    --pod=webtop \
+    --detach \
+    --conmon-pidfile=%t/apache.pid \
+    --cidfile=%t/apache.ctr-id \
+    --cgroups=no-conmon \
+    --replace --name=%N \
+    ${WEBTOP_APACHE_IMAGE}
+ExecStop=/usr/bin/podman stop --ignore --cidfile %t/apache.ctr-id -t 10
+ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/apache.ctr-id
+PIDFile=%t/apache.pid
+Type=forking
+
+[Install]
+WantedBy=default.target

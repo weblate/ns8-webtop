@@ -53,6 +53,19 @@ buildah commit --rm "${container}" "${repobase}/${reponame}"
 # Append the image URL to the images array
 images+=("${repobase}/${reponame}")
 
+
+#Create webtop-apache container
+reponame="webtop-apache"
+container=$(buildah from docker.io/bitnami/apache:2.4)
+buildah add ${container} ${PWD}/apache/ /
+buildah config -e APACHE_HTTP_PORT_NUMBER=8081 ${container}
+# Commit the image
+buildah commit --rm "${container}" "${repobase}/${reponame}"
+
+# Append the image URL to the images array
+images+=("${repobase}/${reponame}")
+
+
 # Configure the image name
 reponame="webtop"
 
@@ -77,7 +90,8 @@ buildah config --entrypoint=/ \
     --label="org.nethserver.tcp-ports-demand=1" \
     --label="org.nethserver.rootfull=0" \
     --label="org.nethserver.images=${repobase}/webtop-webapp:${IMAGETAG:-latest} \
-    ${repobase}/webtop-postgres:${IMAGETAG:-latest}" \
+    ${repobase}/webtop-postgres:${IMAGETAG:-latest} \
+    ${repobase}/webtop-apache:${IMAGETAG:-latest}" \
     "${container}"
 # Commit the image
 buildah commit "${container}" "${repobase}/${reponame}"
