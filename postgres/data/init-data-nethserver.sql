@@ -65,3 +65,44 @@ INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicl
 -- Enable Mail compact toolbar
 -- ---------------------------
 INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.mail', 'toolbar.compact', 'true');
+
+-- ---------------------------------------------
+-- Insert zip media type - HACK for JavaMail bug
+-- ---------------------------------------------
+INSERT INTO "core"."media_types" ("extension", "media_type") VALUES ('zip', 'application/zip');
+
+-- ---------------------
+-- Enable folder sorting
+-- ---------------------
+INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.mail', 'sort.folders', 'true');
+
+-- -----------------------------------------
+-- Always disable built-in SPAM sieve filter
+-- -----------------------------------------
+INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.mail', 'sieve.spamfilter.disabled', 'true');
+
+-- ---------------------------------------
+-- Delete sent messages from draft folders
+-- ---------------------------------------
+INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.mail', 'default.folder.drafts.deletemsgonsend', 'true');
+
+-- ----------------------
+-- Set ACL IMAP lowercase
+-- ----------------------
+INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.mail', 'imap.acl.lowercase', 'true');
+
+-- ----------------------------------------------------------
+-- Set default field to use for ordering contacts to lastname
+-- ----------------------------------------------------------
+INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.contacts', 'default.showby', 'lnfn');
+
+-- ----------------------------------------
+-- Set the name for the Jitsi Meet instance
+-- ----------------------------------------
+DELETE FROM "core"."settings" WHERE service_id = 'com.sonicle.webtop.core' and key = 'meeting.jitsi.name';
+INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.core', 'meeting.jitsi.name', 'WebTop Meet');
+
+-- ---------------------------------------------------------------------------
+-- Prepend username of the creator into the  Jitsi Meet conference room's name
+-- ---------------------------------------------------------------------------
+INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.core', 'meeting.jitsi.meetingid.prependusername', 'true');
