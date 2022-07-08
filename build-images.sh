@@ -32,6 +32,7 @@ fi
 reponame="webtop-webapp"
 container=$(buildah from docker.io/library/tomcat:8-jre8)
 buildah add ${container} ${PWD}/webtop5-build/webtop-webapp-5.war /usr/local/tomcat/webapps/webtop.war
+buildah add ${container} ${PWD}/webapp/ /
 # Commit the image
 buildah commit --rm "${container}" "${repobase}/${reponame}"
 
