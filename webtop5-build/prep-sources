@@ -38,12 +38,14 @@ if [ ! -f VERSION ]; then
    exit_error
 fi
 
-if cat VERSION | grep -qE ^development- ; then
+webtop_version=$(cat VERSION)
+
+if echo $webtop_version | grep -qE ^development- ; then
     base_branch="develop"
-elif cat VERSION | grep -qE ^staging- ; then
+elif echo $webtop_version | grep -qE ^staging- ; then
     base_branch="release"
 else
-    tag_name=$(cat VERSION)
+    tag_name=$webtop_version
     if [ -z $tag_name ]; then
         exit_error
     fi
@@ -120,10 +122,10 @@ popd
 echo
 echo "Copying files..."
 echo
-cp -v webtop-gate/target-wars/webtop-webapp-*_default.war webtop-webapp-5.war
-cp -v webtop-gate/sql-scripts.tar.gz .
+cp -v webtop-gate/target-wars/webtop-webapp-*_default.war webtop-webapp-$webtop_version.war
+cp -v webtop-gate/sql-scripts.tar.gz sql-scripts-$webtop_version.tar.gz
 
 echo
-echo "webtop-webapp-5.war and sql-scripts.tar.gz successfully created"
+echo "webtop-webapp-$webtop_version.war and sql-scripts-$webtop_version.tar.gz successfully created"
 echo
 
