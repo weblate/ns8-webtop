@@ -2,6 +2,8 @@
 
 # Terminate on error
 set -e
+cleanup_list=()
+trap 'rm -rf "${cleanup_list[@]}"' EXIT
 
 # Prepare variables for later use
 images=()
@@ -28,10 +30,17 @@ if [ ! -e ${PWD}/webtop5-build/webtop-webapp-$webtop_version.war ]; then
     buildah run webtopbuilder sh -c "cd webtop5-build/ && ./prep-sources"
 fi
 
+webapp_tmp_dir=$(mktemp -d)
+cleanup_list+=("${webapp_tmp_dir}")
+(
+    mkdir -p "${webapp_tmp_dir}/webtop/"
+    python -mzipfile -e  ${PWD}/webtop5-build/webtop-webapp-$webtop_version.war "${webapp_tmp_dir}/webtop/"
+)
+
 #Create webtop-webapp container
 reponame="webtop-webapp"
 container=$(buildah from docker.io/library/tomcat:8-jre8)
-buildah add ${container} ${PWD}/webtop5-build/webtop-webapp-$webtop_version.war /usr/local/tomcat/webapps/webtop.war
+buildah add ${container} ${webapp_tmp_dir}/webtop /usr/local/tomcat/webapps/webtop/
 buildah add ${container} ${PWD}/webapp/ /
 # Commit the image
 buildah commit --rm "${container}" "${repobase}/${reponame}"
