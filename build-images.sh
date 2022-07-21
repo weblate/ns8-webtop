@@ -30,6 +30,14 @@ if [ ! -e ${PWD}/webtop5-build/webtop-webapp-$webtop_version.war ]; then
     buildah run webtopbuilder sh -c "cd webtop5-build/ && ./prep-sources"
 fi
 
+jcharset_tmp_dir=$(mktemp -d)
+cleanup_list+=("${jcharset_tmp_dir}")
+(
+    cd "${jcharset_tmp_dir}"
+    curl -Ss -O https://www.freeutils.net/source/jcharset/jcharset-2.0-distribution.zip
+    python -mzipfile -e jcharset-2.0-distribution.zip .
+)
+
 webapp_tmp_dir=$(mktemp -d)
 cleanup_list+=("${webapp_tmp_dir}")
 (
@@ -37,10 +45,12 @@ cleanup_list+=("${webapp_tmp_dir}")
     python -mzipfile -e  ${PWD}/webtop5-build/webtop-webapp-$webtop_version.war "${webapp_tmp_dir}/webtop/"
 )
 
+
 #Create webtop-webapp container
 reponame="webtop-webapp"
 container=$(buildah from docker.io/library/tomcat:8-jre8)
 buildah add ${container} ${webapp_tmp_dir}/webtop /usr/local/tomcat/webapps/webtop/
+buildah add ${container} ${jcharset_tmp_dir}/jcharset-2.0/lib/jcharset-2.0.jar /usr/local/tomcat/webapps/webtop/lib/
 buildah add ${container} ${PWD}/webapp/ /
 # Commit the image
 buildah commit --rm "${container}" "${repobase}/${reponame}"
