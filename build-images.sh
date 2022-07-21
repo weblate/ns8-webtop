@@ -22,7 +22,7 @@ if ! buildah containers --format "{{.ContainerName}}" | grep -q webtopbuilder; t
 	    localhost/webtopbuilder-image
 fi
 
-if [ ! -e ${PWD}/webtop5-build/webtop-webapp-5.war ]; then
+if [ ! -e ${PWD}/webtop5-build/webtop-webapp-$webtop_version.war ]; then
     buildah run webtopbuilder sh -c "mkdir -p ~/.m2"
     buildah run webtopbuilder sh -c "cp webtop5-build/settings.xml  ~/.m2/"
     buildah run webtopbuilder sh -c "cd webtop5-build/ && ./prep-sources"
@@ -31,7 +31,7 @@ fi
 #Create webtop-webapp container
 reponame="webtop-webapp"
 container=$(buildah from docker.io/library/tomcat:8-jre8)
-buildah add ${container} ${PWD}/webtop5-build/webtop-webapp-5.war /usr/local/tomcat/webapps/webtop.war
+buildah add ${container} ${PWD}/webtop5-build/webtop-webapp-$webtop_version.war /usr/local/tomcat/webapps/webtop.war
 buildah add ${container} ${PWD}/webapp/ /
 # Commit the image
 buildah commit --rm "${container}" "${repobase}/${reponame}"
@@ -42,7 +42,7 @@ images+=("${repobase}/${reponame}")
 #Create webtop-postgres container
 reponame="webtop-postgres"
 container=$(buildah from docker.io/library/postgres:9.2)
-buildah add ${container} ${PWD}/webtop5-build/sql-scripts.tar.gz /docker-entrypoint-initdb.d/
+buildah add ${container} ${PWD}/webtop5-build/sql-scripts-$webtop_version.tar.gz /docker-entrypoint-initdb.d/
 buildah add ${container} ${PWD}/postgres/data /docker-entrypoint-initdb.d/data
 buildah add ${container} ${PWD}/postgres/postgres /docker-entrypoint-initdb.d/postgres
 buildah add ${container} ${PWD}/postgres/webtop-init.sh /docker-entrypoint-initdb.d/
