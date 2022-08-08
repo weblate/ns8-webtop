@@ -86,6 +86,16 @@ buildah commit --rm "${container}" "${repobase}/${reponame}"
 images+=("${repobase}/${reponame}")
 
 
+#Create webtop-php-fpm container
+reponame="webtop-php-fpm"
+container=$(buildah from docker.io/library/php:7.3-fpm)
+# Commit the image
+buildah commit --rm "${container}" "${repobase}/${reponame}"
+
+# Append the image URL to the images array
+images+=("${repobase}/${reponame}")
+
+
 # Configure the image name
 reponame="webtop"
 
@@ -111,7 +121,8 @@ buildah config --entrypoint=/ \
     --label="org.nethserver.rootfull=0" \
     --label="org.nethserver.images=${repobase}/webtop-webapp:${IMAGETAG:-latest} \
     ${repobase}/webtop-postgres:${IMAGETAG:-latest} \
-    ${repobase}/webtop-apache:${IMAGETAG:-latest}" \
+    ${repobase}/webtop-apache:${IMAGETAG:-latest} \
+    ${repobase}/webtop-php-fpm:${IMAGETAG:-latest}" \
     "${container}"
 # Commit the image
 buildah commit "${container}" "${repobase}/${reponame}"
