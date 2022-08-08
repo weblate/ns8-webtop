@@ -124,8 +124,10 @@ echo "Copying files..."
 echo
 cp -v webtop-gate/target-wars/webtop-webapp-*_default.war webtop-webapp-$webtop_version.war
 cp -v webtop-gate/sql-scripts.tar.gz sql-scripts-$webtop_version.tar.gz
+cp -v webtop-gate/target-servers/webtop-dav-server-*.tgz webtop-dav-server-$webtop_version.tgz
+cp -v webtop-gate/target-servers/webtop-eas-server-*.tgz webtop-eas-server-$webtop_version.tgz
 
 echo
-echo "webtop-webapp-$webtop_version.war and sql-scripts-$webtop_version.tar.gz successfully created"
+echo "webtop-webapp-$webtop_version.war and sql-scripts-$webtop_version.tar.gz webtop-dav-server-$webtop_version.tgz webtop-eas-server-$webtop_version.tgz successfully created"
 echo
 
