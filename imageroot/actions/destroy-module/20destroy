@@ -72,3 +72,14 @@ response = agent.tasks.runp_brief([{
         'instance': f"{os.environ['MODULE_ID']}-well-known-carddav",
     }}]
 )
+
+response = agent.tasks.run(
+    agent_id=agent.resolve_agent_id('traefik@node'),
+    action='delete-route',
+    data={
+        'instance': f"{os.environ['MODULE_ID']}-z-push",
+    },
+)
+
+# Check if traefik configuration has been successfull
+agent.assert_exp(response['exit_code'] == 0)

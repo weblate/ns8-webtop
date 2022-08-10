@@ -12,6 +12,7 @@ WorkingDirectory=%S/state
 Restart=always
 ExecStartPre=/bin/rm -f %t/php-fpm.pid %t/php-fpm.ctr-id
 ExecStart=/usr/bin/podman run \
+    --volume=z-push-state:/var/log/z-push/state \
     --pod=webtop \
     --detach \
     --conmon-pidfile=%t/php-fpm.pid \

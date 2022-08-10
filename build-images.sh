@@ -79,6 +79,7 @@ reponame="webtop-apache"
 container=$(buildah from docker.io/bitnami/apache:2.4)
 buildah add ${container} ${PWD}/apache/ /
 buildah add ${container} ${PWD}/webtop5-build/webtop-dav-server-$webtop_version.tgz /usr/share/webtop/webdav/
+buildah add ${container} ${PWD}/webtop5-build/webtop-eas-server-$webtop_version.tgz /usr/share/webtop/z-push/
 buildah config -e APACHE_HTTP_PORT_NUMBER=8081 ${container}
 # Commit the image
 buildah commit --rm "${container}" "${repobase}/${reponame}"
@@ -91,8 +92,10 @@ images+=("${repobase}/${reponame}")
 reponame="webtop-php-fpm"
 container=$(buildah from docker.io/library/php:7.3-fpm)
 buildah add ${container} ${PWD}/webtop5-build/webtop-dav-server-$webtop_version.tgz /usr/share/webtop/webdav/
+buildah add ${container} ${PWD}/webtop5-build/webtop-eas-server-$webtop_version.tgz /usr/share/webtop/z-push/
 buildah add ${container} ${PWD}/php-fpm/ /
 buildah run ${container} sh -c "mkdir /var/log/webtop-dav/ && chown www-data:www-data /var/log/webtop-dav/"
+buildah run ${container} sh -c "mkdir /var/log/z-push/ && chown www-data:www-data /var/log/z-push/"
 # Commit the image
 buildah commit --rm "${container}" "${repobase}/${reponame}"
 
