@@ -5,8 +5,8 @@
 	"timezone": "UTC",
 	"baseUri": "/webtop-dav/server.php",
 	"log": {
-		"level": "NOTICE",
-		"file": "/var/log/webtop-dav/dav-server.log"
+		"level": "DEBUG",
+		"file": "php://stdout"
 	},
 	"api": {
 		"baseUrl": "http://localhost:8080/webtop",

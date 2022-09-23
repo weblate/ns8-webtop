@@ -94,7 +94,6 @@ container=$(buildah from docker.io/library/php:7.3-fpm)
 buildah add ${container} ${PWD}/webtop5-build/webtop-dav-server-$webtop_version.tgz /usr/share/webtop/webdav/
 buildah add ${container} ${PWD}/webtop5-build/webtop-eas-server-$webtop_version.tgz /usr/share/webtop/z-push/
 buildah add ${container} ${PWD}/php-fpm/ /
-buildah run ${container} sh -c "mkdir /var/log/webtop-dav/ && chown www-data:www-data /var/log/webtop-dav/"
 buildah run ${container} sh -c "mkdir /var/log/z-push/ && chown www-data:www-data /var/log/z-push/"
 # Commit the image
 buildah commit --rm "${container}" "${repobase}/${reponame}"
