@@ -91,6 +91,8 @@ images+=("${repobase}/${reponame}")
 #Create webtop-php-fpm container
 reponame="webtop-php-fpm"
 container=$(buildah from docker.io/library/php:7.3-fpm)
+buildah copy --from=docker.io/mlocati/php-extension-installer:1.5.37 ${container} /usr/bin/install-php-extensions /usr/local/bin/
+buildah run ${container} sh -c "install-php-extensions imap"
 buildah add ${container} ${PWD}/webtop5-build/webtop-dav-server-$webtop_version.tgz /usr/share/webtop/webdav/
 buildah add ${container} ${PWD}/webtop5-build/webtop-eas-server-$webtop_version.tgz /usr/share/webtop/z-push/
 buildah add ${container} ${PWD}/php-fpm/ /
