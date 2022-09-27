@@ -3,26 +3,25 @@
 # Most parts of this file come from podman-generate-systemd.
 #
 [Unit]
-Description=WeTop php-fpm
+Description=WeTop WebDAV server
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
 EnvironmentFile=%S/state/environment
 WorkingDirectory=%S/state
 Restart=always
-ExecStartPre=/bin/rm -f %t/php-fpm.pid %t/php-fpm.ctr-id
+ExecStartPre=/bin/rm -f %t/%N.pid %t/%N.ctr-id
 ExecStart=/usr/bin/podman run \
-    --volume=z-push-state:/var/log/z-push/state \
     --pod=webtop \
     --detach \
-    --conmon-pidfile=%t/php-fpm.pid \
-    --cidfile=%t/php-fpm.ctr-id \
+    --conmon-pidfile=%t/%N.pid \
+    --cidfile=%t/%N.ctr-id \
     --cgroups=no-conmon \
     --replace --name=%N \
-    ${WEBTOP_PHP_FPM_IMAGE}
-ExecStop=/usr/bin/podman stop --ignore --cidfile %t/php-fpm.ctr-id -t 10
-ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/php-fpm.ctr-id
-PIDFile=%t/php-fpm.pid
+    ${WEBTOP_WEBDAV_IMAGE}
+ExecStop=/usr/bin/podman stop --ignore --cidfile %t/%N.ctr-id -t 10
+ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/%N.ctr-id
+PIDFile=%t/%N.pid
 Type=forking
 
 [Install]
