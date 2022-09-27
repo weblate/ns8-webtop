@@ -4,8 +4,8 @@
 #
 [Unit]
 Description=WebTop pod service
-Requires=webapp.service postgres.service apache.service php-fpm.service
-Before=webapp.service postgres.service apache.service php-fpm.service
+Requires=webapp.service postgres.service apache.service webdav.service z-push.service
+Before=webapp.service postgres.service apache.service webdav.service z-push.service
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
