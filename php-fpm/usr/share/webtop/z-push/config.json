@@ -4,6 +4,9 @@
     "level": "DEBUG",
     "dir": "/var/log/z-push/"
   },
+  "mail": {
+    "imapServer": "10.5.4.1"
+  },
   "webtop": {
     "apiBaseUrl": "http://localhost:8080/webtop"
   },
