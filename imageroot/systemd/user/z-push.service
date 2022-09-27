@@ -18,6 +18,7 @@ ExecStart=/usr/bin/podman run \
     --cidfile=%t/%N.ctr-id \
     --cgroups=no-conmon \
     --replace --name=%N \
+    --volume=./z-push_config.json:/usr/share/webtop/z-push/config.json:Z \
     ${WEBTOP_Z_PUSH_IMAGE}
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/%N.ctr-id -t 10
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/%N.ctr-id
