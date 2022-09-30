@@ -92,6 +92,7 @@ images+=("${repobase}/${reponame}")
 reponame="webtop-webdav"
 container=$(buildah from docker.io/library/php:7.3-fpm-alpine)
 buildah add ${container} ${PWD}/webtop5-build/webtop-dav-server-$webtop_version.tgz /usr/share/webtop/webdav/
+buildah run ${container} sh -c "mv \$PHP_INI_DIR/php.ini-production \$PHP_INI_DIR/php.ini"
 # Commit the image
 buildah commit --rm "${container}" "${repobase}/${reponame}"
 
@@ -104,6 +105,7 @@ container=$(buildah from docker.io/library/php:7.3-fpm-alpine)
 buildah copy --from=docker.io/mlocati/php-extension-installer:1.5.37 ${container} /usr/bin/install-php-extensions /usr/local/bin/
 buildah run ${container} sh -c "install-php-extensions imap"
 buildah add ${container} ${PWD}/webtop5-build/webtop-eas-server-$webtop_version.tgz /usr/share/webtop/z-push/
+buildah run ${container} sh -c "mv \$PHP_INI_DIR/php.ini-production \$PHP_INI_DIR/php.ini"
 buildah run ${container} sh -c "mkdir -p /var/log/z-push/state && chown www-data:www-data /var/log/z-push /var/log/z-push/state"
 buildah run ${container} sh -c "sed -i 's/9000/9001/' /usr/local/etc/php-fpm.d/zz-docker.conf"
 # Commit the image
