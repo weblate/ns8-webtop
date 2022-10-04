@@ -11,6 +11,7 @@ EnvironmentFile=%S/state/environment
 WorkingDirectory=%S/state
 Restart=always
 ExecStartPre=/bin/rm -f %t/%N.pid %t/%N.ctr-id
+ExecStartPre=%S/scripts/expandconfig-webdav
 ExecStart=/usr/bin/podman run \
     --pod=webtop \
     --detach \
