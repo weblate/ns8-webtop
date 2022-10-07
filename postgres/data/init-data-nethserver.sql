@@ -112,3 +112,8 @@ INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicl
 -- ------------------------------------------
 INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.vfs', 'nextcloud.default.host', 'localhost');
 INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.vfs', 'nextcloud.default.path', '/nextcloud/remote.php/webdav');
+
+-- ------------------------
+-- Create vmail user config
+-- ------------------------
+INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.mail', 'nethtop.vmail.secret', '');
