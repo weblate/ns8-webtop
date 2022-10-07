@@ -106,3 +106,9 @@ INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicl
 -- Prepend username of the creator into the  Jitsi Meet conference room's name
 -- ---------------------------------------------------------------------------
 INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.core', 'meeting.jitsi.meetingid.prependusername', 'true');
+
+-- ------------------------------------------
+-- Set default Nextcloud configuration values
+-- ------------------------------------------
+INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.vfs', 'nextcloud.default.host', 'localhost');
+INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.vfs', 'nextcloud.default.path', '/nextcloud/remote.php/webdav');
