@@ -21,15 +21,20 @@
 #
 
 import json
+import os
+
+timezone = os.getenv("WEBTOP_TIMEZONE")
+debug = os.getenv("WEBDAV_DEBUG", 'False').lower() in ('true', '1', 't')
+log_level = os.getenv("WEBDAV_LOG_LEVEL")
 
 config={
-        "debug": False,
+        "debug": debug,
         "caldav": True,
         "carddav": True,
-        "timezone": "UTC",
+        "timezone": f"{timezone}",
         "baseUri": "/webtop-dav/server.php",
 	"log": {
-		"level": "DEBUG",
+		"level": f"{log_level}",
 		"file": "php://stdout"
 	},
 	"api": {
