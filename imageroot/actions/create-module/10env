@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/bin/bash
 
 #
 # Copyright (C) 2022 Nethesis S.r.l.
@@ -19,30 +19,15 @@
 # You should have received a copy of the GNU General Public License
 # along with NethServer.  If not, see COPYING.
 #
+set -e
 
-import json
-import os
+exec 1>&2 # Send any output to stderr, to not alter the action response protocol
 
-timezone = os.getenv("WEBTOP_TIMEZONE")
-log_level = os.getenv("Z_PUSH_LOG_LEVEL")
-imap_server = os.getenv("Z_PUSH_IMAP_SERVER")
-
-config={
-        "timezone": f"{timezone}",
-        "log": {
-            "level": f"{log_level}",
-            "dir": "/var/log/z-push/"
-            },
-        "mail": {
-            "imapServer": f"{imap_server}"
-            },
-        "webtop": {
-            "apiBaseUrl": "http://localhost:8080/webtop"
-            },
-        "state": {
-            "dir": "/var/log/z-push/state"
-            }
-        }
-
-with open('z-push_config.json', 'w') as f:
-    json.dump(config, f)
+cat >&${AGENT_COMFD} <<EOF
+set-env WEBTOP_TIMEZONE Etc/UTC
+set-env WEBDAV_DEBUG True
+set-env WEBDAV_LOG_LEVEL DEBUG
+set-env Z_PUSH_LOG_LEVEL DEBUG
+set-env Z_PUSH_IMAP_SERVER 10.5.4.1
+dump-env
+EOF
