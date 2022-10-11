@@ -24,4 +24,5 @@ set -e
 
 cat <<EOF > webtop.properties
 webtop.log.target=console
+webtop.session.forcesecurecookie=true
 EOF
