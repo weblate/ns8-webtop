@@ -4,6 +4,7 @@
 #
 [Unit]
 Description=WeTop Z-Push server
+PartOf=webtop.service
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
