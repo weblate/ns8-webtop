@@ -29,6 +29,7 @@ set-env WEBDAV_DEBUG True
 set-env WEBDAV_LOG_LEVEL DEBUG
 set-env Z_PUSH_LOG_LEVEL DEBUG
 set-env Z_PUSH_IMAP_SERVER 10.5.4.1
+set-env Z_PUSH_USE_LEGACY_FOLDER_IDS false
 set-env WEBAPP_JS_DEBUG false
 dump-env
 EOF
