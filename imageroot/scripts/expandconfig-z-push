@@ -26,6 +26,7 @@ import os
 timezone = os.getenv("WEBTOP_TIMEZONE")
 log_level = os.getenv("Z_PUSH_LOG_LEVEL")
 imap_server = os.getenv("Z_PUSH_IMAP_SERVER")
+use_legacy_folder_ids = os.getenv("Z_PUSH_USE_LEGACY_FOLDER_IDS", 'False').lower() in ('true', '1', 't')
 
 config={
         "timezone": f"{timezone}",
@@ -40,6 +41,7 @@ config={
             "apiBaseUrl": "http://localhost:8080/webtop"
             },
         "state": {
+            "useLegacyFolderIds": use_legacy_folder_ids,
             "dir": "/var/log/z-push/state"
             }
         }
