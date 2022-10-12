@@ -4,6 +4,7 @@
 #
 [Unit]
 Description=postgres server
+PartOf=webtop.service
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n

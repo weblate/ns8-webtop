@@ -6,6 +6,7 @@
 Description=WeTop webapp
 Wants=postgres.service
 After=postgres.service
+PartOf=webtop.service
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
