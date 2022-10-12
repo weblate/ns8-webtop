@@ -15,7 +15,10 @@ Restart=always
 ExecStartPre=/bin/rm -f %t/webapp.pid %t/webapp.ctr-id
 ExecStartPre=%S/scripts/expandconfig-webapp
 ExecStart=/usr/bin/podman run \
-    --env=CATALINA_OPTS="-server -Djava.security.egd=file:/dev/./urandom -Dfile.encoding=UTF8 -Dcom.sun.jndi.ldap.object.disableEndpointIdentification=true -Dmail.mime.address.strict=false -Dwebtop.etc.dir=/etc/webtop" \
+    --env=CATALINA_OPTS="-server -Xms${WEBAPP_MIN_MEMORY}m -Xmx${WEBAPP_MAX_MEMORY}m \
+                         -Djava.security.egd=file:/dev/./urandom -Dfile.encoding=UTF8 \
+			 -Dcom.sun.jndi.ldap.object.disableEndpointIdentification=true \
+			 -Dmail.mime.address.strict=false -Dwebtop.etc.dir=/etc/webtop" \
     --volume=webtop-home:/var/lib/nethserver/webtop \
     --volume=./webtop.properties:/etc/webtop/webtop.properties:Z \
     --pod=webtop \
