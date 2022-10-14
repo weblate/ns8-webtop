@@ -117,3 +117,21 @@ INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicl
 -- Create vmail user config
 -- ------------------------
 INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.mail', 'nethtop.vmail.secret', '');
+
+-- -----------------------------------------------------------------------
+-- Set default remote automatic calendars/contacts synchronization options
+-- -----------------------------------------------------------------------
+INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.calendar', 'calendar.remote.autosync.enabled', 'true');
+INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.calendar', 'calendar.remote.autosync.onlywhenonline', 'false');
+INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.contacts', 'category.remote.autosync.enabled', 'true');
+INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.contacts', 'category.remote.autosync.onlywhenonline', 'false');
+
+-- ---------------------------------
+-- Disable known device verification
+-- ---------------------------------
+INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.core', 'security.knowndeviceverification.enabled', 'false');
+
+-- ------------------------------
+-- Set default size icons toolbar
+-- ------------------------------
+INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.core', 'default.viewport.header.scale', 'medium');
