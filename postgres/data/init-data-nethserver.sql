@@ -7,7 +7,7 @@ UPDATE "core"."settings" SET value = '' WHERE key = 'googledrive.clientid' AND s
 UPDATE "core"."settings" SET value = '' WHERE key = 'googledrive.clientsecret' AND service_id = 'com.sonicle.webtop.core';
 UPDATE "core"."settings" SET value = '/usr/share/webtop/bin/' WHERE key = 'php.path' AND service_id = 'com.sonicle.webtop.core';
 UPDATE "core"."settings" SET value = '587' WHERE key = 'smtp.port' AND service_id = 'com.sonicle.webtop.core';
-UPDATE "core"."settings" SET value = '/usr/share/webtop/z-push' WHERE key = 'zpush.path' AND service_id = 'com.sonicle.webtop.core';
+UPDATE "core"."settings" SET value = '/tmp' WHERE key = 'zpush.path' AND service_id = 'com.sonicle.webtop.core';
 UPDATE "core"."settings" SET value = '/var/lib/nethserver/webtop' WHERE key = 'home.path' AND service_id = 'com.sonicle.webtop.core';
 
 -- --------------------------------

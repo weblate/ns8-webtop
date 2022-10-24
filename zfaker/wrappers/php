@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# remove first arg which is z-push-admin-wrapper
+shift
+/usr/share/webtop/bin/z-push-admin-wrapper "$@"

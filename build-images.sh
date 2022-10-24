@@ -56,6 +56,8 @@ container=$(buildah from docker.io/library/tomcat:8-jre8)
 buildah add ${container} ${webapp_tmp_dir}/webtop /usr/local/tomcat/webapps/webtop/
 buildah add ${container} ${jcharset_tmp_dir}/jcharset-2.0/lib/jcharset-2.0.jar /usr/local/tomcat/webapps/webtop/lib/
 buildah add ${container} ${PWD}/webtop5-build/ListTimeZones.class /usr/share/webtop/
+buildah add ${container} ${PWD}/zfaker/wrappers/php /usr/share/webtop/bin/php
+buildah add ${container} ${PWD}/zfaker/wrappers/z-push-admin-wapper /usr/share/webtop/bin/z-push-admin-wrapper
 buildah add ${container} ${PWD}/webapp/ /
 # Commit the image
 buildah commit --rm "${container}" "${repobase}/${reponame}"
@@ -85,6 +87,7 @@ container=$(buildah from docker.io/bitnami/apache:2.4)
 buildah add ${container} ${PWD}/apache/ /
 buildah add ${container} ${PWD}/webtop5-build/webtop-dav-server-$webtop_version.tgz /usr/share/webtop/webdav/
 buildah add ${container} ${PWD}/webtop5-build/webtop-eas-server-$webtop_version.tgz /usr/share/webtop/z-push/
+buildah add ${container} ${PWD}/zfaker/src/ /usr/share/webtop/zfacker/
 buildah config -e APACHE_HTTP_PORT_NUMBER=8081 ${container}
 # Commit the image
 buildah commit --rm "${container}" "${repobase}/${reponame}"
@@ -110,6 +113,7 @@ container=$(buildah from docker.io/library/php:7.3-fpm-alpine)
 buildah copy --from=docker.io/mlocati/php-extension-installer:1.5.37 ${container} /usr/bin/install-php-extensions /usr/local/bin/
 buildah run ${container} sh -c "install-php-extensions imap"
 buildah add ${container} ${PWD}/webtop5-build/webtop-eas-server-$webtop_version.tgz /usr/share/webtop/z-push/
+buildah add ${container} ${PWD}/zfaker/src/ /usr/share/webtop/zfacker/
 buildah run ${container} sh -c "mv \$PHP_INI_DIR/php.ini-production \$PHP_INI_DIR/php.ini"
 buildah run ${container} sh -c "mkdir -p /var/log/z-push/state && chown www-data:www-data /var/log/z-push /var/log/z-push/state"
 buildah run ${container} sh -c "sed -i 's/9000/9001/' /usr/local/etc/php-fpm.d/zz-docker.conf"
