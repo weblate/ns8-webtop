@@ -1,0 +1,133 @@
+#!/bin/bash
+#
+# Copyright (C) 2017 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+#
+#  This script will download and build webtop5,
+#  at the end a war named webtop-webapp-5.war will
+#  be available inside th current directory
+
+set -e 
+
+function exit_error
+{
+    echo "ERROR: please create a VERSION file containing the WebTop 5 git tag"
+    echo
+    echo "  Example: echo 'wt-5.1.4' > VERSION"
+    echo
+    exit 1
+}
+
+if [ ! -f VERSION ]; then
+   exit_error
+fi
+
+webtop_version=$(cat VERSION)
+
+if echo $webtop_version | grep -qE ^development- ; then
+    base_branch="develop"
+elif echo $webtop_version | grep -qE ^staging- ; then
+    base_branch="release"
+else
+    tag_name=$webtop_version
+    if [ -z $tag_name ]; then
+        exit_error
+    fi
+fi
+
+# Maven sure maven has enough RAM
+MAVEN_OPTS="-Xmx1024m"
+export MAVEN_OPTS
+
+for P in mvn javac bzip2 node wget; do
+    which $P >/dev/null 2>&1 || { echo "Missing '$P' executable!"; exit 1; }
+done
+
+if [ ! -d webtop-gate ]; then
+    echo "Downloading webtop-gate..."
+    echo
+    GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/sonicle-webtop/webtop-gate.git
+fi
+
+pushd webtop-gate
+git pull
+
+echo
+echo "Cleanup local copy... "
+rm -rf components sencha-620  sencha-750  target-servers  target-wars
+
+echo
+echo "Cloning all repositories..."
+echo
+
+if [ "$base_branch" == "release" -o  "$base_branch" == "develop" ]; then
+  make setup \
+    USE_LFS=0 \
+    DEFAULT_CLONE_BASEURL=https://code.sonicle.com/scm/webtop \
+    DEFAULT_MVNTOOLS_CLONE_BASEURL=https://code.sonicle.com/scm/mvn \
+    DEFAULT_BASE_BRANCH=$base_branch
+else
+  make setup USE_LFS=0
+  make checkout-tag TAG=$tag_name
+fi
+
+popd
+echo
+echo "Adding Nethesis patches..."
+echo
+for f in $(find patches -name \*.patch); do
+    project=$(echo $f | cut -d'/' -f 2)
+    git apply $f --directory=webtop-gate/components/$project
+    echo "Applying $f"
+done
+pushd webtop-gate
+
+
+echo
+echo "Building..."
+echo
+make build
+
+echo
+echo "Extracting sql scripts..."
+tmpdir=$(mktemp -d)
+cp -rp postgres $tmpdir
+mkdir $tmpdir/{data,schema}
+find -path "*/resources/*" -name init-data\*.sql -type f  -exec cp -p '{}' $tmpdir/data \;
+find -path "*/resources/*" -name init-\*.sql ! -name init-data\*.sql -type f -exec cp -p '{}' $tmpdir/schema \;
+# Remove invalid lines starting with @ used inside WebTop
+find $tmpdir/schema -name init-\*.sql | xargs sed -i '/^@/d'
+tar cvzf sql-scripts.tar.gz -C $tmpdir .
+echo "sql-scripts.tar.gz successfully created"
+echo
+
+popd
+
+echo
+echo "Copying files..."
+echo
+cp -v webtop-gate/target-wars/webtop-webapp-*_default.war webtop-webapp-$webtop_version.war
+cp -v webtop-gate/sql-scripts.tar.gz sql-scripts-$webtop_version.tar.gz
+cp -v webtop-gate/target-servers/webtop-dav-server-*.tgz webtop-dav-server-$webtop_version.tgz
+cp -v webtop-gate/target-servers/webtop-eas-server-*.tgz webtop-eas-server-$webtop_version.tgz
+
+echo
+echo "webtop-webapp-$webtop_version.war and sql-scripts-$webtop_version.tar.gz webtop-dav-server-$webtop_version.tgz webtop-eas-server-$webtop_version.tgz successfully created"
+echo
+

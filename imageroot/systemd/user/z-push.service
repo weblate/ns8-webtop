@@ -1,0 +1,31 @@
+#
+# This systemd unit starts a webtop instance using Podman.
+# Most parts of this file come from podman-generate-systemd.
+#
+[Unit]
+Description=WeTop Z-Push server
+PartOf=webtop.service
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+EnvironmentFile=%S/state/environment
+WorkingDirectory=%S/state
+Restart=always
+ExecStartPre=/bin/rm -f %t/%N.pid %t/%N.ctr-id
+ExecStartPre=%S/scripts/expandconfig-z-push
+ExecStart=/usr/bin/podman run \
+    --pod=webtop \
+    --detach \
+    --conmon-pidfile=%t/%N.pid \
+    --cidfile=%t/%N.ctr-id \
+    --cgroups=no-conmon \
+    --replace --name=%N \
+    --volume=./z-push_config.json:/usr/share/webtop/z-push/config.json:Z \
+    ${WEBTOP_Z_PUSH_IMAGE}
+ExecStop=/usr/bin/podman stop --ignore --cidfile %t/%N.ctr-id -t 10
+ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/%N.ctr-id
+PIDFile=%t/%N.pid
+Type=forking
+
+[Install]
+WantedBy=default.target

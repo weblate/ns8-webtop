@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+
+#
+# Copyright (C) 2022 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+import json
+import os
+
+timezone = os.getenv("WEBTOP_TIMEZONE")
+debug = os.getenv("WEBDAV_DEBUG", 'False').lower() in ('true', '1', 't')
+log_level = os.getenv("WEBDAV_LOG_LEVEL")
+
+config={
+        "debug": debug,
+        "caldav": True,
+        "carddav": True,
+        "timezone": f"{timezone}",
+        "baseUri": "/webtop-dav/server.php",
+	"log": {
+		"level": f"{log_level}",
+		"file": "php://stdout"
+	},
+	"api": {
+        "baseUrl": "http://localhost:8080/webtop",
+		"dav": {
+            "url": "/api/com.sonicle.webtop.core/v1",
+            "baseUrl": None
+            },
+        "caldav": {
+            "url": "/api/com.sonicle.webtop.calendar/v1",
+            "baseUrl": None
+            },
+        "carddav": {
+            "url": "/api/com.sonicle.webtop.contacts/v1",
+            "baseUrl": None
+            }
+        }
+     }
+
+with open('webdav_config.json', 'w') as f:
+    json.dump(config, f)

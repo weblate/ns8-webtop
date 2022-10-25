@@ -3,24 +3,25 @@
 # Most parts of this file come from podman-generate-systemd.
 #
 [Unit]
-Description=webtop server
+Description=WebTop pod service
+Wants=webapp.service postgres.service apache.service webdav.service z-push.service
+Before=webapp.service postgres.service apache.service webdav.service z-push.service
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
 EnvironmentFile=%S/state/environment
 WorkingDirectory=%S/state
 Restart=always
-ExecStartPre=/bin/rm -f %t/webtop.pid %t/webtop.ctr-id
-ExecStart=/usr/bin/podman run \
-    --detach \
-    --conmon-pidfile=%t/webtop.pid \
-    --cidfile=%t/webtop.ctr-id \
-    --cgroups=no-conmon \
-    --replace --name=%N \
-    --publish=127.0.0.1:${TCP_PORT}:8080 \
-    ${ECHO_SERVER_IMAGE}
-ExecStop=/usr/bin/podman stop --ignore --cidfile %t/webtop.ctr-id -t 10
-ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/webtop.ctr-id
+ExecStartPre=/bin/rm -f %t/webtop.pid %t/webtop.pod-id
+ExecStartPre=/usr/bin/podman pod create \
+    --infra-conmon-pidfile=%t/webtop.pid \
+    --pod-id-file=%t/webtop.pod-id \
+    --name=webtop \
+    --publish=${TCP_PORT}:8081 \
+    --replace
+ExecStart=/usr/bin/podman pod start --pod-id-file %t/webtop.pod-id
+ExecStop=/usr/bin/podman pod stop --ignore --pod-id-file %t/webtop.pod-id -t 10
+ExecStopPost=/usr/bin/podman pod rm --ignore -f --pod-id-file %t/webtop.pod-id
 PIDFile=%t/webtop.pid
 Type=forking
 
