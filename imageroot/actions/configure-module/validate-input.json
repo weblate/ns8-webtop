@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "configure-module input",
+    "$id": "http://schema.nethserver.org/webtop/configure-route-input.json",
+    "description": "Configure webtop",
+    "examples": [
+        {
+            "hostname": "example.com"
+        }
+    ],
+    "type": "object",
+    "properties": {
+        "hostname": {
+            "type": "string",
+            "format": "hostname",
+            "title": "Hostname of the WebTop instance",
+            "examples": [
+                "example.com"
+            ]
+        }
+    }
+}
