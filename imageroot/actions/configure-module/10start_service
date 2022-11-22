@@ -20,6 +20,4 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-# If the control reaches this step, the service can be enabled and started
-
-systemctl --user enable webtop.service
+systemctl --user start webtop
