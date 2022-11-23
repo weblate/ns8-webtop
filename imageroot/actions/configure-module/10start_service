@@ -19,5 +19,23 @@
 # You should have received a copy of the GNU General Public License
 # along with NethServer.  If not, see COPYING.
 #
+# Redirect any output to the journal (stderr)
 
-systemctl --user start webtop
+set -e
+
+exec 1>&2
+
+systemctl --user start postgres
+
+podman exec -i postgres sh -s <<'EOF'
+query="SELECT EXISTS ( SELECT * FROM pg_tables WHERE schemaname = 'core' AND tablename  = 'settings');"
+psql -q -U postgres webtop5 -tA -c "$query" 2> /dev/null | grep -q t
+db_check=$?
+c=10
+while [ "$db_check" -ne 0 -o $c -eq 0 ]; do
+  sleep 1s
+  psql -q -U postgres webtop5 -tA -c "$query" 2> /dev/null  | grep -q t
+  db_check=$?
+  c=$(expr $c - 1 )
+done
+EOF
