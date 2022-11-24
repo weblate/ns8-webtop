@@ -6,6 +6,10 @@
     "examples": [
         {
             "hostname": "example.com"
+        },
+        {
+            "hostname": "example.com",
+            "request_https_certificate": true
         }
     ],
     "type": "object",
@@ -18,6 +22,10 @@
             "examples": [
                 "example.com"
             ]
+        },
+        "request_https_certificate": {
+            "type": "boolean",
+            "title": "Request a valid HTTPS certificate"
         }
     }
 }

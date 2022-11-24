@@ -45,6 +45,11 @@ r = agent.redis_connect(privileged=True).pipeline()
 
 restart_webapp = False
 
+webtop_request_https_certificate = os.environ["WEBTOP_REQUEST_HTTPS_CERTIFICATE"].lower() in ('true', '1', 't')
+if data.get("request_https_certificate") is not None:
+    if data.get("request_https_certificate") != webtop_request_https_certificate:
+        webtop_request_https_certificate = data["request_https_certificate"]
+        agent.set_env("WEBTOP_REQUEST_HTTPS_CERTIFICATE", data["request_https_certificate"])
 
 # Configure Traefik to route WebTop's host requests to the webtop module
 response = agent.tasks.run(
@@ -54,7 +59,7 @@ response = agent.tasks.run(
         'instance': os.environ['MODULE_ID'],
         'url':  'http://127.0.0.1:' + os.environ["TCP_PORT"],
         'http2https': True,
-        'lets_encrypt': False,
+        'lets_encrypt': webtop_request_https_certificate,
         'host': data["hostname"],
     },
 )
