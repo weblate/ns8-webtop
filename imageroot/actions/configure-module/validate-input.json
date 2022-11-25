@@ -26,6 +26,19 @@
         "request_https_certificate": {
             "type": "boolean",
             "title": "Request a valid HTTPS certificate"
-        }
+        },
+	"locale": {
+            "type": "string",
+            "title": "Default locale for WebTop users",
+            "enum": [
+                "it_IT",
+                "en_US",
+                "de_DE",
+                "es_ES",
+                "hr_HR",
+                "hu_HU",
+                "fr_FR"
+	    ]
+	}
     }
 }

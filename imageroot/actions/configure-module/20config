@@ -62,5 +62,86 @@ if data["hostname"] != os.getenv("WEBTOP_HOSTNAME"):
     agent.set_env("WEBTOP_HOSTNAME", data["hostname"])
     restart_webapp = True
 
+if "locale" in data and data["locale"] != os.environ["WEBTOP_LOCALE"]:
+
+    locales = {
+            'it_IT': {
+                'LANGUAGE': 'it_IT',
+                'START_DAY': '1',
+                'DATE_FORMAT_LONG': 'dd MMM yyyy',
+                'DATE_FORMAT_SHORT': 'dd/MM/yyyy',
+                'TIME_FORMAT_SHORT': 'HH:mm',
+                'TIME_FORMAT_LONG': 'HH:mm:ss',
+                },
+            'en_US': {
+                'LANGUAGE': 'en_EN',
+                'START_DAY': '0',
+                'DATE_FORMAT_LONG': 'MMM dd, yyyy',
+                'DATE_FORMAT_SHORT': 'MM/dd/yy',
+                'TIME_FORMAT_SHORT': 'h:mm a',
+                'TIME_FORMAT_LONG': 'h:mm:ss a',
+                },
+            'de_DE': {
+                'LANGUAGE': 'de_DE',
+                'START_DAY': '1',
+                'DATE_FORMAT_LONG': 'dd MMM yyyy',
+                'DATE_FORMAT_SHORT': 'dd.MM.yyyy',
+                'TIME_FORMAT_SHORT': 'HH:mm',
+                'TIME_FORMAT_LONG': 'HH:mm:ss',
+                },
+            'es_ES': {
+                'LANGUAGE': 'es_ES',
+                'START_DAY': '1',
+                'DATE_FORMAT_LONG': 'dd. MMM yyyy.',
+                'DATE_FORMAT_SHORT': 'd/M/yy',
+                'TIME_FORMAT_SHORT': 'HH:mm',
+                'TIME_FORMAT_LONG': 'HH:mm:ss',
+                },
+            'hr_HR': {
+                'LANGUAGE': 'hr_HR',
+                'START_DAY': '1',
+                'DATE_FORMAT_LONG': 'dd. MMM yyyy.',
+                'DATE_FORMAT_SHORT': 'dd. MM. yyyy.',
+                'TIME_FORMAT_SHORT': 'HH:mm',
+                'TIME_FORMAT_LONG': 'HH:mm:ss',
+                },
+            'hu_HU': {
+                'LANGUAGE': 'hu_HU',
+                'START_DAY': '1',
+                'DATE_FORMAT_LONG': 'yyyy. MMMM dd.',
+                'DATE_FORMAT_SHORT': 'yyyy.MM.dd.',
+                'TIME_FORMAT_SHORT': 'HH:mm',
+                'TIME_FORMAT_LONG': 'HH:mm:ss',
+                },
+            'fr_FR': {
+                'LANGUAGE': 'fr_FR',
+                'START_DAY': '1',
+                'DATE_FORMAT_LONG': 'dd MMM yyyy',
+                'DATE_FORMAT_SHORT': 'dd/MM/yyyy',
+                'TIME_FORMAT_SHORT': 'HH:mm',
+                'TIME_FORMAT_LONG': 'HH:mm:ss',
+                }
+            }
+
+    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdin=subprocess.PIPE, text=True) as psql:
+        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.languageTag';\n", file=psql.stdin)
+        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.startDay';\n", file=psql.stdin)
+        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.format.date.short';\n", file=psql.stdin)
+        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.format.date.long';\n", file=psql.stdin)
+        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.format.time.short';\n", file=psql.stdin)
+        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.format.time.long';\n", file=psql.stdin)
+
+        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.languageTag', '"  + locales[data['locale']]['LANGUAGE'] + "');\n", file=psql.stdin)
+        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.startDay', '" + locales[data['locale']]['START_DAY']+ "');\n", file=psql.stdin)
+        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.format.date.short', '" + locales[data['locale']]['DATE_FORMAT_SHORT'] + "');\n", file=psql.stdin)
+        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.format.date.long', '" + locales[data['locale']]['DATE_FORMAT_LONG'] + "');\n", file=psql.stdin)
+        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.format.time.short', '" + locales[data['locale']]['TIME_FORMAT_SHORT'] + "');\n", file=psql.stdin)
+        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.format.time.long', '" + locales[data['locale']]['TIME_FORMAT_LONG'] + "');\n", file=psql.stdin)
+
+    agent.assert_exp(psql.returncode == 0) # check the command is succesfull
+
+    agent.set_env("WEBTOP_LOCALE", data["locale"])
+    restart_webapp = True
+
 if restart_webapp:
     agent.run_helper("systemctl", "--user", "restart", "webapp").check_returncode()
