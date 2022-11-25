@@ -30,7 +30,7 @@ import json
 import sys
 import os
 import agent
-import tempfile
+import subprocess
 
 # Try to parse the stdin as JSON.
 # If parsing fails, output everything to stderr
@@ -71,18 +71,14 @@ if data["hostname"] != os.getenv("WEBTOP_HOSTNAME"):
     public_url = 'https://' + data["hostname"] + '/webtop'
     dav_url = 'https://' + data["hostname"] + '/webtop-dav/server.php'
 
-    tmp_sql_file = tempfile.NamedTemporaryFile()
+    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdin=subprocess.PIPE, text=True) as psql:
+        print("DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.core' and key = 'public.url';\n", file=psql.stdin)
+        print("INSERT INTO \"core\".\"settings\" (\"service_id\", \"key\", \"value\") VALUES ('com.sonicle.webtop.core', 'public.url', \'" + public_url + "\');\n", file=psql.stdin)
 
-    tmp_sql_file.write(b"DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.core' and key = 'public.url';\n")
-    tmp_sql_file.write(b"INSERT INTO \"core\".\"settings\" (\"service_id\", \"key\", \"value\") VALUES ('com.sonicle.webtop.core', 'public.url', \'" + public_url.encode() + b"\');\n")
+        print("DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.core' and key = 'davserver.url';\n", file=psql.stdin)
+        print("INSERT INTO \"core\".\"settings\" (\"service_id\", \"key\", \"value\") VALUES ('com.sonicle.webtop.core', 'davserver.url',\'" + dav_url + "\');\n", file=psql.stdin)
 
-    tmp_sql_file.write(b"DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.core' and key = 'davserver.url';\n")
-    tmp_sql_file.write(b"INSERT INTO \"core\".\"settings\" (\"service_id\", \"key\", \"value\") VALUES ('com.sonicle.webtop.core', 'davserver.url',\'" + dav_url.encode() + b"\');\n")
-
-    tmp_sql_file.flush()
-
-    os.system(f"podman cp {tmp_sql_file.name} postgres:/tmp/settings.sql")
-    os.system('podman exec postgres sh -c "psql -U postgres webtop5 < /tmp/settings.sql > /dev/null"')
+    agent.assert_exp(psql.returncode == 0) # check the command is succesfull
 
     agent.set_env("WEBTOP_HOSTNAME", data["hostname"])
     restart_webapp = True
