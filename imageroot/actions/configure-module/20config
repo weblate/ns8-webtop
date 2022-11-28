@@ -84,4 +84,4 @@ if data["hostname"] != os.getenv("WEBTOP_HOSTNAME"):
     restart_webapp = True
 
 if restart_webapp:
-    os.system("systemctl --user restart webapp")
+    agent.run_helper("systemctl", "--user", "restart", "webapp").check_returncode()
