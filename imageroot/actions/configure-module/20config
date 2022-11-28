@@ -23,6 +23,8 @@ if not agent_id:
 r = agent.redis_connect(privileged=True).pipeline()
 
 restart_webapp = False
+restart_webdav = False
+restart_zpush = False
 
 webtop_request_https_certificate = os.environ["WEBTOP_REQUEST_HTTPS_CERTIFICATE"].lower() in ('true', '1', 't')
 if data.get("request_https_certificate") is not None:
@@ -143,5 +145,25 @@ if "locale" in data and data["locale"] != os.environ["WEBTOP_LOCALE"]:
     agent.set_env("WEBTOP_LOCALE", data["locale"])
     restart_webapp = True
 
+if "timezone" in data and data["timezone"] != os.environ["WEBTOP_TIMEZONE"]:
+    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdin=subprocess.PIPE, text=True) as psql:
+        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.timezone';\n", file=psql.stdin)
+        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.timezone','" + data["timezone"] + "');\n", file=psql.stdin)
+
+    agent.assert_exp(psql.returncode == 0) # check the command is succesfull
+
+    agent.set_env("WEBTOP_HOSTNAME", data["hostname"])
+    restart_webapp = True
+    restart_webdav = True
+    restart_zpush = True
+
+agent.dump_env()
+
 if restart_webapp:
     agent.run_helper("systemctl", "--user", "restart", "webapp").check_returncode()
+
+if restart_webdav:
+   agent.run_helper("systemctl", "--user", "restart", "webdav").check_returncode()
+
+if restart_zpush:
+    agent.run_helper("systemctl", "--user", "restart", "z-push").check_returncode()

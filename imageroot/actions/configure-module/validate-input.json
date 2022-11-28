@@ -39,6 +39,13 @@
                 "hu_HU",
                 "fr_FR"
 	    ]
+	},
+	"timezone": {
+            "type": "string",
+	    "title": "Default timezone for WebTop users",
+	    "examples": [
+		    "Etc/UTC"
+	    ]
 	}
     }
 }

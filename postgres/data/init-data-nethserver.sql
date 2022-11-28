@@ -145,3 +145,8 @@ INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.c
 INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.format.date.long', 'MMM dd, yyyy');
 INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.format.time.short', 'h:mm a');
 INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.format.time.long', 'h:mm:ss a');
+
+-- ------------------------------
+-- Set default timezone
+-- ------------------------------
+INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.timezone', 'Etc/UTC');
