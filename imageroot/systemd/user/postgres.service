@@ -5,6 +5,8 @@
 [Unit]
 Description=postgres server
 PartOf=webtop.service
+Requires=webtop.service
+After=webtop.service
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n

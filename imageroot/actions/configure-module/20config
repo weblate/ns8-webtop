@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+
+#
+# Copyright (C) 2022 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+#
+# Create a virtual host configuration
+# Input example:
+#  {"instance": "module1", "url": "http://127.0.0.0:2000", "path": "/foo", "http2https": true}
+#
+
+import json
+import sys
+import os
+import agent
+import subprocess
+
+# Try to parse the stdin as JSON.
+# If parsing fails, output everything to stderr
+data = json.load(sys.stdin)
+
+agent_id = os.getenv("AGENT_ID", "")
+if not agent_id:
+    raise Exception("AGENT_ID not found inside the environemnt")
+
+# Connect to redis
+r = agent.redis_connect(privileged=True).pipeline()
+
+restart_webapp = False
+
+webtop_request_https_certificate = os.environ["WEBTOP_REQUEST_HTTPS_CERTIFICATE"].lower() in ('true', '1', 't')
+if data.get("request_https_certificate") is not None:
+    if data.get("request_https_certificate") != webtop_request_https_certificate:
+        webtop_request_https_certificate = data["request_https_certificate"]
+        agent.set_env("WEBTOP_REQUEST_HTTPS_CERTIFICATE", data["request_https_certificate"])
+
+# Configure Traefik to route WebTop's host requests to the webtop module
+response = agent.tasks.run(
+    agent_id=agent.resolve_agent_id('traefik@node'),
+    action='set-route',
+    data={
+        'instance': os.environ['MODULE_ID'],
+        'url':  'http://127.0.0.1:' + os.environ["TCP_PORT"],
+        'http2https': True,
+        'lets_encrypt': webtop_request_https_certificate,
+        'host': data["hostname"],
+    },
+)
+# Check if traefik configuration has been successfull
+agent.assert_exp(response['exit_code'] == 0)
+
+if data["hostname"] != os.getenv("WEBTOP_HOSTNAME"):
+
+    public_url = 'https://' + data["hostname"] + '/webtop'
+    dav_url = 'https://' + data["hostname"] + '/webtop-dav/server.php'
+
+    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdin=subprocess.PIPE, text=True) as psql:
+        print("DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.core' and key = 'public.url';\n", file=psql.stdin)
+        print("INSERT INTO \"core\".\"settings\" (\"service_id\", \"key\", \"value\") VALUES ('com.sonicle.webtop.core', 'public.url', \'" + public_url + "\');\n", file=psql.stdin)
+
+        print("DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.core' and key = 'davserver.url';\n", file=psql.stdin)
+        print("INSERT INTO \"core\".\"settings\" (\"service_id\", \"key\", \"value\") VALUES ('com.sonicle.webtop.core', 'davserver.url',\'" + dav_url + "\');\n", file=psql.stdin)
+
+    agent.assert_exp(psql.returncode == 0) # check the command is succesfull
+
+    agent.set_env("WEBTOP_HOSTNAME", data["hostname"])
+    restart_webapp = True
+
+if restart_webapp:
+    agent.run_helper("systemctl", "--user", "restart", "webapp").check_returncode()

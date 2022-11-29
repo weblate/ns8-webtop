@@ -19,20 +19,23 @@
 # You should have received a copy of the GNU General Public License
 # along with NethServer.  If not, see COPYING.
 #
+# Redirect any output to the journal (stderr)
+
 set -e
 
-exec 1>&2 # Send any output to stderr, to not alter the action response protocol
+exec 1>&2
 
-cat >&${AGENT_COMFD} <<EOF
-set-env WEBTOP_TIMEZONE Etc/UTC
-set-env WEBTOP_REQUEST_HTTPS_CERTIFICATE False
-set-env WEBDAV_DEBUG True
-set-env WEBDAV_LOG_LEVEL DEBUG
-set-env Z_PUSH_LOG_LEVEL DEBUG
-set-env Z_PUSH_IMAP_SERVER 10.5.4.1
-set-env Z_PUSH_USE_LEGACY_FOLDER_IDS false
-set-env WEBAPP_JS_DEBUG false
-set-env WEBAPP_MIN_MEMORY 512
-set-env WEBAPP_MAX_MEMORY 1024
-dump-env
+systemctl --user start postgres
+
+podman exec -i postgres sh -s <<'EOF'
+query="SELECT EXISTS ( SELECT * FROM pg_tables WHERE schemaname = 'core' AND tablename  = 'settings');"
+psql -q -U postgres webtop5 -tA -c "$query" 2> /dev/null | grep -q t
+db_check=$?
+c=10
+while [ "$db_check" -ne 0 -o $c -eq 0 ]; do
+  sleep 1s
+  psql -q -U postgres webtop5 -tA -c "$query" 2> /dev/null  | grep -q t
+  db_check=$?
+  c=$(expr $c - 1 )
+done
 EOF
