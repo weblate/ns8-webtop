@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+
+#
+# Copyright (C) 2022 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+import json
+import sys
+import os
+import agent
+import subprocess
+
+agent.set_weight(os.path.basename(__file__), 0) # Validation step, no task progress at all
+
+# Try to parse the stdin as JSON.
+# If parsing fails, output everything to stderr
+data = json.load(sys.stdin)
+
+if "timezone" in data and data["timezone"] != os.environ["WEBTOP_TIMEZONE"]:
+    accepted_timezone_list = subprocess.check_output(['podman', 'run', '--rm', os.environ["WEBTOP_WEBAPP_IMAGE"], 'java', '-classpath', '/usr/share/webtop/', 'ListTimeZones'], text=True).splitlines()
+    if data["timezone"] not in accepted_timezone_list:
+        agent.set_status('validation-failed')
+        json.dump([{'field':'timezone','parameter':'timezone','value': data["timezone"],'error':'timezone_is_not_valid'}], fp=sys.stdout)
+        sys.exit(2)

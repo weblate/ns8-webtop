@@ -43,6 +43,7 @@
 	"timezone": {
             "type": "string",
 	    "title": "Default timezone for WebTop users",
+	    "minLength": 1,
 	    "examples": [
 		    "Etc/UTC"
 	    ]
