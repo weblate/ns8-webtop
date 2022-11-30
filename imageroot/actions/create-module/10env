@@ -11,6 +11,7 @@ exec 1>&2 # Send any output to stderr, to not alter the action response protocol
 
 cat >&${AGENT_COMFD} <<EOF
 set-env WEBTOP_TIMEZONE Etc/UTC
+set-env WEBTOP_LOCALE en_US
 set-env WEBTOP_REQUEST_HTTPS_CERTIFICATE False
 set-env WEBDAV_DEBUG True
 set-env WEBDAV_LOG_LEVEL DEBUG

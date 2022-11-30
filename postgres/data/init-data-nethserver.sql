@@ -135,3 +135,18 @@ INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicl
 -- Set default size icons toolbar
 -- ------------------------------
 INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.core', 'default.viewport.header.scale', 'medium');
+
+-- ------------------------------
+-- Set default locales
+-- ------------------------------
+INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.languageTag', 'en_US');
+INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.startDay', '0');
+INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.format.date.short', 'MM/dd/yy');
+INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.format.date.long', 'MMM dd, yyyy');
+INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.format.time.short', 'h:mm a');
+INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.format.time.long', 'h:mm:ss a');
+
+-- ------------------------------
+-- Set default timezone
+-- ------------------------------
+INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.timezone', 'Etc/UTC');
