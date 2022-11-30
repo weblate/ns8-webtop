@@ -162,6 +162,11 @@ if "mail_module" in data and data["mail_module"] != os.getenv("MAIL_MODULE"):
     imap_host = rdb.hget(f"module/{mail_module}/srv/tcp/imap", "host") or ""
     imap_port = rdb.hget(f"module/{mail_module}/srv/tcp/imap", "port") or ""
 
+    # Save the mail module UUID to automatically re-configure the module if it is
+    # already available:
+    mail_uuid = rdb.hget(f"module/{mail_module}/srv/tcp/imap", "module_uuid") or ""
+    agent.set_env("MAIL_MODULE_UUID", mail_uuid)
+
     agent.set_env("Z_PUSH_IMAP_SERVER", imap_host)
     agent.set_env("RESTART_Z_PUSH", "1")
 

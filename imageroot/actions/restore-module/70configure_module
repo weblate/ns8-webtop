@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+
+#
+# Copyright (C) 2022 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+import sys
+import json
+import os
+import agent
+import webtop
+
+request = json.load(sys.stdin)
+
+rdb = agent.redis_connect()
+lookup_matches = agent.list_service_providers(rdb, 'imap', 'tcp', {
+    'module_uuid': os.getenv('MAIL_MODULE_UUID', '')
+})
+
+if lookup_matches:
+    # Re-configure Webtop with the matching mail module instance:
+    mail_module = lookup_matches[0]['module_id']
+    webtop.configure_module(mail_module, request['environment']) # Ignore exit code

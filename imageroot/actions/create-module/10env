@@ -23,3 +23,5 @@ set-env WEBAPP_MIN_MEMORY 512
 set-env WEBAPP_MAX_MEMORY 1024
 dump-env
 EOF
+
+redis-exec SADD "${AGENT_ID}/roles/webtopadm" "configure-module" "get-*" "list-*"

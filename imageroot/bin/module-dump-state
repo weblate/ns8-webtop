@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2022 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+set -e
+
+if systemctl --user -q is-active postgres; then
+    podman exec postgres pg_dump -U postgres --format=c webtop5 > webtop5.dump
+fi
