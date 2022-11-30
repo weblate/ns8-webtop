@@ -47,6 +47,14 @@
 	    "examples": [
 		    "Etc/UTC"
 	    ]
+	},
+	"mail_module": {
+            "type": "string",
+	    "title": "Mail module ID",
+	    "description": "Mail module used by WebTop for smtp, imap and users authentication",
+	    "examples": [
+		    "mail1"
+	    ]
 	}
     }
 }
