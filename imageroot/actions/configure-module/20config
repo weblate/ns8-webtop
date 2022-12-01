@@ -20,7 +20,7 @@ if not agent_id:
     raise Exception("AGENT_ID not found inside the environemnt")
 
 # Connect to redis
-r = agent.redis_connect(privileged=True).pipeline()
+rdb = agent.redis_connect()
 
 restart_webapp = False
 restart_webdav = False
@@ -156,6 +156,42 @@ if "timezone" in data and data["timezone"] != os.environ["WEBTOP_TIMEZONE"]:
     restart_webapp = True
     restart_webdav = True
     restart_zpush = True
+
+if "mail_module" in data and data["mail_module"] != os.getenv("MAIL_MODULE"):
+    mail_module = data["mail_module"]
+
+    smtp_host = rdb.hget(f"module/{mail_module}/srv/tcp/submission", "host") or ""
+    smtp_port = rdb.hget(f"module/{mail_module}/srv/tcp/submission", "port") or ""
+
+    imap_host = rdb.hget(f"module/{mail_module}/srv/tcp/imap", "host") or ""
+    imap_port = rdb.hget(f"module/{mail_module}/srv/tcp/imap", "port") or ""
+
+    agent.set_env("Z_PUSH_IMAP_SERVER", imap_host)
+    restart_zpush = True
+
+    response = agent.tasks.run(f"module/{mail_module}", action='reveal-master-credentials')
+    agent.assert_exp(response['exit_code'] == 0)
+
+    vmail_password = response['output']['password']
+
+    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdin=subprocess.PIPE, text=True) as psql:
+        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'smtp.host';\n", file=psql.stdin)
+        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'smtp.port';\n", file=psql.stdin)
+        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'smtp.host', '" + smtp_host + "');\n", file=psql.stdin)
+        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'smtp.port', '" + smtp_port + "');\n", file=psql.stdin)
+
+        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.mail' and key = 'default.host';\n", file=psql.stdin)
+        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.mail' and key = 'default.host';\n", file=psql.stdin)
+        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.mail', 'default.host', '" + imap_host + "');\n", file=psql.stdin)
+        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.mail', 'default.port', '" + imap_port + "');\n", file=psql.stdin)
+
+        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.mail' and key = 'nethtop.vmail.secret';\n", file=psql.stdin)
+        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.mail', 'nethtop.vmail.secret', '" + vmail_password + "');\n", file=psql.stdin)
+
+    agent.assert_exp(psql.returncode == 0) # check the command is succesfull
+
+    agent.set_env("MAIL_MODULE", mail_module)
+    restart_webapp = True
 
 agent.dump_env()
 
