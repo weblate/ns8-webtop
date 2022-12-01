@@ -55,6 +55,70 @@
 	    "examples": [
 		    "mail1"
 	    ]
-	}
+        },
+        "webapp": {
+            "type":"object",
+            "title": "WebTop's Java webapp configuration",
+            "properties": {
+                "debug": {
+                    "type":"boolean",
+                    "title": "Enable webapp debug"
+            },
+                "min_memory": {
+                    "type":"integer",
+                    "title": "Minimum memory of Tomcat instance. Values are expressed in MB",
+                    "minimum": 0
+                },
+                "max_memory": {
+                    "type":"integer",
+                    "title": "Maximum memory of Tomcat instance. Values are expressed in MB",
+                     "minimum": 0
+                }
+            }
+        },
+        "webdav": {
+            "type": "object",
+            "title": "WebTop's webdav server configuration",
+            "properties": {
+                "debug": {
+                    "type":"boolean",
+                    "title": "Enable debug for the webdav application."
+                },
+                "loglevel": {
+                    "type": "string",
+                    "title": "Log level of webtopdav application",
+                    "enum": [
+                        "EMERGENCY",
+                        "ALERT",
+                        "CRITICAL",
+                        "ERROR",
+                        "WARNING",
+                        "NOTICE",
+                        "INFO",
+                        "DEBUG"
+                    ]
+                }
+            }
+        },
+        "zpush": {
+            "type": "object",
+            "title": "WebTop's z-push server configuration",
+            "properties": {
+                "loglevel": {
+                    "type": "string",
+                    "title": "Log level of z-push application",
+                    "enum": [
+                        "EMERGENCY",
+                        "ALERT",
+                        "CRITICAL",
+                        "ERROR",
+                        "WARNING",
+                        "NOTICE",
+                        "INFO",
+                        "DEBUG"
+                    ]
+                }
+            }
+        }
     }
 }

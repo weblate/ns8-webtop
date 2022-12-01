@@ -193,6 +193,30 @@ if "mail_module" in data and data["mail_module"] != os.getenv("MAIL_MODULE"):
     agent.set_env("MAIL_MODULE", mail_module)
     restart_webapp = True
 
+if "webapp" in data:
+    if "debug" in data["webapp"] and data["webapp"]["debug"] != os.getenv("WEBAPP_JS_DEBUG"):
+            agent.set_env("WEBAPP_JS_DEBUG", data["webapp"]["debug"])
+            restart_webapp = True
+    if "min_memory" in data["webapp"] and data["webapp"]["min_memory"] != os.getenv("WEBAPP_MIN_MEMORY"):
+            agent.set_env("WEBAPP_MIN_MEMORY", data["webapp"]["min_memory"])
+            restart_webapp = True
+    if "max_memory" in data["webapp"] and data["webapp"]["max_memory"] != os.getenv("WEBAPP_MAX_MEMORY"):
+            agent.set_env("WEBAPP_MAX_MEMORY", data["webapp"]["max_memory"])
+            restart_webapp = True
+
+if "webdav" in data:
+    if "debug" in data["webdav"] and data["webdav"]["debug"] != os.getenv("WEBDAV_DEBUG"):
+            agent.set_env("WEBDAV_DEBUG", data["webdav"]["debug"])
+            restart_webdav = True
+    if "loglevel" in data["webdav"] and data["webdav"]["loglevel"] != os.getenv("WEBDAV_LOG_LEVEL"):
+            agent.set_env("WEBDAV_LOG_LEVEL", data["webdav"]["loglevel"])
+            restart_webdav = True
+
+if "zpush" in data:
+    if "loglevel" in data["zpush"] and data["zpush"]["loglevel"] != os.getenv("Z_PUSH_LOG_LEVEL"):
+            agent.set_env("Z_PUSH_LOG_LEVEL", data["zpush"]["loglevel"])
+            restart_zpush = True
+
 agent.dump_env()
 
 if restart_webapp:
