@@ -48,7 +48,7 @@ if data["hostname"] != os.getenv("WEBTOP_HOSTNAME"):
     public_url = 'https://' + data["hostname"] + '/webtop'
     dav_url = 'https://' + data["hostname"] + '/webtop-dav/server.php'
 
-    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdin=subprocess.PIPE, text=True) as psql:
+    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdout=sys.stderr, stdin=subprocess.PIPE, text=True) as psql:
         print("DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.core' and key = 'public.url';\n", file=psql.stdin)
         print("INSERT INTO \"core\".\"settings\" (\"service_id\", \"key\", \"value\") VALUES ('com.sonicle.webtop.core', 'public.url', \'" + public_url + "\');\n", file=psql.stdin)
 
@@ -121,7 +121,7 @@ if "locale" in data and data["locale"] != os.environ["WEBTOP_LOCALE"]:
                 }
             }
 
-    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdin=subprocess.PIPE, text=True) as psql:
+    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdout=sys.stderr, stdin=subprocess.PIPE, text=True) as psql:
         print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.languageTag';\n", file=psql.stdin)
         print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.startDay';\n", file=psql.stdin)
         print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.format.date.short';\n", file=psql.stdin)
@@ -142,7 +142,7 @@ if "locale" in data and data["locale"] != os.environ["WEBTOP_LOCALE"]:
     agent.set_env("RESTART_WEBAPP", "1")
 
 if "timezone" in data and data["timezone"] != os.environ["WEBTOP_TIMEZONE"]:
-    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdin=subprocess.PIPE, text=True) as psql:
+    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdout=sys.stderr, stdin=subprocess.PIPE, text=True) as psql:
         print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.timezone';\n", file=psql.stdin)
         print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.timezone','" + data["timezone"] + "');\n", file=psql.stdin)
 
@@ -170,7 +170,7 @@ if "mail_module" in data and data["mail_module"] != os.getenv("MAIL_MODULE"):
 
     vmail_password = response['output']['password']
 
-    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdin=subprocess.PIPE, text=True) as psql:
+    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdout=sys.stderr, stdin=subprocess.PIPE, text=True) as psql:
         print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'smtp.host';\n", file=psql.stdin)
         print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'smtp.port';\n", file=psql.stdin)
         print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'smtp.host', '" + smtp_host + "');\n", file=psql.stdin)
