@@ -22,10 +22,6 @@ if not agent_id:
 # Connect to redis
 rdb = agent.redis_connect()
 
-restart_webapp = False
-restart_webdav = False
-restart_zpush = False
-
 webtop_request_https_certificate = os.environ["WEBTOP_REQUEST_HTTPS_CERTIFICATE"].lower() in ('true', '1', 't')
 if data.get("request_https_certificate") is not None:
     if data.get("request_https_certificate") != webtop_request_https_certificate:
@@ -62,7 +58,7 @@ if data["hostname"] != os.getenv("WEBTOP_HOSTNAME"):
     agent.assert_exp(psql.returncode == 0) # check the command is succesfull
 
     agent.set_env("WEBTOP_HOSTNAME", data["hostname"])
-    restart_webapp = True
+    agent.set_env("RESTART_WEBAPP", "1")
 
 if "locale" in data and data["locale"] != os.environ["WEBTOP_LOCALE"]:
 
@@ -143,7 +139,7 @@ if "locale" in data and data["locale"] != os.environ["WEBTOP_LOCALE"]:
     agent.assert_exp(psql.returncode == 0) # check the command is succesfull
 
     agent.set_env("WEBTOP_LOCALE", data["locale"])
-    restart_webapp = True
+    agent.set_env("RESTART_WEBAPP", "1")
 
 if "timezone" in data and data["timezone"] != os.environ["WEBTOP_TIMEZONE"]:
     with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdin=subprocess.PIPE, text=True) as psql:
@@ -153,9 +149,9 @@ if "timezone" in data and data["timezone"] != os.environ["WEBTOP_TIMEZONE"]:
     agent.assert_exp(psql.returncode == 0) # check the command is succesfull
 
     agent.set_env("WEBTOP_HOSTNAME", data["hostname"])
-    restart_webapp = True
-    restart_webdav = True
-    restart_zpush = True
+    agent.set_env("RESTART_WEBAPP", "1")
+    agent.set_env("RESTART_WEBDAV", "1")
+    agent.set_env("RESTART_Z_PUSH", "1")
 
 if "mail_module" in data and data["mail_module"] != os.getenv("MAIL_MODULE"):
     mail_module = data["mail_module"]
@@ -167,7 +163,7 @@ if "mail_module" in data and data["mail_module"] != os.getenv("MAIL_MODULE"):
     imap_port = rdb.hget(f"module/{mail_module}/srv/tcp/imap", "port") or ""
 
     agent.set_env("Z_PUSH_IMAP_SERVER", imap_host)
-    restart_zpush = True
+    agent.set_env("RESTART_Z_PUSH", "1")
 
     response = agent.tasks.run(f"module/{mail_module}", action='reveal-master-credentials')
     agent.assert_exp(response['exit_code'] == 0)
@@ -191,39 +187,30 @@ if "mail_module" in data and data["mail_module"] != os.getenv("MAIL_MODULE"):
     agent.assert_exp(psql.returncode == 0) # check the command is succesfull
 
     agent.set_env("MAIL_MODULE", mail_module)
-    restart_webapp = True
+    agent.set_env("RESTART_WEBAPP", "1")
 
 if "webapp" in data:
     if "debug" in data["webapp"] and data["webapp"]["debug"] != os.getenv("WEBAPP_JS_DEBUG"):
             agent.set_env("WEBAPP_JS_DEBUG", data["webapp"]["debug"])
-            restart_webapp = True
+            agent.set_env("RESTART_WEBAPP", "1")
     if "min_memory" in data["webapp"] and data["webapp"]["min_memory"] != os.getenv("WEBAPP_MIN_MEMORY"):
             agent.set_env("WEBAPP_MIN_MEMORY", data["webapp"]["min_memory"])
-            restart_webapp = True
+            agent.set_env("RESTART_WEBAPP", "1")
     if "max_memory" in data["webapp"] and data["webapp"]["max_memory"] != os.getenv("WEBAPP_MAX_MEMORY"):
             agent.set_env("WEBAPP_MAX_MEMORY", data["webapp"]["max_memory"])
-            restart_webapp = True
+            agent.set_env("RESTART_WEBAPP", "1")
 
 if "webdav" in data:
     if "debug" in data["webdav"] and data["webdav"]["debug"] != os.getenv("WEBDAV_DEBUG"):
             agent.set_env("WEBDAV_DEBUG", data["webdav"]["debug"])
-            restart_webdav = True
+            agent.set_env("RESTART_WEBDAV", "1")
     if "loglevel" in data["webdav"] and data["webdav"]["loglevel"] != os.getenv("WEBDAV_LOG_LEVEL"):
             agent.set_env("WEBDAV_LOG_LEVEL", data["webdav"]["loglevel"])
-            restart_webdav = True
+            agent.set_env("RESTART_WEBDAV", "1")
 
 if "zpush" in data:
     if "loglevel" in data["zpush"] and data["zpush"]["loglevel"] != os.getenv("Z_PUSH_LOG_LEVEL"):
             agent.set_env("Z_PUSH_LOG_LEVEL", data["zpush"]["loglevel"])
-            restart_zpush = True
+            agent.set_env("RESTART_Z_PUSH", "1")
 
 agent.dump_env()
-
-if restart_webapp:
-    agent.run_helper("systemctl", "--user", "restart", "webapp").check_returncode()
-
-if restart_webdav:
-   agent.run_helper("systemctl", "--user", "restart", "webdav").check_returncode()
-
-if restart_zpush:
-    agent.run_helper("systemctl", "--user", "restart", "z-push").check_returncode()

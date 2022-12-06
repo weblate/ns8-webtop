@@ -1,0 +1,30 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2022 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Redirect any output to the journal (stderr)
+
+set -e
+
+exec 1>&2
+
+if [ "$RESTART_WEBAPP" == "1" ]; then
+	systemctl --user restart webapp
+fi
+
+if [ "$RESTART_WEBDAV" == "1" ]; then
+	systemctl --user restart webdav
+fi
+
+if [ "$RESTART_Z_PUSH" == "1" ]; then
+	systemctl --user restart z-push
+fi
+
+cat >&${AGENT_COMFD} <<EOF
+unset-env RESTART_WEBAPP
+unset-env RESTART_WEBDAV
+unset-env RESTART_Z_PUSH
+dump-env
+EOF
