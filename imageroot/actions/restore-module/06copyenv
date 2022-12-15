@@ -5,6 +5,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
+# Symlinked by actions:
+# - clone-module
+# - restore-module
+
 import sys
 import json
 import agent

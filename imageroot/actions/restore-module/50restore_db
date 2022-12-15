@@ -5,8 +5,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-# Symlinked by:
+# Symlinked by actions:
 # - import-module
+# - clone-module
 # - restore-module
 
 set -e -o pipefail
