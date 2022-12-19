@@ -9,7 +9,38 @@ import json
 import sys
 import os
 import agent
+import agent.ldapproxy
 import subprocess
+
+def domain_setup(user_domain_name, user_domain):
+    user_domain_uri = "ldapneth://accountprovider" + ":" + user_domain["port"]
+    user_domain_admin = user_domain["bind_dn"]
+
+    user_domain_password = subprocess.check_output(['podman', 'run', '--rm', os.environ["WEBTOP_WEBAPP_IMAGE"], 'bash', '-c', "echo -n " + user_domain["bind_password"] + " | java -classpath /usr/share/webtop/ WebtopPassEncode"], text=True).splitlines().pop()
+
+    user_domain_parameters = {
+            "loginDn": user_domain["base_dn"],
+            "loginFilter": None,
+            "userDn": user_domain["base_dn"],
+            "userFilter": None,
+            "userIdField": "uid",
+            "userFirstnameField": "givenName",
+            "userLastnameField": "sn",
+            "userDisplayNameField": "gecos",
+            }
+
+    if user_domain["schema"] == "ad":
+        user_domain_parameters["loginFilter"] = "&(objectCategory=person)(objectClass=user)"
+        user_domain_parameters["userIdField"] = "sAMAccountName"
+        user_domain_parameters["userFilter"] = "(&(objectClass=user)(objectCategory=person)(!(isCriticalSystemObject=TRUE)))"
+        user_domain_parameters["userDisplayNameField"] = "displayName"
+
+    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdin=subprocess.PIPE, text=True) as psql:
+        print("DELETE FROM core.domains WHERE domain_id = 'NethServer';\n", file=psql.stdin)
+        print("INSERT INTO core.domains (domain_id, internet_name, enabled, description, user_auto_creation, dir_uri, dir_admin, dir_password, dir_connection_security, dir_case_sensitive, dir_password_policy, dir_parameters) VALUES ('NethServer', '" + user_domain_name + "', 't', 'NethServer', 't', '" + user_domain_uri + "', '" + user_domain_admin + "', '" + user_domain_password + "', null, 'f', 'f', '" + json.dumps(user_domain_parameters) + "');\n", file=psql.stdin)
+
+        agent.set_env("USER_DOMAIN_PORT", user_domain["port"])
+
 
 # Try to parse the stdin as JSON.
 # If parsing fails, output everything to stderr
@@ -186,8 +217,22 @@ if "mail_module" in data and data["mail_module"] != os.getenv("MAIL_MODULE"):
 
     agent.assert_exp(psql.returncode == 0) # check the command is succesfull
 
+    user_domain_name = rdb.hget(f"module/{mail_module}/srv/tcp/imap", "user_domain") or ""
+    user_domain = agent.ldapproxy.Ldapproxy().get_domain(user_domain_name) or {}
+
+    domain_setup(user_domain_name, user_domain)
+
     agent.set_env("MAIL_MODULE", mail_module)
     agent.set_env("RESTART_WEBAPP", "1")
+
+# In case of module move/migrate/restore, check if the port of local the ldapproxy is changed
+if "MAIL_MODULE" in os.environ and ("mail_module" not in data or data["mail_module"] == os.getenv("MAIL_MODULE")) :
+    user_domain_name = rdb.hget(f'module/{data["mail_module"]}/srv/tcp/imap', "user_domain") or ""
+    user_domain = agent.ldapproxy.Ldapproxy().get_domain(user_domain_name) or {}
+
+    if user_domain["port"] != os.environ["USER_DOMAIN_PORT"]:
+        domain_setup(user_domain_name, user_domain)
+        agent.set_env("RESTART_WEBAPP", "1")
 
 if "webapp" in data:
     if "debug" in data["webapp"] and data["webapp"]["debug"] != os.getenv("WEBAPP_JS_DEBUG"):
