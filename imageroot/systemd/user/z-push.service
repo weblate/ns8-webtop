@@ -26,6 +26,3 @@ ExecStop=/usr/bin/podman stop --ignore --cidfile %t/%N.ctr-id -t 10
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/%N.ctr-id
 PIDFile=%t/%N.pid
 Type=forking
-
-[Install]
-WantedBy=default.target

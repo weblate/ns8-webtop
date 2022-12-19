@@ -34,6 +34,3 @@ ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/webapp.ctr-id
 PIDFile=%t/webapp.pid
 Type=forking
 SuccessExitStatus=143
-
-[Install]
-WantedBy=default.target
