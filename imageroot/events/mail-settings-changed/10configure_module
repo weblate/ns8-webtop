@@ -12,5 +12,5 @@ import webtop
 
 event_input = json.load(sys.stdin)
 
-if (event_input['module_uuid'] == os.getenv('MAIL_MODULE_UUID'):
+if event_input['module_uuid'] == os.getenv('MAIL_MODULE_UUID'):
     webtop.configure_module(event_input['module_id'], os.environ) # Ignore exit code
