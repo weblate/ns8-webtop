@@ -1,0 +1,15 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2022 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+set -e -o pipefail
+exec 1>&2 # Redirect any output to the journal (stderr)
+
+# Check if the migrated z-push state use the legacy folder ids format
+if [[ -e ./legacy_ids_enabled ]]; then
+	echo "set-env Z_PUSH_USE_LEGACY_FOLDER_IDS True" >&${AGENT_COMFD}
+	rm ./legacy_ids_enabled
+fi
