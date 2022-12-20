@@ -1,0 +1,39 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2022 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+# Symlinked by actions:
+# - import-module
+# - clone-module
+# - restore-module
+
+set -e -o pipefail
+exec 1>&2 # Redirect any output to the journal (stderr)
+
+# Prepare an initialization script that restores the dump file
+mkdir -vp initdb.d
+cat - >initdb.d/webtop5_restore.sh <<'EOS'
+# Read dump file from standard input:
+pg_restore --no-owner --no-privileges -U postgres -d webtop5
+# Print additional information:
+psql --version
+# The script is sourced, override entrypoint args and exit:
+set -- true
+EOS
+
+# Override the image /docker-entrypoint-initdb.d contents, to restore the
+# DB dump file:
+podman run \
+    --rm \
+    --interactive \
+    --network=none \
+    --volume=./initdb.d:/docker-entrypoint-initdb.d:z \
+    --volume=pgdata:/var/lib/postgresql/data \
+    --replace --name=restore_db \
+    "${WEBTOP_POSTGRES_IMAGE}" < webtop5.dump
+
+# If the restore is successful, clean up:
+rm -rfv webtop5.dump initdb.d/
