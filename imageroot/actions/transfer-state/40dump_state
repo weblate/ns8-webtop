@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2022 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+set -e
+exec 1>&2
+
+# XXX: put webapp in maintenance/freeze mode
+
+module-dump-state # Dumps the postgres DB. Needs postgres container running.
+
+# Environment apart, only the DB dump file constitutes the module state:
+cat - >state-filter-rules.rsync <<'EOF'
++ /state/
++ /state/webtop5.dump
+- *
+EOF
