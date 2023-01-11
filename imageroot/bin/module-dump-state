@@ -7,6 +7,4 @@
 
 set -e
 
-if systemctl --user -q is-active postgres; then
-    podman exec postgres pg_dump -U postgres --format=c webtop5 > webtop5.dump
-fi
+podman exec postgres pg_dump -U postgres --format=c webtop5 > webtop5.dump
