@@ -1,1 +1,21 @@
-../restore-module/70configure_module
+#!/usr/bin/env python3
+
+#
+# Copyright (C) 2022 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+import sys
+import json
+import os
+import agent
+import webtop
+
+rdb = agent.redis_connect()
+lookup_matches = agent.list_service_providers(rdb, 'imap', 'tcp', {
+    'module_uuid': os.environ['MAIL_MODULE_UUID'],
+})
+
+if lookup_matches:
+    # Re-configure Webtop with the matching mail module instance
+    webtop.configure_module(lookup_matches[0]['module_id'], os.environ) # Ignore exit code
