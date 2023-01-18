@@ -212,7 +212,7 @@ if "mail_module" in data and data["mail_module"] != os.getenv("MAIL_MODULE"):
         print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'smtp.port', '" + smtp_port + "');\n", file=psql.stdin)
 
         print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.mail' and key = 'default.host';\n", file=psql.stdin)
-        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.mail' and key = 'default.host';\n", file=psql.stdin)
+        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.mail' and key = 'default.port';\n", file=psql.stdin)
         print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.mail', 'default.host', '" + imap_host + "');\n", file=psql.stdin)
         print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.mail', 'default.port', '" + imap_port + "');\n", file=psql.stdin)
 
