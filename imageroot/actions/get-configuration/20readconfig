@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+
+#
+# Copyright (C) 2023 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+import json
+import os
+import sys
+
+config={
+        "hostname": os.getenv("WEBTOP_HOSTNAME", ""),
+        "request_https_certificate": os.environ["WEBTOP_REQUEST_HTTPS_CERTIFICATE"].lower() in ('true', '1', 't'),
+        "locale": os.environ["WEBTOP_LOCALE"],
+        "timezone": os.environ["WEBTOP_TIMEZONE"],
+        "mail_module": os.getenv("MAIL_MODULE", ""),
+        "webapp": {
+            "debug": os.environ["WEBAPP_JS_DEBUG"].lower() in ('true', '1', 't'),
+            "min_memory": int(os.environ["WEBAPP_MIN_MEMORY"]),
+            "max_memory": int(os.environ["WEBAPP_MAX_MEMORY"]),
+            },
+        "webdav": {
+            "debug": os.environ["WEBDAV_DEBUG"].lower() in ('true', '1', 't'),
+            "loglevel": os.environ["WEBDAV_LOG_LEVEL"],
+            },
+        "zpush": {
+            "loglevel": os.environ["Z_PUSH_LOG_LEVEL"],
+            },
+        }
+
+json.dump(config, fp=sys.stdout)
