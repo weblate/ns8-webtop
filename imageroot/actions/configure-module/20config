@@ -179,6 +179,8 @@ if "timezone" in data and data["timezone"] != os.environ["WEBTOP_TIMEZONE"]:
 
     agent.assert_exp(psql.returncode == 0) # check the command is succesfull
 
+    agent.set_env("WEBTOP_TIMEZONE", data["timezone"])
+
     agent.set_env("RESTART_WEBAPP", "1")
     agent.set_env("RESTART_WEBDAV", "1")
     agent.set_env("RESTART_Z_PUSH", "1")
