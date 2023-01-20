@@ -150,3 +150,9 @@ INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.c
 -- Set default timezone
 -- ------------------------------
 INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.timezone', 'Etc/UTC');
+
+-- ------------------------------
+-- Disable STARTTLS on local SMTP
+-- ------------------------------
+INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'smtp.auth', 'true');
+INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'smtp.starttls', 'false');
