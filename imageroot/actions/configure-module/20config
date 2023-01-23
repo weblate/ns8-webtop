@@ -11,6 +11,10 @@ import os
 import agent
 import agent.ldapproxy
 import subprocess
+import urllib.request
+
+api_endpoint = "http://localhost:" + os.environ["TCP_PORT"] + "/webtop/api/com.sonicle.webtop.core/v1"
+api_headers={"Content-Type": "application/json", "Authorization": "Bearer " + os.environ["WEBAPP_API_TOKEN"]}
 
 def domain_setup(user_domain_name, user_domain):
     user_domain_uri = "ldapneth://accountprovider" + ":" + user_domain["port"]
@@ -74,24 +78,19 @@ response = agent.tasks.run(
 # Check if traefik configuration has been successfull
 agent.assert_exp(response['exit_code'] == 0)
 
-if data["hostname"] != os.getenv("WEBTOP_HOSTNAME"):
+# Configure the webapp
+public_url = 'https://' + data["hostname"] + '/webtop'
+dav_url = 'https://' + data["hostname"] + '/webtop-dav/server.php'
 
-    public_url = 'https://' + data["hostname"] + '/webtop'
-    dav_url = 'https://' + data["hostname"] + '/webtop-dav/server.php'
+try:
+    urllib.request.urlopen(urllib.request.Request(f"{api_endpoint}/admin/settings/com.sonicle.webtop.core/public.url", data=public_url.encode(), headers=api_headers, method='PUT'))
+    urllib.request.urlopen(urllib.request.Request(f"{api_endpoint}/admin/settings/com.sonicle.webtop.core/davserver.url", data=dav_url.encode(), headers=api_headers, method='PUT'))
+except urllib.error.URLError as e:
+    raise Exception(f'Error reaching webapp daemon: {e.reason}')
 
-    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdout=sys.stderr, stdin=subprocess.PIPE, text=True) as psql:
-        print("DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.core' and key = 'public.url';\n", file=psql.stdin)
-        print("INSERT INTO \"core\".\"settings\" (\"service_id\", \"key\", \"value\") VALUES ('com.sonicle.webtop.core', 'public.url', \'" + public_url + "\');\n", file=psql.stdin)
+agent.set_env("WEBTOP_HOSTNAME", data["hostname"])
 
-        print("DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.core' and key = 'davserver.url';\n", file=psql.stdin)
-        print("INSERT INTO \"core\".\"settings\" (\"service_id\", \"key\", \"value\") VALUES ('com.sonicle.webtop.core', 'davserver.url',\'" + dav_url + "\');\n", file=psql.stdin)
-
-    agent.assert_exp(psql.returncode == 0) # check the command is succesfull
-
-    agent.set_env("WEBTOP_HOSTNAME", data["hostname"])
-    agent.set_env("RESTART_WEBAPP", "1")
-
-if "locale" in data and data["locale"] != os.environ["WEBTOP_LOCALE"]:
+if "locale" in data:
 
     locales = {
             'it_IT': {
@@ -152,32 +151,23 @@ if "locale" in data and data["locale"] != os.environ["WEBTOP_LOCALE"]:
                 }
             }
 
-    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdout=sys.stderr, stdin=subprocess.PIPE, text=True) as psql:
-        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.languageTag';\n", file=psql.stdin)
-        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.startDay';\n", file=psql.stdin)
-        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.format.date.short';\n", file=psql.stdin)
-        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.format.date.long';\n", file=psql.stdin)
-        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.format.time.short';\n", file=psql.stdin)
-        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.format.time.long';\n", file=psql.stdin)
-
-        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.languageTag', '"  + locales[data['locale']]['LANGUAGE'] + "');\n", file=psql.stdin)
-        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.startDay', '" + locales[data['locale']]['START_DAY']+ "');\n", file=psql.stdin)
-        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.format.date.short', '" + locales[data['locale']]['DATE_FORMAT_SHORT'] + "');\n", file=psql.stdin)
-        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.format.date.long', '" + locales[data['locale']]['DATE_FORMAT_LONG'] + "');\n", file=psql.stdin)
-        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.format.time.short', '" + locales[data['locale']]['TIME_FORMAT_SHORT'] + "');\n", file=psql.stdin)
-        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.format.time.long', '" + locales[data['locale']]['TIME_FORMAT_LONG'] + "');\n", file=psql.stdin)
-
-    agent.assert_exp(psql.returncode == 0) # check the command is succesfull
+    try:
+        urllib.request.urlopen(urllib.request.Request(f"{api_endpoint}/admin/settings/com.sonicle.webtop.core/default.i18n.languageTag", data=locales[data['locale']]['LANGUAGE'].encode(), headers=api_headers, method='PUT'))
+        urllib.request.urlopen(urllib.request.Request(f"{api_endpoint}/admin/settings/com.sonicle.webtop.core/default.i18n.startDay", data=locales[data['locale']]['START_DAY'].encode(), headers=api_headers, method='PUT'))
+        urllib.request.urlopen(urllib.request.Request(f"{api_endpoint}/admin/settings/com.sonicle.webtop.core/default.i18n.format.date.short", data=locales[data['locale']]['DATE_FORMAT_SHORT'].encode(), headers=api_headers, method='PUT'))
+        urllib.request.urlopen(urllib.request.Request(f"{api_endpoint}/admin/settings/com.sonicle.webtop.core/default.i18n.format.date.long", data=locales[data['locale']]['DATE_FORMAT_LONG'].encode(), headers=api_headers, method='PUT'))
+        urllib.request.urlopen(urllib.request.Request(f"{api_endpoint}/admin/settings/com.sonicle.webtop.core/default.i18n.format.time.short", data=locales[data['locale']]['TIME_FORMAT_SHORT'].encode(), headers=api_headers, method='PUT'))
+        urllib.request.urlopen(urllib.request.Request(f"{api_endpoint}/admin/settings/com.sonicle.webtop.core/default.i18n.format.time.long", locales[data['locale']]['TIME_FORMAT_LONG'].encode(), headers=api_headers, method='PUT'))
+    except urllib.error.URLError as e:
+        raise Exception(f'Error reaching webapp daemon: {e.reason}')
 
     agent.set_env("WEBTOP_LOCALE", data["locale"])
-    agent.set_env("RESTART_WEBAPP", "1")
 
-if "timezone" in data and data["timezone"] != os.environ["WEBTOP_TIMEZONE"]:
-    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdout=sys.stderr, stdin=subprocess.PIPE, text=True) as psql:
-        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'default.i18n.timezone';\n", file=psql.stdin)
-        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.i18n.timezone','" + data["timezone"] + "');\n", file=psql.stdin)
-
-    agent.assert_exp(psql.returncode == 0) # check the command is succesfull
+if "timezone" in data:
+    try:
+        urllib.request.urlopen(urllib.request.Request(f"{api_endpoint}/admin/settings/com.sonicle.webtop.core/default.i18n.timezone", data=data["timezone"].encode(), headers=api_headers, method='PUT'))
+    except urllib.error.URLError as e:
+        raise Exception(f'Error reaching webapp daemon: {e.reason}')
 
     agent.set_env("WEBTOP_TIMEZONE", data["timezone"])
 
@@ -185,7 +175,7 @@ if "timezone" in data and data["timezone"] != os.environ["WEBTOP_TIMEZONE"]:
     agent.set_env("RESTART_WEBDAV", "1")
     agent.set_env("RESTART_Z_PUSH", "1")
 
-if "mail_module" in data and data["mail_module"] != os.getenv("MAIL_MODULE"):
+if "mail_module" in data:
     mail_module = data["mail_module"]
 
     smtp_host = rdb.hget(f"module/{mail_module}/srv/tcp/submission", "host") or ""
@@ -207,21 +197,14 @@ if "mail_module" in data and data["mail_module"] != os.getenv("MAIL_MODULE"):
 
     vmail_password = response['output']['password']
 
-    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdout=sys.stderr, stdin=subprocess.PIPE, text=True) as psql:
-        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'smtp.host';\n", file=psql.stdin)
-        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'smtp.port';\n", file=psql.stdin)
-        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'smtp.host', '" + smtp_host + "');\n", file=psql.stdin)
-        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'smtp.port', '" + smtp_port + "');\n", file=psql.stdin)
-
-        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.mail' and key = 'default.host';\n", file=psql.stdin)
-        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.mail' and key = 'default.port';\n", file=psql.stdin)
-        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.mail', 'default.host', '" + imap_host + "');\n", file=psql.stdin)
-        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.mail', 'default.port', '" + imap_port + "');\n", file=psql.stdin)
-
-        print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.mail' and key = 'nethtop.vmail.secret';\n", file=psql.stdin)
-        print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.mail', 'nethtop.vmail.secret', '" + vmail_password + "');\n", file=psql.stdin)
-
-    agent.assert_exp(psql.returncode == 0) # check the command is succesfull
+    try:
+        urllib.request.urlopen(urllib.request.Request(f"{api_endpoint}/admin/settings/com.sonicle.webtop.core/smtp.host", smtp_host.encode(), headers=api_headers, method='PUT'))
+        urllib.request.urlopen(urllib.request.Request(f"{api_endpoint}/admin/settings/com.sonicle.webtop.core/smtp.port", smtp_port.encode(), headers=api_headers, method='PUT'))
+        urllib.request.urlopen(urllib.request.Request(f"{api_endpoint}/admin/settings/com.sonicle.webtop.mail/default.host", imap_host.encode(), headers=api_headers, method='PUT'))
+        urllib.request.urlopen(urllib.request.Request(f"{api_endpoint}/admin/settings/com.sonicle.webtop.mail/default.port", imap_port.encode(), headers=api_headers, method='PUT'))
+        urllib.request.urlopen(urllib.request.Request(f"{api_endpoint}/admin/settings/com.sonicle.webtop.mail/nethtop.vmail.secret", vmail_password.encode(), headers=api_headers, method='PUT'))
+    except urllib.error.URLError as e:
+        raise Exception(f'Error reaching webapp daemon: {e.reason}')
 
     user_domain_name = rdb.hget(f"module/{mail_module}/srv/tcp/imap", "user_domain") or ""
     user_domain = agent.ldapproxy.Ldapproxy().get_domain(user_domain_name) or {}

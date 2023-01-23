@@ -6,21 +6,20 @@
 #
 # Redirect any output to the journal (stderr)
 
-set -e
-
 exec 1>&2
 
-systemctl --user start postgres
+systemctl --user start webapp
 
-podman exec -i postgres sh -s <<'EOF'
-query="SELECT EXISTS ( SELECT * FROM pg_tables WHERE schemaname = 'core' AND tablename  = 'settings');"
-psql -q -U postgres webtop5 -tA -c "$query" 2> /dev/null | grep -q t
-db_check=$?
+curl -s -f "http://localhost:$TCP_PORT/webtop/api/com.sonicle.webtop.core/v1/admin/settings" \
+  -H "Authorization: Bearer $WEBAPP_API_TOKEN" \
+  -H 'accept: application/json'> /dev/null
+webapp_check=$?
 c=10
-while [ "$db_check" -ne 0 -o $c -eq 0 ]; do
+while [ "$webapp_check" -ne 0 -o $c -eq 0 ]; do
   sleep 1s
-  psql -q -U postgres webtop5 -tA -c "$query" 2> /dev/null  | grep -q t
-  db_check=$?
+  curl -s -f "http://localhost:$TCP_PORT/webtop/api/com.sonicle.webtop.core/v1/admin/settings" \
+    -H "Authorization: Bearer $WEBAPP_API_TOKEN" \
+    -H 'accept: application/json' > /dev/null
+  webapp_check=$?
   c=$(expr $c - 1 )
 done
-EOF
