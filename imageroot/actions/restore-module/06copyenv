@@ -16,4 +16,3 @@ import agent
 request = json.load(sys.stdin)
 agent.set_env('MAIL_MODULE_UUID', request['environment']['MAIL_MODULE_UUID'])
 agent.set_env('Z_PUSH_USE_LEGACY_FOLDER_IDS', request['environment']['Z_PUSH_USE_LEGACY_FOLDER_IDS'])
-agent.dump_env()

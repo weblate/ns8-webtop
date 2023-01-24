@@ -26,5 +26,4 @@ cat >&${AGENT_COMFD} <<EOF
 unset-env RESTART_WEBAPP
 unset-env RESTART_WEBDAV
 unset-env RESTART_Z_PUSH
-dump-env
 EOF

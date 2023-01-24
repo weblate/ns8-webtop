@@ -263,5 +263,3 @@ if "zpush" in data:
     if "loglevel" in data["zpush"] and data["zpush"]["loglevel"] != os.getenv("Z_PUSH_LOG_LEVEL"):
             agent.set_env("Z_PUSH_LOG_LEVEL", data["zpush"]["loglevel"])
             agent.set_env("RESTART_Z_PUSH", "1")
-
-agent.dump_env()
