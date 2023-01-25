@@ -365,7 +365,7 @@ export default {
     },
     listWidgetOptionsAborted(taskResult, taskContext) {
       console.error(`${taskContext.action} aborted`, taskResult);
-      this.error.listWidgetOptions = this.$t("error.generic_error");
+      this.error.listWidgetOptions = this.$t("error.cannot_retrieve_UI_options");
       this.loading.getConfiguration = false;
     },
     listWidgetOptionsCompleted(taskContext, taskResult) {
