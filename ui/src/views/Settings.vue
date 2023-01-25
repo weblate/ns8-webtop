@@ -29,7 +29,7 @@
               v-model.trim="hostname"
               class="mg-bottom"
               :invalid-message="$t(error.hostname)"
-              :disabled="loading.getConfiguration || loading.configureModule"
+              :disabled="loadingUi"
               ref="hostname"
             >
             </cv-text-input>
@@ -37,7 +37,7 @@
               value="letsEncrypt"
               :label="$t('settings.request_https_certificate')"
               v-model="isLetsEncryptEnabled"
-              :disabled="loading.getConfiguration || loading.configureModule"
+              :disabled="loadingUi"
               class="mg-bottom"
             >
               <template slot="text-left">{{
@@ -57,7 +57,7 @@
               :acceptUserInput="false"
               :showItemType="true"
               :invalid-message="$t(error.mail_module)"
-              :disabled="loading.getConfiguration || loading.configureModule"
+              :disabled="loadingUi"
               tooltipAlignment="start"
               tooltipDirection="top"
               ref="mail_module"
@@ -78,7 +78,7 @@
               :hide-selected="false"
               :invalid-message="$t(error.locale)"
               :label="$t('settings.select_locale')"
-              :disabled="loading.getConfiguration || loading.configureModule">
+              :disabled="loadingUi">
               <cv-dropdown-item  value="it_IT">{{$t('settings.LOCALE_it_IT')}}</cv-dropdown-item>
               <cv-dropdown-item  selected value="en_US">{{$t('settings.LOCALE_en_US')}}</cv-dropdown-item>
               <cv-dropdown-item  value="de_DE">{{$t('settings.LOCALE_de_DE')}}</cv-dropdown-item>
@@ -98,7 +98,7 @@
               :acceptUserInput="false"
               :showItemType="true"
               :invalid-message="$t(error.accepted_timezone_list)"
-              :disabled="loading.getConfiguration || loading.configureModule"
+              :disabled="loadingUi"
               tooltipAlignment="start"
               tooltipDirection="top"
               ref="accepted_timezone_list"
@@ -114,7 +114,7 @@
                     value="webapp_debug"
                     :label="$t('settings.webapp_debug')"
                     v-model="webapp.debug"
-                    :disabled="loading.getConfiguration || loading.configureModule"
+                    :disabled="loadingUi"
                     class="mg-bottom"
                   >
                     <template slot="text-left">{{
@@ -129,7 +129,7 @@
                     :invalid-message="$t(error.webapp.min_memory)"
                     :helper-text="$t('settings.choose_min_webapp_memory_MB')"
                     :disabled="
-                      loading.getConfiguration || loading.configureModule
+                      loadingUi
                     "
                     v-model.trim="webapp.min_memory"
                     :min="512"
@@ -144,7 +144,7 @@
                     :invalid-message="$t(error.webapp.max_memory)"
                     :helper-text="$t('settings.choose_max_webapp_memory_MB')"
                     :disabled="
-                      loading.getConfiguration || loading.configureModule
+                      loadingUi
                     "
                     v-model.trim="webapp.max_memory"
                     :min="webapp.min_memory"
@@ -158,7 +158,7 @@
                     value="webdav_debug"
                     :label="$t('settings.webdav_debug')"
                     v-model="webdav.debug"
-                    :disabled="loading.getConfiguration || loading.configureModule"
+                    :disabled="loadingUi"
                     class="mg-bottom"
                   >
                     <template slot="text-left">{{
@@ -177,7 +177,7 @@
                     :hide-selected="false"
                     :invalid-message="$t(error.webdav.loglevel)"
                     :label="$t('settings.select_webdav_loglevel')"
-                    :disabled="loading.getConfiguration || loading.configureModule">
+                    :disabled="loadingUi">
                     <cv-dropdown-item value="ALERT">{{$t('settings.LOG_ALERT')}}</cv-dropdown-item>
                     <cv-dropdown-item value="CRITICAL">{{$t('settings.LOG_CRITICAL')}}</cv-dropdown-item>
                     <cv-dropdown-item value="DEBUG">{{$t('settings.LOG_DEBUG')}}</cv-dropdown-item>
@@ -196,7 +196,7 @@
                     :hide-selected="false"
                     :invalid-message="$t(error.zpush.loglevel)"
                     :label="$t('settings.select_zpush_loglevel')"
-                    :disabled="loading.getConfiguration || loading.configureModule">
+                    :disabled="loadingUi">
                     <cv-dropdown-item  value="ALERT">{{$t('settings.LOG_ALERT')}}</cv-dropdown-item>
                     <cv-dropdown-item  value="CRITICAL">{{$t('settings.LOG_CRITICAL')}}</cv-dropdown-item>
                     <cv-dropdown-item  value="DEBUG">{{$t('settings.LOG_DEBUG')}}</cv-dropdown-item>
@@ -223,7 +223,7 @@
               kind="primary"
               :icon="Save20"
               :loading="loading.configureModule"
-              :disabled="loading.getConfiguration || loading.configureModule"
+              :disabled="loadingUi"
               >{{ $t("settings.save") }}</NsButton
             >
           </cv-form>
@@ -284,10 +284,12 @@ export default {
       loading: {
         getConfiguration: false,
         configureModule: false,
+        getDefaults: false,
       },
       error: {
         getConfiguration: "",
         configureModule: "",
+        getDefaults: "",
         hostname: "",
         request_https_certificate: "",
         mail_module: "",
@@ -310,10 +312,17 @@ export default {
   },
   computed: {
     ...mapState(["instanceName", "core", "appName"]),
+    loadingUi() {
+      return (
+        this.loading.getConfiguration ||
+        this.loading.getDefaults ||
+        this.loading.configureModule
+      );
+    },
   },
   created() {
-    this.listWidgetOptions();
     this.getConfiguration();
+    this.listWidgetOptions();
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
@@ -327,7 +336,7 @@ export default {
   },
   methods: {
     async listWidgetOptions() {
-      this.loading.getConfiguration = true;
+      this.loading.getDefaults = true;
       const taskAction = "get-defaults";
       const eventId = this.getUuid();
 
@@ -358,20 +367,20 @@ export default {
       if (err) {
         console.error(`error creating task ${taskAction}`, err);
         this.error.listWidgetOptions = this.getErrorMessage(err);
-        this.loading.getConfiguration = false;
+        this.loading.getDefaults = false;
         return;
       }
     },
     listWidgetOptionsAborted(taskResult, taskContext) {
       console.error(`${taskContext.action} aborted`, taskResult);
       this.error.listWidgetOptions = this.$t("error.cannot_retrieve_UI_options");
-      this.loading.getConfiguration = false;
+      this.loading.getDefaults = false;
     },
     listWidgetOptionsCompleted(taskContext, taskResult) {
       const config = taskResult.output;
       this.mail_module_widget = config.mail_module_widget;
       this.accepted_timezone_list = config.accepted_timezone_list;
-      this.loading.getConfiguration = false;
+      this.loading.getDefaults = false;
     },
     async getConfiguration() {
       this.loading.getConfiguration = true;
@@ -425,8 +434,8 @@ export default {
       this.zpush = config.zpush;
       // force to reload value after dom update
       this.$nextTick(() => {
-        this.mail_module = config.mail_module;
         this.timezone = config.timezone;
+        this.mail_module = config.mail_module;
       });
       this.loading.getConfiguration = false;
       this.focusElement("hostname");
