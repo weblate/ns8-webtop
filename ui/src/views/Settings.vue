@@ -69,51 +69,48 @@
               }}
               </template>
             </NsComboBox>
+            <cv-dropdown 
+              :value="locale"
+              class="maxwidth"
+              v-model="locale"
+              :up="false"
+              :inline="false"
+              :helper-text="$t('settings.default_locale_for_webtop_users')"
+              :hide-selected="false"
+              :invalid-message="$t(error.locale)"
+              :label="$t('settings.select_locale')"
+              :disabled="loading.getConfiguration || loading.configureModule">
+              <cv-dropdown-item  value="it_IT">{{$t('settings.LOCALE_it_IT')}}</cv-dropdown-item>
+              <cv-dropdown-item  selected value="en_US">{{$t('settings.LOCALE_en_US')}}</cv-dropdown-item>
+              <cv-dropdown-item  value="de_DE">{{$t('settings.LOCALE_de_DE')}}</cv-dropdown-item>
+              <cv-dropdown-item  value="es_ES">{{$t('settings.LOCALE_es_ES')}}</cv-dropdown-item>
+              <cv-dropdown-item  value="hr_HR">{{$t('settings.LOCALE_hr_HR')}}</cv-dropdown-item>
+              <cv-dropdown-item  value="hu_HU">{{$t('settings.LOCALE_hu_HU')}}</cv-dropdown-item>
+              <cv-dropdown-item  value="fr_FR">{{$t('settings.LOCALE_fr_FR')}}</cv-dropdown-item>
+            </cv-dropdown>
+            <NsComboBox
+              v-model.trim="timezone"
+              :autoFilter="true"
+              :autoHighlight="true"
+              :title="$t('settings.timezone')"
+              :label="$t('settings.choose_timezone')"
+              :options="accepted_timezone_list"
+              :userInputLabel="core.$t('settings.choose_timezone')"
+              :acceptUserInput="false"
+              :showItemType="true"
+              :invalid-message="$t(error.accepted_timezone_list)"
+              :disabled="loading.getConfiguration || loading.configureModule"
+              tooltipAlignment="start"
+              tooltipDirection="top"
+              ref="accepted_timezone_list"
+              :helper-text="$t('settings.default_timezone_for_webtop_users')"
+            >
+            </NsComboBox>
             <!-- advanced options -->
             <cv-accordion ref="accordion" class="maxwidth mg-bottom">
               <cv-accordion-item :open="toggleAccordion[0]">
                 <template slot="title">{{ $t("settings.advanced") }}</template>
                 <template slot="content">
-                  <cv-dropdown 
-                    :value="locale"
-                    v-model="locale"
-                    :up="false"
-                    :inline="false"
-                    :helper-text="$t('settings.default_locale_for_webtop_users')"
-                    :hide-selected="false"
-                    :invalid-message="$t(error.locale)"
-                    :label="$t('settings.select_locale')"
-                    :disabled="loading.getConfiguration || loading.configureModule">
-                    <cv-dropdown-item  value="it_IT">{{$t('settings.LOCALE_it_IT')}}</cv-dropdown-item>
-                    <cv-dropdown-item  selected value="en_US">{{$t('settings.LOCALE_en_US')}}</cv-dropdown-item>
-                    <cv-dropdown-item  value="de_DE">{{$t('settings.LOCALE_de_DE')}}</cv-dropdown-item>
-                    <cv-dropdown-item  value="es_ES">{{$t('settings.LOCALE_es_ES')}}</cv-dropdown-item>
-                    <cv-dropdown-item  value="hr_HR">{{$t('settings.LOCALE_hr_HR')}}</cv-dropdown-item>
-                    <cv-dropdown-item  value="hu_HU">{{$t('settings.LOCALE_hu_HU')}}</cv-dropdown-item>
-                    <cv-dropdown-item  value="fr_FR">{{$t('settings.LOCALE_fr_FR')}}</cv-dropdown-item>
-                  </cv-dropdown>
-                  <NsComboBox
-                    v-model.trim="timezone"
-                    :autoFilter="true"
-                    :autoHighlight="true"
-                    :title="$t('settings.timezone')"
-                    :label="$t('settings.choose_timezone')"
-                    :options="accepted_timezone_list"
-                    :userInputLabel="core.$t('settings.choose_timezone')"
-                    :acceptUserInput="false"
-                    :showItemType="true"
-                    :invalid-message="$t(error.accepted_timezone_list)"
-                    :disabled="loading.getConfiguration || loading.configureModule"
-                    tooltipAlignment="start"
-                    tooltipDirection="top"
-                    ref="accepted_timezone_list"
-                  >
-                    <template slot="tooltip">
-                    {{
-                      $t("settings.default_timezone_for_webtop_users")
-                    }}
-                    </template>
-                  </NsComboBox>
                   <cv-toggle
                     value="webapp_debug"
                     :label="$t('settings.webapp_debug')"
