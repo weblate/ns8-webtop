@@ -329,7 +329,7 @@ export default {
   methods: {
     async listWidgetOptions() {
       this.loading.getConfiguration = true;
-      const taskAction = "list-widget-options-for-UI";
+      const taskAction = "get-defaults";
       const eventId = this.getUuid();
 
       // register to task error
