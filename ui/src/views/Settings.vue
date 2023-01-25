@@ -432,6 +432,7 @@ export default {
       this.webapp = config.webapp;
       this.webdav = config.webdav;
       this.zpush = config.zpush;
+      this.locale = config.locale;
       // force to reload value after dom update
       this.$nextTick(() => {
         this.timezone = config.timezone;
