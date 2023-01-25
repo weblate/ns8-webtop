@@ -54,7 +54,6 @@
               :title="$t('settings.mail_server_fqdn')"
               :label="$t('settings.choose_mail_server')"
               :options="mail_module_widget"
-              :userInputLabel="core.$t('settings.choose_mail_server')"
               :acceptUserInput="false"
               :showItemType="true"
               :invalid-message="$t(error.mail_module)"
