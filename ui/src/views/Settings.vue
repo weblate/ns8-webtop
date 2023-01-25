@@ -406,6 +406,22 @@ export default {
         }
         isValidationOk = false;
       }
+      if (!this.webapp.min_memory) {
+        this.error.webapp.min_memory = "common.required";
+
+        if (isValidationOk) {
+          this.focusElement("webapp.min_memory");
+        }
+        isValidationOk = false;
+      }
+      if (!this.webapp.max_memory) {
+        this.error.webapp.max_memory = "common.required";
+
+        if (isValidationOk) {
+          this.focusElement("webapp.max_memory");
+        }
+        isValidationOk = false;
+      }
       return isValidationOk;
     },
     configureModuleValidationFailed(validationErrors) {
