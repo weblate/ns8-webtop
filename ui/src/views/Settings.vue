@@ -313,6 +313,7 @@ export default {
     ...mapState(["instanceName", "core", "appName"]),
   },
   created() {
+    this.listWidgetOptions();
     this.getConfiguration();
   },
   beforeRouteEnter(to, from, next) {
@@ -326,6 +327,53 @@ export default {
     next();
   },
   methods: {
+    async listWidgetOptions() {
+      this.loading.getConfiguration = true;
+      const taskAction = "list-widget-options-for-UI";
+      const eventId = this.getUuid();
+
+      // register to task error
+      this.core.$root.$once(
+        `${taskAction}-aborted-${eventId}`,
+        this.listWidgetOptionsAborted
+      );
+
+      // register to task completion
+      this.core.$root.$once(
+        `${taskAction}-completed-${eventId}`,
+        this.listWidgetOptionsCompleted
+      );
+
+      const res = await to(
+        this.createModuleTaskForApp(this.instanceName, {
+          action: taskAction,
+          extra: {
+            title: this.$t("action." + taskAction),
+            isNotificationHidden: true,
+            eventId,
+          },
+        })
+      );
+      const err = res[0];
+
+      if (err) {
+        console.error(`error creating task ${taskAction}`, err);
+        this.error.listWidgetOptions = this.getErrorMessage(err);
+        this.loading.getConfiguration = false;
+        return;
+      }
+    },
+    listWidgetOptionsAborted(taskResult, taskContext) {
+      console.error(`${taskContext.action} aborted`, taskResult);
+      this.error.listWidgetOptions = this.$t("error.generic_error");
+      this.loading.getConfiguration = false;
+    },
+    listWidgetOptionsCompleted(taskContext, taskResult) {
+      const config = taskResult.output;
+      this.mail_module_widget = config.mail_module_widget;
+      this.accepted_timezone_list = config.accepted_timezone_list;
+      this.loading.getConfiguration = false;
+    },
     async getConfiguration() {
       this.loading.getConfiguration = true;
       this.error.getConfiguration = "";
@@ -376,8 +424,6 @@ export default {
       this.webapp = config.webapp;
       this.webdav = config.webdav;
       this.zpush = config.zpush;
-      this.mail_module_widget = config.mail_module_widget;
-      this.accepted_timezone_list = config.accepted_timezone_list;
       // force to reload value after dom update
       this.$nextTick(() => {
         this.mail_module = config.mail_module;
