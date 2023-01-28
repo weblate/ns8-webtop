@@ -59,7 +59,8 @@
     "LOCALE_hr_HR": "hr_HR",
     "LOCALE_hu_HU": "hu_HU",
     "LOCALE_fr_FR": "fr_FR",
-    "configuring": "Configuring"
+    "configuring": "Configuring",
+    "domain_already_used_in_traefik": "This domain is already used in traefik"
   },
   "about": {
     "title": "About"
