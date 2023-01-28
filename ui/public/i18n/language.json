@@ -40,8 +40,6 @@
     "webapp_debug": "Debug mode for WebTop",
     "min_webapp_memory":"Minimum memory for WebTop",
     "max_webapp_memory": "Maximum memory for WebTop",
-    "choose_min_webapp_memory_MB": "Must be less than maximum memory",
-    "choose_max_webapp_memory_MB": "Must be greater than minimum memory",
     "webdav_debug": "Debug mode for WebDAV",
     "select_webdav_loglevel": "WebDAV log level",
     "LOG_ALERT": "ALERT",
@@ -90,6 +88,7 @@
     "404": "Resource not found",
     "cannot_retrieve_module_info": "Cannot retrieve module info",
     "cannot_retrieve_installed_modules": "Cannot retrieve installed modules",
-    "cannot_retrieve_UI_options": "Cannot retrieve UI options"
+    "cannot_retrieve_UI_options": "Cannot retrieve UI options",
+    "choose_min_webapp_memory_MB": "Must be less than maximum memory"
   }
 }

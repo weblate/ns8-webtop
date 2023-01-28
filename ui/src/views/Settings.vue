@@ -131,24 +131,7 @@
                   <NsByteSlider
                     v-model="webapp.min_memory"
                     :label="$t('settings.min_webapp_memory')"
-                    min="512"
-                    :max="webapp.max_memory"
-                    step="1"
-                    stepMultiplier="1023"
-                    minLabel=""
-                    maxLabel=""
-                    :isUnlimited="false"
-                    :byteUnit="$t('settings.min_webapp_memory')"
-                    showHumanReadableLabel
-                    tagKind="high-contrast"
-                    :invalidMessage="error.limit"
-                    :disabled="loading.getConfiguration || loading.configureModule || loading.getDefaults"
-
-                  />
-                  <NsByteSlider
-                    v-model="webapp.max_memory"
-                    :label="$t('settings.min_webapp_memory')"
-                    :min="webapp.min_memory"
+                    min="256"
                     max="4096"
                     step="1"
                     stepMultiplier="1023"
@@ -158,7 +141,24 @@
                     :byteUnit="$t('settings.min_webapp_memory')"
                     showHumanReadableLabel
                     tagKind="high-contrast"
-                    :invalidMessage="error.limit"
+                    :invalidMessage="$t(error.limit_min)"
+                    :disabled="loading.getConfiguration || loading.configureModule || loading.getDefaults"
+                    ref="min_memory"
+                  />
+                  <NsByteSlider
+                    v-model="webapp.max_memory"
+                    :label="$t('settings.max_webapp_memory')"
+                    min="56"
+                    max="4096"
+                    step="1"
+                    stepMultiplier="1023"
+                    minLabel=""
+                    maxLabel=""
+                    :isUnlimited="false"
+                    :byteUnit="$t('settings.min_webapp_memory')"
+                    showHumanReadableLabel
+                    tagKind="high-contrast"
+                    :invalidMessage="$t(error.limit_max)"
                     :disabled="loading.getConfiguration || loading.configureModule || loading.getDefaults"
                   />
                   <cv-toggle
@@ -301,6 +301,8 @@ export default {
         mail_module: "",
         locale: "",
         timezone:"",
+        limit_min:"",
+        limit_max:"",
         webapp: {
           min_memory: "",
           max_memory: "",
@@ -459,6 +461,14 @@ export default {
 
         if (isValidationOk) {
           this.focusElement("mail_module");
+        }
+        isValidationOk = false;
+      }
+      if (parseInt(this.webapp.min_memory) > parseInt(this.webapp.max_memory)) {
+        this.error.limit_min = "error.choose_min_webapp_memory_MB";
+        this.webapp.min_memory = this.webapp.max_memory
+        if (isValidationOk) {
+          this.focusElement("min_memory");
         }
         isValidationOk = false;
       }
