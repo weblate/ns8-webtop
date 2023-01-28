@@ -29,7 +29,7 @@
               v-model.trim="hostname"
               class="mg-bottom"
               :invalid-message="$t(error.hostname)"
-              :disabled="loadingUi"
+              :disabled="loading.getConfiguration || loading.configureModule || loading.getDefaults"
               ref="hostname"
             >
             </cv-text-input>
@@ -37,7 +37,7 @@
               value="letsEncrypt"
               :label="$t('settings.request_https_certificate')"
               v-model="isLetsEncryptEnabled"
-              :disabled="loadingUi"
+              :disabled="loading.getConfiguration || loading.configureModule || loading.getDefaults"
               class="mg-bottom"
             >
               <template slot="text-left">{{
@@ -57,7 +57,7 @@
               :acceptUserInput="false"
               :showItemType="true"
               :invalid-message="$t(error.mail_module)"
-              :disabled="loadingUi"
+              :disabled="loading.getConfiguration || loading.configureModule || loading.getDefaults"
               tooltipAlignment="start"
               tooltipDirection="top"
               ref="mail_module"
@@ -70,17 +70,17 @@
             </NsComboBox>
             <cv-dropdown 
               :value="locale"
-              class="maxwidth"
               v-model="locale"
+              class="maxwidth"
               :up="false"
               :inline="false"
               :helper-text="$t('settings.default_locale_for_webtop_users')"
               :hide-selected="false"
               :invalid-message="$t(error.locale)"
               :label="$t('settings.select_locale')"
-              :disabled="loadingUi">
+              :disabled="loading.getConfiguration || loading.configureModule || loading.getDefaults">
               <cv-dropdown-item  value="it_IT">{{$t('settings.LOCALE_it_IT')}}</cv-dropdown-item>
-              <cv-dropdown-item  selected value="en_US">{{$t('settings.LOCALE_en_US')}}</cv-dropdown-item>
+              <cv-dropdown-item  value="en_US">{{$t('settings.LOCALE_en_US')}}</cv-dropdown-item>
               <cv-dropdown-item  value="de_DE">{{$t('settings.LOCALE_de_DE')}}</cv-dropdown-item>
               <cv-dropdown-item  value="es_ES">{{$t('settings.LOCALE_es_ES')}}</cv-dropdown-item>
               <cv-dropdown-item  value="hr_HR">{{$t('settings.LOCALE_hr_HR')}}</cv-dropdown-item>
@@ -98,12 +98,16 @@
               :acceptUserInput="false"
               :showItemType="true"
               :invalid-message="$t(error.accepted_timezone_list)"
-              :disabled="loadingUi"
+              :disabled="loading.getConfiguration || loading.configureModule || loading.getDefaults"
               tooltipAlignment="start"
               tooltipDirection="top"
               ref="accepted_timezone_list"
-              :helper-text="$t('settings.default_timezone_for_webtop_users')"
             >
+              <template slot="tooltip">
+              {{
+                $t("settings.default_timezone_for_webtop_users")
+              }}
+              </template>
             </NsComboBox>
             <!-- advanced options -->
             <cv-accordion ref="accordion" class="maxwidth mg-bottom">
@@ -114,7 +118,7 @@
                     value="webapp_debug"
                     :label="$t('settings.webapp_debug')"
                     v-model="webapp.debug"
-                    :disabled="loadingUi"
+                    :disabled="loading.getConfiguration || loading.configureModule || loading.getDefaults"
                     class="mg-bottom"
                   >
                     <template slot="text-left">{{
@@ -124,41 +128,44 @@
                       $t("settings.enabled")
                     }}</template>
                   </cv-toggle>
-                  <cv-number-input
+                  <NsByteSlider
+                    v-model="webapp.min_memory"
                     :label="$t('settings.min_webapp_memory')"
-                    :invalid-message="$t(error.webapp.min_memory)"
-                    :helper-text="$t('settings.choose_min_webapp_memory_MB')"
-                    :disabled="
-                      loadingUi
-                    "
-                    v-model.trim="webapp.min_memory"
-                    :min="512"
+                    min="512"
                     :max="webapp.max_memory"
-                    :step="1"
-                    :mobile="false"
-                    ref="min_memory"
-                    >
-                  </cv-number-input>
-                  <cv-number-input
-                    :label="$t('settings.max_webapp_memory')"
-                    :invalid-message="$t(error.webapp.max_memory)"
-                    :helper-text="$t('settings.choose_max_webapp_memory_MB')"
-                    :disabled="
-                      loadingUi
-                    "
-                    v-model.trim="webapp.max_memory"
+                    step="1"
+                    stepMultiplier="1023"
+                    minLabel=""
+                    maxLabel=""
+                    :isUnlimited="false"
+                    :byteUnit="$t('settings.min_webapp_memory')"
+                    showHumanReadableLabel
+                    tagKind="high-contrast"
+                    :invalidMessage="error.limit"
+                    :disabled="loading.getConfiguration || loading.configureModule || loading.getDefaults"
+
+                  />
+                  <NsByteSlider
+                    v-model="webapp.max_memory"
+                    :label="$t('settings.min_webapp_memory')"
                     :min="webapp.min_memory"
-                    :max="4096"
-                    :step="1"
-                    :mobile="false"
-                    ref="max_memory"
-                    >
-                  </cv-number-input>
+                    max="4096"
+                    step="1"
+                    stepMultiplier="1023"
+                    minLabel=""
+                    maxLabel=""
+                    :isUnlimited="false"
+                    :byteUnit="$t('settings.min_webapp_memory')"
+                    showHumanReadableLabel
+                    tagKind="high-contrast"
+                    :invalidMessage="error.limit"
+                    :disabled="loading.getConfiguration || loading.configureModule || loading.getDefaults"
+                  />
                   <cv-toggle
                     value="webdav_debug"
                     :label="$t('settings.webdav_debug')"
                     v-model="webdav.debug"
-                    :disabled="loadingUi"
+                    :disabled="loading.getConfiguration || loading.configureModule || loading.getDefaults"
                     class="mg-bottom"
                   >
                     <template slot="text-left">{{
@@ -177,7 +184,7 @@
                     :hide-selected="false"
                     :invalid-message="$t(error.webdav.loglevel)"
                     :label="$t('settings.select_webdav_loglevel')"
-                    :disabled="loadingUi">
+                    :disabled="loading.getConfiguration || loading.configureModule || loading.getDefaults">
                     <cv-dropdown-item value="ALERT">{{$t('settings.LOG_ALERT')}}</cv-dropdown-item>
                     <cv-dropdown-item value="CRITICAL">{{$t('settings.LOG_CRITICAL')}}</cv-dropdown-item>
                     <cv-dropdown-item value="DEBUG">{{$t('settings.LOG_DEBUG')}}</cv-dropdown-item>
@@ -196,7 +203,7 @@
                     :hide-selected="false"
                     :invalid-message="$t(error.zpush.loglevel)"
                     :label="$t('settings.select_zpush_loglevel')"
-                    :disabled="loadingUi">
+                    :disabled="loading.getConfiguration || loading.configureModule || loading.getDefaults">
                     <cv-dropdown-item  value="ALERT">{{$t('settings.LOG_ALERT')}}</cv-dropdown-item>
                     <cv-dropdown-item  value="CRITICAL">{{$t('settings.LOG_CRITICAL')}}</cv-dropdown-item>
                     <cv-dropdown-item  value="DEBUG">{{$t('settings.LOG_DEBUG')}}</cv-dropdown-item>
@@ -223,7 +230,7 @@
               kind="primary"
               :icon="Save20"
               :loading="loading.configureModule"
-              :disabled="loadingUi"
+              :disabled="loading.getConfiguration || loading.configureModule || loading.getDefaults"
               >{{ $t("settings.save") }}</NsButton
             >
           </cv-form>
@@ -267,11 +274,11 @@ export default {
       mail_module: "",
       mail_module_widget: [],
       accepted_timezone_list: [],
-      locale: "it_IT",
-      timezone: "Europe/Rome",
+      locale: "",
+      timezone: "",
       webapp: {
-        min_memory: 512,
-        max_memory: 1024,
+        min_memory: "512",
+        max_memory: "1024",
         debug: false
       },
       webdav: {
@@ -289,7 +296,6 @@ export default {
       error: {
         getConfiguration: "",
         configureModule: "",
-        getDefaults: "",
         hostname: "",
         request_https_certificate: "",
         mail_module: "",
@@ -312,16 +318,8 @@ export default {
   },
   computed: {
     ...mapState(["instanceName", "core", "appName"]),
-    loadingUi() {
-      return (
-        this.loading.getConfiguration ||
-        this.loading.getDefaults ||
-        this.loading.configureModule
-      );
-    },
   },
   created() {
-    this.getConfiguration();
     this.listWidgetOptions();
   },
   beforeRouteEnter(to, from, next) {
@@ -341,7 +339,7 @@ export default {
       const eventId = this.getUuid();
 
       // register to task error
-      this.core.$root.$once(
+     this.core.$root.$once(
         `${taskAction}-aborted-${eventId}`,
         this.listWidgetOptionsAborted
       );
@@ -380,6 +378,7 @@ export default {
       const config = taskResult.output;
       this.mail_module_widget = config.mail_module_widget;
       this.accepted_timezone_list = config.accepted_timezone_list;
+      this.getConfiguration();
       this.loading.getDefaults = false;
     },
     async getConfiguration() {
@@ -430,13 +429,15 @@ export default {
       this.isLetsEncryptEnabled = config.request_https_certificate;
       this.upload_max_filesize = config.upload_max_filesize;
       this.webapp = config.webapp;
+      this.webapp.min_memory = String(config.webapp.min_memory)
+      this.webapp.max_memory = String(config.webapp.max_memory)
       this.webdav = config.webdav;
       this.zpush = config.zpush;
       this.locale = config.locale;
       // force to reload value after dom update
       this.$nextTick(() => {
-        this.timezone = config.timezone;
         this.mail_module = config.mail_module;
+        this.timezone = config.timezone;
       });
       this.loading.getConfiguration = false;
       this.focusElement("hostname");
@@ -458,22 +459,6 @@ export default {
 
         if (isValidationOk) {
           this.focusElement("mail_module");
-        }
-        isValidationOk = false;
-      }
-      if (!this.webapp.min_memory) {
-        this.error.webapp.min_memory = "common.required";
-
-        if (isValidationOk) {
-          this.focusElement("webapp.min_memory");
-        }
-        isValidationOk = false;
-      }
-      if (!this.webapp.max_memory) {
-        this.error.webapp.max_memory = "common.required";
-
-        if (isValidationOk) {
-          this.focusElement("webapp.max_memory");
         }
         isValidationOk = false;
       }
