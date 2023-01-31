@@ -60,7 +60,7 @@
     "LOCALE_hu_HU": "hu_HU",
     "LOCALE_fr_FR": "fr_FR",
     "configuring": "Configuring",
-    "domain_already_used_in_traefik": "This domain is already used in traefik"
+    "domain_already_used_in_traefik": "This domain is already used in Traefik"
   },
   "about": {
     "title": "About"
@@ -89,7 +89,7 @@
     "404": "Resource not found",
     "cannot_retrieve_module_info": "Cannot retrieve module info",
     "cannot_retrieve_installed_modules": "Cannot retrieve installed modules",
-    "cannot_retrieve_UI_options": "Cannot retrieve UI options",
+    "cannot_retrieve_UI_options": "Cannot retrieve defaults",
     "choose_min_webapp_memory_MB": "Must be less than maximum memory"
   }
 }
