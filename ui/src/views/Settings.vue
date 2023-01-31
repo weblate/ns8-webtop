@@ -53,7 +53,7 @@
               :autoHighlight="true"
               :title="$t('settings.mail_server_fqdn')"
               :label="$t('settings.choose_mail_server')"
-              :options="mail_module_widget"
+              :options="mail_modules_id"
               :acceptUserInput="false"
               :showItemType="true"
               :invalid-message="$t(error.mail_module)"
@@ -272,7 +272,7 @@ export default {
       hostname: "",
       isLetsEncryptEnabled: false,
       mail_module: "",
-      mail_module_widget: [],
+      mail_modules_id: [],
       accepted_timezone_list: [],
       locale: "",
       timezone: "",
@@ -378,7 +378,7 @@ export default {
     },
     listWidgetOptionsCompleted(taskContext, taskResult) {
       const config = taskResult.output;
-      this.mail_module_widget = config.mail_module_widget;
+      this.mail_modules_id = config.mail_modules_id;
       this.accepted_timezone_list = config.accepted_timezone_list;
       this.getConfiguration();
       this.loading.getDefaults = false;

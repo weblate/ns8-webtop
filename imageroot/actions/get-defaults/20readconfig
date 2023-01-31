@@ -34,7 +34,7 @@ for value in accepted_timezone_list:
     })
 
 config={
-        "mail_module_widget": modules,
+        "mail_modules_id": modules,
         "accepted_timezone_list": list_of_timezone_widget
         }
 
