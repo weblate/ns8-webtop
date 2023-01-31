@@ -22,7 +22,14 @@
     <cv-row>
       <cv-column>
         <cv-tile light>
-          <cv-form @submit.prevent="configureModule">
+          <cv-skeleton-text
+            v-if="loading.getConfiguration|| loading.getDefaults"
+            heading
+            paragraph
+            :line-count="15"
+            width="80%"
+          ></cv-skeleton-text>
+          <cv-form v-else @submit.prevent="configureModule">
             <cv-text-input
               :label="$t('settings.webtop_fqdn')"
               placeholder="webtop.example.org"
