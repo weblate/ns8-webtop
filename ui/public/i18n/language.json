@@ -22,9 +22,45 @@
   },
   "settings": {
     "title": "Settings",
-    "configure_instance": "Configure {instance}",
+    "instance_configuration": "Configure {instance}",
     "save": "Save",
-    "test_filed": "Test field"
+    "webtop_fqdn": "WebTop virtual host (FQDN)",
+    "request_https_certificate": "Request a Let's Encrypt certificate",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "mail_server_fqdn" : "Mail server (FQDN)",
+    "choose_mail_server": "Choose a mail server in the list",
+    "choose_the_mail_server_to_use": "WebTop must be connected to a mail server in the cluster, please choose a valid mail server in the list",
+    "advanced": "Advanced",
+    "select_locale": "Default locale",
+    "default_locale_for_webtop_users": "Default locale for WebTop users",
+    "timezone":"Default timezone",
+    "default_timezone_for_webtop_users": "Default timezone for WebTop users",
+    "choose_timezone": "Choose the timezone for WebTop users",
+    "webapp_debug": "Debug mode for WebTop",
+    "min_webapp_memory":"Minimum memory for WebTop",
+    "max_webapp_memory": "Maximum memory for WebTop",
+    "webdav_debug": "Debug mode for WebDAV",
+    "select_webdav_loglevel": "WebDAV log level",
+    "LOG_ALERT": "ALERT",
+    "LOG_CRITICAL": "CRITICAL",
+    "LOG_DEBUG": "DEBUG",
+    "LOG_EMERGENCY": "EMERGENCY",
+    "LOG_ERROR": "ERROR",
+    "LOG_INFO": "INFO",
+    "LOG_NOTICE": "NOTICE",
+    "LOG_WARNING": "WARNING",
+    "select_zpush_loglevel": "Z-Push log level",
+    "debug_loglevel": "Debug level can affect the size of logs",
+    "LOCALE_it_IT": "it_IT",
+    "LOCALE_en_US": "en_US",
+    "LOCALE_de_DE": "de_DE",
+    "LOCALE_es_ES": "es_ES",
+    "LOCALE_hr_HR": "hr_HR",
+    "LOCALE_hu_HU": "hu_HU",
+    "LOCALE_fr_FR": "fr_FR",
+    "configuring": "Configuring",
+    "domain_already_used_in_traefik": "This domain is already used in Traefik"
   },
   "about": {
     "title": "About"
@@ -52,6 +88,8 @@
     "403": "Operation not authorized",
     "404": "Resource not found",
     "cannot_retrieve_module_info": "Cannot retrieve module info",
-    "cannot_retrieve_installed_modules": "Cannot retrieve installed modules"
+    "cannot_retrieve_installed_modules": "Cannot retrieve installed modules",
+    "cannot_retrieve_UI_options": "Cannot retrieve defaults",
+    "choose_min_webapp_memory_MB": "Must be less than maximum memory"
   }
 }

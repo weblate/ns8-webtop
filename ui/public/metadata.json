@@ -1,19 +1,19 @@
 {
-  "name": "webtop",
+  "name": "WebTop",
   "description": {
-    "en": "My webtop module"
+    "en": "WebTop is a full-featured groupware which implements ActiveSync protocol."
   },
-  "categories": [],
+  "categories": ["collaboration"],
   "authors": [
     {
-      "name": "Name Surname",
-      "email": "author@yourmail.org"
+      "name": "NethServer team",
+      "email": "nethserver@nethesis.it"
     }
   ],
   "docs": {
-    "documentation_url": "https://docs.webtop.com/",
+    "documentation_url": "http://www.sonicle.com/webtop-5/",
     "bug_url": "https://github.com/NethServer/dev",
-    "code_url": "https://github.com/author/ns8-webtop"
+    "code_url": "https://github.com/NethServer/ns8-webtop"
   },
   "source": "ghcr.io/nethserver/webtop"
 }
