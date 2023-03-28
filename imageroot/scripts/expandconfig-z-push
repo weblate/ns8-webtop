@@ -17,7 +17,7 @@ config={
         "timezone": f"{timezone}",
         "log": {
             "level": f"{log_level}",
-            "dir": "/var/log/z-push/"
+            "file": "php://stdout"
             },
         "mail": {
             "imapServer": f"{imap_server}"
