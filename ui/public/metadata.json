@@ -1,7 +1,8 @@
 {
   "name": "WebTop",
   "description": {
-    "en": "WebTop is a full-featured groupware which implements ActiveSync protocol."
+    "en": "WebTop is a full-featured groupware which implements ActiveSync and DAV protocol.",
+    "it": "WebTop è un groupware completo che implementa i protocolli ActiveSync e DAV."
   },
   "categories": ["collaboration"],
   "authors": [
