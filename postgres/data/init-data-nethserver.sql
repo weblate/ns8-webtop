@@ -155,3 +155,9 @@ INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.c
 -- ------------------------------
 INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'smtp.auth', 'true');
 INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'smtp.starttls', 'false');
+
+-- ------------------------------
+-- Set default Spam folder name
+-- ------------------------------
+DELETE FROM "core"."settings" WHERE service_id = 'com.sonicle.webtop.mail' and key = 'default.folder.spam';
+INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.mail', 'default.folder.spam', 'Junk');
