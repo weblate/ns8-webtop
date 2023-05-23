@@ -1,29 +1,24 @@
-#!/bin/bash
+#!/usr/bin/env python3
 
 #
-# Copyright (C) 2022 Nethesis S.r.l.
+# Copyright (C) 2023 Nethesis S.r.l.
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# Redirect any output to the journal (stderr)
 
-set -e
+import agent
+import os
 
-exec 1>&2
+restart_webapp = os.environ.get('RESTART_WEBAPP','')
+restart_webdav = os.environ.get('RESTART_WEBDAV','')
+restart_z_push = os.environ.get('RESTART_Z_PUSH','')
 
-if [ "$RESTART_WEBAPP" == "1" ]; then
-	systemctl --user restart webapp
-fi
+if restart_webapp == '1':
+    agent.run_helper('systemctl','--user','restart','webapp').check_returncode()
+if restart_webdav == '1':
+    agent.run_helper('systemctl','--user','restart','webdav').check_returncode()
+if restart_z_push == '1':
+    agent.run_helper('systemctl','--user','restart','z-push').check_returncode()
 
-if [ "$RESTART_WEBDAV" == "1" ]; then
-	systemctl --user restart webdav
-fi
-
-if [ "$RESTART_Z_PUSH" == "1" ]; then
-	systemctl --user restart z-push
-fi
-
-cat >&${AGENT_COMFD} <<EOF
-unset-env RESTART_WEBAPP
-unset-env RESTART_WEBDAV
-unset-env RESTART_Z_PUSH
-EOF
+agent.unset_env("RESTART_WEBAPP")
+agent.unset_env("RESTART_WEBDAV")
+agent.unset_env("RESTART_Z_PUSH")
