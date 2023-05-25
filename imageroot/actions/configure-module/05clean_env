@@ -1,17 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env python3
 
 #
-# Copyright (C) 2022 Nethesis S.r.l.
+# Copyright (C) 2023 Nethesis S.r.l.
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# Redirect any output to the journal (stderr)
 
-set -e
+import agent
 
-exec 1>&2
-
-cat >&${AGENT_COMFD} <<EOF
-unset-env RESTART_WEBAPP
-unset-env RESTART_WEBDAV
-unset-env RESTART_Z_PUSH
-EOF
+agent.unset_env("RESTART_WEBAPP")
+agent.unset_env("RESTART_WEBDAV")
+agent.unset_env("RESTART_Z_PUSH")
