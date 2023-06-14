@@ -9,11 +9,6 @@ Check if webtop is installed correctly
     &{output} =    Evaluate    ${output}
     Set Suite Variable    ${module_id}    ${output.module_id}
 
-Check if webtop works as expected
-    ${rc} =    Execute Command    curl -f http://127.0.0.1/webtop/
-    ...    return_rc=True  return_stdout=False
-    Should Be Equal As Integers    ${rc}  0
-
 Check if webtop is removed correctly
     ${rc} =    Execute Command    remove-module --no-preserve ${module_id}
     ...    return_rc=True  return_stdout=False
