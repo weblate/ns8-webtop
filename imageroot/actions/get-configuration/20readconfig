@@ -15,6 +15,7 @@ config={
         "locale": os.environ["WEBTOP_LOCALE"],
         "timezone": os.environ["WEBTOP_TIMEZONE"],
         "mail_module": os.getenv("MAIL_MODULE", ""),
+        "mail_domain": os.getenv("MAIL_DOMAIN", ""),
         "webapp": {
             "debug": os.environ["WEBAPP_JS_DEBUG"].lower() in ('true', '1', 't'),
             "min_memory": int(os.environ["WEBAPP_MIN_MEMORY"]),
