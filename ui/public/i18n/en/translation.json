@@ -30,7 +30,7 @@
     "disabled": "Disabled",
     "mail_server_fqdn" : "Mail server (FQDN)",
     "choose_mail_server": "Choose a mail server in the list",
-    "choose_the_mail_server_to_use": "WebTop must be connected to a mail server in the cluster, please choose a valid mail server in the list",
+    "choose_the_mail_server_to_use": "WebTop must be connected to a mail server in the cluster, please choose a valid mail server in the list with the mail domain of users you want to use. Once modified it is applied to users who have never logon to WebTop. For changing the mail domain for all users you must use the admin tools of WebTop",
     "advanced": "Advanced",
     "select_locale": "Default locale",
     "default_locale_for_webtop_users": "Default locale for WebTop users",
