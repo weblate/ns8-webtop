@@ -23,13 +23,13 @@
       <cv-column>
         <cv-tile light>
           <cv-skeleton-text
-            v-if="loading.getConfiguration || loading.getDefaults"
+            v-show="loading.getConfiguration || loading.getDefaults"
             heading
             paragraph
             :line-count="15"
             width="80%"
           ></cv-skeleton-text>
-          <cv-form v-else @submit.prevent="configureModule">
+          <cv-form v-show="!(loading.getConfiguration || loading.getDefaults)" @submit.prevent="configureModule">
             <cv-text-input
               :label="$t('settings.webtop_fqdn')"
               placeholder="webtop.example.org"
