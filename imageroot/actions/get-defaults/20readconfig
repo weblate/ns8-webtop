@@ -18,11 +18,16 @@ list_of_timezone_widget = []
 
 # we query about all mail server to use it inside the user interface
 for key in agent.list_service_providers(rdb,'imap','tcp'):
-    modules.append({
-        "name": key['module_id'],
-        "label": key['mail_hostname'],
-        "value": key['module_id'],
-    })
+    mail = key['module_id']
+    get_retval = agent.tasks.run(f"module/{mail}",'list-domains')
+    for kd in get_retval['output']:
+        if kd['addusers']:
+            obj = {
+                "name": key['module_id'],
+                "label": f"{kd['domain']} ({key['mail_hostname']})",
+                "value": key['module_id']+','+kd['domain'],
+            }
+            modules.append(obj)
 # we query about all known timezone and we build a widget
 accepted_timezone_list = subprocess.check_output(['podman', 'run', '--rm', os.environ["WEBTOP_WEBAPP_IMAGE"], 'java', '-classpath', '/usr/share/webtop/', 'ListTimeZones'], text=True).splitlines()
 

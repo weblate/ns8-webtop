@@ -23,13 +23,13 @@
       <cv-column>
         <cv-tile light>
           <cv-skeleton-text
-            v-if="loading.getConfiguration || loading.getDefaults"
+            v-show="loading.getConfiguration || loading.getDefaults"
             heading
             paragraph
             :line-count="15"
             width="80%"
           ></cv-skeleton-text>
-          <cv-form v-else @submit.prevent="configureModule">
+          <cv-form v-show="!(loading.getConfiguration || loading.getDefaults)" @submit.prevent="configureModule">
             <cv-text-input
               :label="$t('settings.webtop_fqdn')"
               placeholder="webtop.example.org"
@@ -372,6 +372,7 @@ export default {
       hostname: "",
       isLetsEncryptEnabled: false,
       mail_module: "",
+      mail_domain: "",
       mail_modules_id: [],
       accepted_timezone_list: [],
       locale: "",
@@ -423,6 +424,7 @@ export default {
   },
   created() {
     this.listWidgetOptions();
+    // this.getConfiguration();
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
@@ -540,7 +542,13 @@ export default {
       this.locale = config.locale;
       // force to reload value after dom update
       this.$nextTick(() => {
-        this.mail_module = config.mail_module;
+        const mail_module_tmp = config.mail_module;
+        const mail_domain_tmp = config.mail_domain;
+        if (mail_module_tmp && mail_domain_tmp) {
+          this.mail_module = mail_module_tmp + ',' + mail_domain_tmp;
+        } else {
+          this.mail_module = "";
+        }
         this.timezone = config.timezone;
       });
       this.loading.getConfiguration = false;
@@ -618,14 +626,17 @@ export default {
         `${taskAction}-completed-${eventId}`,
         this.configureModuleCompleted
       );
-
+      const tmparray = this.mail_module.split(',');
+      const mail_module_tmp = tmparray[0];
+      const mail_domain_tmp = tmparray[1];
       const res = await to(
         this.createModuleTaskForApp(this.instanceName, {
           action: taskAction,
           data: {
             hostname: this.hostname,
             request_https_certificate: this.isLetsEncryptEnabled,
-            mail_module: this.mail_module,
+            mail_module: mail_module_tmp,
+            mail_domain: mail_domain_tmp,
             locale: this.locale,
             timezone: this.timezone,
             webapp: {
