@@ -56,6 +56,14 @@
 		    "mail1"
 	    ]
         },
+        "mail_domain": {
+            "type": "string",
+            "title": "Mail domain of users",
+            "description": "Mail domain used by WebTop users for email",
+            "examples": [
+                "domain.com"
+            ]
+        },
         "webapp": {
             "type":"object",
             "title": "WebTop's Java webapp configuration",
