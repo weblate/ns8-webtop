@@ -121,6 +121,11 @@ buildah add ${container} ${PWD}/webtop5-build/webtop-eas-server-$webtop_version.
 buildah add ${container} ${PWD}/zfaker/src/ /usr/share/webtop/zfacker/
 buildah run ${container} sh -c "mv \$PHP_INI_DIR/php.ini-production \$PHP_INI_DIR/php.ini"
 buildah run ${container} sh -c "mkdir -p /var/log/z-push/state && chown www-data:www-data /var/log/z-push /var/log/z-push/state"
+buildah run ${container} sh -c "sed -i 's/pm.max_children = 5/pm.max_children = 50/' /usr/local/etc/php-fpm.d/www.conf"
+buildah run ${container} sh -c "sed -i 's/pm.start_servers = 2/pm.start_servers = 5/' /usr/local/etc/php-fpm.d/www.conf"
+buildah run ${container} sh -c "sed -i 's/pm.min_spare_servers = 1/pm.min_spare_servers = 5/' /usr/local/etc/php-fpm.d/www.conf"
+buildah run ${container} sh -c "sed -i 's/pm.max_spare_servers = 3/pm.max_spare_servers = 35/' /usr/local/etc/php-fpm.d/www.conf"
+buildah run ${container} sh -c "sed -i 's/;php_admin_value\[memory_limit\] = 32M/php_admin_value[memory_limit] = 512M/' /usr/local/etc/php-fpm.d/www.conf"
 buildah run ${container} sh -c "sed -i 's/9000/9001/' /usr/local/etc/php-fpm.d/zz-docker.conf"
 # Commit the image
 buildah commit --rm "${container}" "${repobase}/${reponame}"
