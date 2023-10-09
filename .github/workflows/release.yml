@@ -1,0 +1,27 @@
+name: Build Release RPM
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'WebTop Version'
+        required: true
+
+jobs:
+  update_create_pr:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get current stable version
+      id: get_version
+      run: echo "::set-output name=version::$(cat webtop5-build/VERSION)"
+    - name: Set new version
+      run: echo "wt-${{ github.event.inputs.version }}" > webtop5-build/VERSION
+    - name: Create/Update pull request
+      uses: peter-evans/create-pull-request@v3
+      with:
+        branch: ${{ steps.get_version.outputs.version }}-next
+        title: Update to upstream release wt-${{ github.event.inputs.version }}
+        body: ''
+        commit-message: Update to upstream release wt-${{ github.event.inputs.version }}
+        draft: false
+        token: ${{ secrets.webtop_pr }}
