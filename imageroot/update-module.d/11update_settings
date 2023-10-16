@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+
+#
+# Copyright (C) 2023 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+import sys
+import agent
+import subprocess
+
+with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-qU', 'postgres', 'webtop5'], stdout=sys.stderr, stdin=subprocess.PIPE, text=True) as psql:
+    print("DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.mail' AND key = 'acl.domainsuffix.policy.override';\n", file=psql.stdin)
+    print("INSERT INTO \"core\".\"settings\" (service_id, key, value) VALUES ('com.sonicle.webtop.mail', 'acl.domainsuffix.policy.override', 'strip');\n", file=psql.stdin)
+
+agent.assert_exp(psql.returncode == 0) # check the command is succesfull

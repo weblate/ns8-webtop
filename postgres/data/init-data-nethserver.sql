@@ -161,3 +161,8 @@ INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.c
 -- ------------------------------
 DELETE FROM "core"."settings" WHERE service_id = 'com.sonicle.webtop.mail' and key = 'default.folder.spam';
 INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.mail', 'default.folder.spam', 'Junk');
+
+-- -----------------------------------------
+-- Strip domain suffix when applying IMAP ACL
+-- -----------------------------------------
+INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.mail', 'acl.domainsuffix.policy.override', 'strip');
