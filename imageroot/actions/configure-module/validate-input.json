@@ -48,6 +48,14 @@
 		    "Etc/UTC"
 	    ]
 	},
+    "ejabberd_module": {
+            "type": "string",
+        "title": "Ejabberd module ID",
+        "description": "Ejabberd module used by WebTop for xmpp",
+        "examples": [
+            "ejabberd1"
+        ]
+    },
 	"mail_module": {
             "type": "string",
 	    "title": "Mail module ID",
