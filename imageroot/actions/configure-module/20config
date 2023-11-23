@@ -185,17 +185,25 @@ if "timezone" in data and data["timezone"] != os.environ["WEBTOP_TIMEZONE"]:
     agent.set_env("RESTART_WEBDAV", "1")
     agent.set_env("RESTART_Z_PUSH", "1")
 
-# adjust the ejabberd host
+# adjust the ejabberd module
 if "ejabberd_module" in data and data["ejabberd_module"] != os.environ["EJABBERD_MODULE"]:
     ejabberd_module = data["ejabberd_module"]
     agent.set_env("EJABBERD_MODULE", ejabberd_module)
     # Save the ejabberd module UUID to automatically re-configure the module if it is
     # already available:
-    ejabberd_uuid = rdb.hget(f"module/{ejabberd_module}/srv/tcp/xmpp", "module_uuid") or ""
+    if ejabberd_module != "":
+        ejabberd_uuid = rdb.hget(f"module/{ejabberd_module}/srv/tcp/xmpp", "module_uuid") or ""
+        # retrieve the ejabberd host and port
+        ejabberd_host = rdb.hget(f"module/{ejabberd_module}/srv/tcp/xmpp", "host") or ""
+        ejabberd_port = rdb.hget(f"module/{ejabberd_module}/srv/tcp/xmpp", "port") or ""
+    else:
+        # if ejabberd module is empty, we set the default values
+        # we do not want to use the chat module
+        ejabberd_uuid = ""
+        ejabberd_host = "localhost"
+        ejabberd_port = "5222"
+
     agent.set_env("EJABBERD_MODULE_UUID", ejabberd_uuid)
-    # retrieve the ejabberd host and port
-    ejabberd_host = rdb.hget(f"module/{ejabberd_module}/srv/tcp/xmpp", "host") or ""
-    ejabberd_port = rdb.hget(f"module/{ejabberd_module}/srv/tcp/xmpp", "port") or ""
 
     with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdout=sys.stderr, stdin=subprocess.PIPE, text=True) as psql:
             print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'xmpp.host';\n", file=psql.stdin)
