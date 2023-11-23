@@ -60,7 +60,11 @@
     "LOCALE_hu_HU": "hu_HU",
     "LOCALE_fr_FR": "fr_FR",
     "configuring": "Configuring",
-    "domain_already_used_in_traefik": "This domain is already used in Traefik"
+    "domain_already_used_in_traefik": "This domain is already used in Traefik",
+    "ejabberd_server": "Ejabberd/Chat server",
+    "choose_ejabberd_server": "Choose an Ejabberd/Chat server in the list",
+    "choose_the_ejabberd_server_to_use": "Refer to WebTop documentation to enable the Chat integration",
+    "no_ejabberd_server": "No Ejabberd/Chat server"
   },
   "about": {
     "title": "About"
