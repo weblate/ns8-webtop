@@ -85,6 +85,30 @@
                 {{ $t("settings.choose_the_mail_server_to_use") }}
               </template>
             </NsComboBox>
+            <NsComboBox
+              v-if="ejabberd_modules_id.length > 1"
+              v-model.trim="ejabberd_module"
+              :autoFilter="true"
+              :autoHighlight="true"
+              :title="$t('settings.ejabberd_server')"
+              :label="$t('settings.choose_ejabberd_server')"
+              :options="ejabberd_modules_id"
+              :acceptUserInput="false"
+              :showItemType="true"
+              :invalid-message="$t(error.ejabberd_module)"
+              :disabled="
+                loading.getConfiguration ||
+                loading.configureModule ||
+                loading.getDefaults
+              "
+              tooltipAlignment="start"
+              tooltipDirection="top"
+              ref="ejabberd_module"
+            >
+              <template slot="tooltip">
+                {{ $t("settings.choose_the_mail_server_to_use") }}
+              </template>
+            </NsComboBox>
             <cv-dropdown
               :value="locale"
               v-model="locale"
@@ -374,6 +398,8 @@ export default {
       mail_module: "",
       mail_domain: "",
       mail_modules_id: [],
+      ejabberd_module: "",
+      ejabberd_modules_id: [],
       accepted_timezone_list: [],
       locale: "",
       timezone: "",
@@ -400,6 +426,7 @@ export default {
         hostname: "",
         request_https_certificate: "",
         mail_module: "",
+        ejabberd_module: "",
         locale: "",
         timezone: "",
         limit_min: "",
@@ -483,6 +510,12 @@ export default {
     listWidgetOptionsCompleted(taskContext, taskResult) {
       const config = taskResult.output;
       this.mail_modules_id = config.mail_modules_id;
+      this.ejabberd_modules_id = config.ejabberd_modules_id;
+      this.ejabberd_modules_id.unshift({
+        name: "-",
+        label: this.$t("settings.no_ejabberd_server"),
+        value: "",
+      });
       this.accepted_timezone_list = config.accepted_timezone_list;
       this.getConfiguration();
       this.loading.getDefaults = false;
@@ -549,6 +582,7 @@ export default {
         } else {
           this.mail_module = "";
         }
+        this.ejabberd_module = config.ejabberd_module;
         this.timezone = config.timezone;
       });
       this.loading.getConfiguration = false;
@@ -637,6 +671,7 @@ export default {
             request_https_certificate: this.isLetsEncryptEnabled,
             mail_module: mail_module_tmp,
             mail_domain: mail_domain_tmp,
+            ejabberd_module: this.ejabberd_module,
             locale: this.locale,
             timezone: this.timezone,
             webapp: {
