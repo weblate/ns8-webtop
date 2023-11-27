@@ -106,7 +106,7 @@
               ref="ejabberd_module"
             >
               <template slot="tooltip">
-                {{ $t("settings.choose_the_mail_server_to_use") }}
+                {{ $t("settings.choose_the_ejabberd_server_to_use") }}
               </template>
             </NsComboBox>
             <cv-dropdown
