@@ -186,7 +186,7 @@ if "timezone" in data and data["timezone"] != os.environ["WEBTOP_TIMEZONE"]:
     agent.set_env("RESTART_Z_PUSH", "1")
 
 # adjust the ejabberd module
-if "ejabberd_module" in data and data["ejabberd_module"] != os.environ["EJABBERD_MODULE"]:
+if "ejabberd_module" in data and data["ejabberd_module"] != os.getenv("EJABBERD_MODULE",""):
     ejabberd_module = data["ejabberd_module"]
     agent.set_env("EJABBERD_MODULE", ejabberd_module)
     # Save the ejabberd module UUID to automatically re-configure the module if it is
