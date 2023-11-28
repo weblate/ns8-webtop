@@ -185,34 +185,38 @@ if "timezone" in data and data["timezone"] != os.environ["WEBTOP_TIMEZONE"]:
     agent.set_env("RESTART_WEBDAV", "1")
     agent.set_env("RESTART_Z_PUSH", "1")
 
-# adjust the ejabberd module
-if "ejabberd_module" in data and data["ejabberd_module"] != os.getenv("EJABBERD_MODULE",""):
-    ejabberd_module = data["ejabberd_module"]
-    agent.set_env("EJABBERD_MODULE", ejabberd_module)
-    # Save the ejabberd module UUID to automatically re-configure the module if it is
-    # already available:
-    if ejabberd_module != "":
-        ejabberd_uuid = rdb.hget(f"module/{ejabberd_module}/srv/tcp/xmpp", "module_uuid") or ""
-        # retrieve the ejabberd host and port
-        ejabberd_host = rdb.hget(f"module/{ejabberd_module}/srv/tcp/xmpp", "host") or ""
-        ejabberd_port = rdb.hget(f"module/{ejabberd_module}/srv/tcp/xmpp", "port") or ""
-    else:
-        # if ejabberd module is empty, we set the default values
-        # we do not want to use the chat module
-        ejabberd_uuid = ""
-        ejabberd_host = "localhost"
-        ejabberd_port = "5222"
+# adjust the ejabberd module, when we disabled globally the chat module we use '-' as ejabberd module (needed by NSCombobox)
+if "ejabberd_module" in data and data["ejabberd_module"] != '-' and "ejabberd_domain" in data:
+    if data["ejabberd_module"] != os.getenv("EJABBERD_MODULE","") and data["ejabberd_domain"] != os.getenv("EJABBERD_DOMAIN",""):
+        ejabberd_module = data["ejabberd_module"]
+        ejabberd_domain = data["ejabberd_domain"]
+        # Save the ejabberd module UUID to automatically re-configure the module if it is
+        # already available:
+        if ejabberd_module != "":
+            ejabberd_uuid = rdb.hget(f"module/{ejabberd_module}/srv/tcp/xmpp", "module_uuid") or ""
+            # retrieve the ejabberd host and port
+            ejabberd_host = rdb.hget(f"module/{ejabberd_module}/srv/tcp/xmpp", "host") or ""
+            ejabberd_port = rdb.hget(f"module/{ejabberd_module}/srv/tcp/xmpp", "port") or ""
+        else:
+            # if ejabberd module is empty, we set the default values
+            # we do not want to use the chat module
+            ejabberd_uuid = ""
+            ejabberd_host = "localhost"
+            ejabberd_port = "5222"
 
-    agent.set_env("EJABBERD_MODULE_UUID", ejabberd_uuid)
+        with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdout=sys.stderr, stdin=subprocess.PIPE, text=True) as psql:
+                print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'xmpp.host';\n", file=psql.stdin)
+                print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'xmpp.port';\n", file=psql.stdin)
+                print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'xmpp.host', '" + ejabberd_host + "');\n", file=psql.stdin)
+                print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'xmpp.port', '" + ejabberd_port + "');\n", file=psql.stdin)
 
-    with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-U', 'postgres', 'webtop5'], stdout=sys.stderr, stdin=subprocess.PIPE, text=True) as psql:
-            print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'xmpp.host';\n", file=psql.stdin)
-            print("DELETE FROM core.settings WHERE service_id = 'com.sonicle.webtop.core' and key = 'xmpp.port';\n", file=psql.stdin)
-            print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'xmpp.host', '" + ejabberd_host + "');\n", file=psql.stdin)
-            print("INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'xmpp.port', '" + ejabberd_port + "');\n", file=psql.stdin)
+        agent.assert_exp(psql.returncode == 0) # check the command is succesfull
 
-    agent.assert_exp(psql.returncode == 0) # check the command is succesfull
-    agent.set_env("RESTART_WEBAPP", "1")
+        # we set the env variable to configure the module
+        agent.set_env("EJABBERD_MODULE", ejabberd_module)
+        agent.set_env("EJABBERD_DOMAIN", ejabberd_domain)
+        agent.set_env("EJABBERD_MODULE_UUID", ejabberd_uuid)
+        agent.set_env("RESTART_WEBAPP", "1")
 
 if "mail_module" in data and "mail_domain" in data:
     if data["mail_module"] != os.getenv("MAIL_MODULE") or data["mail_domain"] != os.getenv("MAIL_DOMAIN"):
