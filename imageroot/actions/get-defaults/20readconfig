@@ -44,7 +44,7 @@ for key in agent.list_service_providers(rdb,'xmpp','tcp'):
     obj = {
         "name": key['module_id'],
         "label": f"{key['ejabberd_hostname']} (node: {key['node']})",
-        "value": key['module_id']
+        "value": key['module_id']+','+key['ejabberd_hostname']
     }
     ejabberd.append(obj)
 
