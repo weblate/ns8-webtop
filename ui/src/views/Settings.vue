@@ -608,6 +608,14 @@ export default {
         }
         isValidationOk = false;
       }
+      if (!this.ejabberd_module) {
+        this.error.ejabberd_module = "common.required";
+
+        if (isValidationOk) {
+          this.focusElement("ejabberd_module");
+        }
+        isValidationOk = false;
+      }
       if (parseInt(this.webapp.min_memory) > parseInt(this.webapp.max_memory)) {
         this.error.limit_min = "error.choose_min_webapp_memory_MB";
         this.webapp.min_memory = this.webapp.max_memory;
