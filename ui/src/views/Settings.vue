@@ -99,7 +99,8 @@
               :disabled="
                 loading.getConfiguration ||
                 loading.configureModule ||
-                loading.getDefaults
+                loading.getDefaults ||
+                ! mail_module
               "
               tooltipAlignment="start"
               tooltipDirection="top"
@@ -399,6 +400,7 @@ export default {
       mail_domain: "",
       mail_modules_id: [],
       ejabberd_module: "",
+      ejabberd_domain: "",
       ejabberd_modules_id: [],
       accepted_timezone_list: [],
       locale: "",
@@ -510,11 +512,19 @@ export default {
     listWidgetOptionsCompleted(taskContext, taskResult) {
       const config = taskResult.output;
       this.mail_modules_id = config.mail_modules_id;
-      this.ejabberd_modules_id = config.ejabberd_modules_id;
+      // Extract hostnames from mail_module_id values
+      const mailHostnames = config.mail_modules_id.map(item => item.value.split(',')[1]);
+
+      // Filter ejabberd_module_id based on matching hostnames
+       this.ejabberd_modules_id = config.ejabberd_modules_id.filter(item => {
+          const ejabberdHostname = item.value.split(',')[1];
+          return mailHostnames.includes(ejabberdHostname);
+      });
+
       this.ejabberd_modules_id.unshift({
         name: "-",
         label: this.$t("settings.no_ejabberd_server"),
-        value: "",
+        value: "-",
       });
       this.accepted_timezone_list = config.accepted_timezone_list;
       this.getConfiguration();
@@ -582,7 +592,13 @@ export default {
         } else {
           this.mail_module = "";
         }
-        this.ejabberd_module = config.ejabberd_module;
+        const ejabberd_module_tmp = config.ejabberd_module;
+        const ejabberd_domain_tmp = config.ejabberd_domain;
+        if (ejabberd_module_tmp && ejabberd_domain_tmp) {
+          this.ejabberd_module = ejabberd_module_tmp + ',' + ejabberd_domain_tmp;
+        } else {
+          this.ejabberd_module = "-";
+        }
         this.timezone = config.timezone;
       });
       this.loading.getConfiguration = false;
@@ -608,14 +624,7 @@ export default {
         }
         isValidationOk = false;
       }
-      if (!this.ejabberd_module) {
-        this.error.ejabberd_module = "common.required";
 
-        if (isValidationOk) {
-          this.focusElement("ejabberd_module");
-        }
-        isValidationOk = false;
-      }
       if (parseInt(this.webapp.min_memory) > parseInt(this.webapp.max_memory)) {
         this.error.limit_min = "error.choose_min_webapp_memory_MB";
         this.webapp.min_memory = this.webapp.max_memory;
@@ -671,6 +680,9 @@ export default {
       const tmparray = this.mail_module.split(',');
       const mail_module_tmp = tmparray[0];
       const mail_domain_tmp = tmparray[1];
+      const tmp_ejabberd = this.ejabberd_module.split(',');
+      const ejabberd_module_tmp = tmp_ejabberd[0] || "";
+      const ejabberd_domain_tmp = tmp_ejabberd[1] || "";
       const res = await to(
         this.createModuleTaskForApp(this.instanceName, {
           action: taskAction,
@@ -679,7 +691,8 @@ export default {
             request_https_certificate: this.isLetsEncryptEnabled,
             mail_module: mail_module_tmp,
             mail_domain: mail_domain_tmp,
-            ejabberd_module: this.ejabberd_module,
+            ejabberd_module: ejabberd_module_tmp,
+            ejabberd_domain: ejabberd_domain_tmp,
             locale: this.locale,
             timezone: this.timezone,
             webapp: {
