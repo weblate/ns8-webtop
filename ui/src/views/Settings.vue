@@ -681,7 +681,7 @@ export default {
       const mail_module_tmp = tmparray[0];
       const mail_domain_tmp = tmparray[1];
       const tmp_ejabberd = this.ejabberd_module.split(',');
-      const ejabberd_module_tmp = tmp_ejabberd[0] || "";
+      const ejabberd_module_tmp = tmp_ejabberd[0] !== '-' ? tmp_ejabberd[0] || "" : "";
       const ejabberd_domain_tmp = tmp_ejabberd[1] || "";
       const res = await to(
         this.createModuleTaskForApp(this.instanceName, {

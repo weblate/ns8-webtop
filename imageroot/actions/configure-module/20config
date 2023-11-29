@@ -185,8 +185,8 @@ if "timezone" in data and data["timezone"] != os.environ["WEBTOP_TIMEZONE"]:
     agent.set_env("RESTART_WEBDAV", "1")
     agent.set_env("RESTART_Z_PUSH", "1")
 
-# adjust the ejabberd module, when we disabled globally the chat module we use '-' as ejabberd module (needed by NSCombobox)
-if "ejabberd_module" in data and data["ejabberd_module"] != '-' and "ejabberd_domain" in data:
+# adjust the ejabberd module, when we disabled globally the chat module we use ''
+if "ejabberd_module" in data and "ejabberd_domain" in data:
     if data["ejabberd_module"] != os.getenv("EJABBERD_MODULE","") and data["ejabberd_domain"] != os.getenv("EJABBERD_DOMAIN",""):
         ejabberd_module = data["ejabberd_module"]
         ejabberd_domain = data["ejabberd_domain"]
