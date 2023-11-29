@@ -85,6 +85,31 @@
                 {{ $t("settings.choose_the_mail_server_to_use") }}
               </template>
             </NsComboBox>
+            <NsComboBox
+              v-if="ejabberd_modules_id.length > 1"
+              v-model.trim="ejabberd_module"
+              :autoFilter="true"
+              :autoHighlight="true"
+              :title="$t('settings.ejabberd_server')"
+              :label="$t('settings.choose_ejabberd_server')"
+              :options="ejabberd_modules_id"
+              :acceptUserInput="false"
+              :showItemType="true"
+              :invalid-message="$t(error.ejabberd_module)"
+              :disabled="
+                loading.getConfiguration ||
+                loading.configureModule ||
+                loading.getDefaults ||
+                ! mail_module
+              "
+              tooltipAlignment="start"
+              tooltipDirection="top"
+              ref="ejabberd_module"
+            >
+              <template slot="tooltip">
+                {{ $t("settings.choose_the_ejabberd_server_to_use") }}
+              </template>
+            </NsComboBox>
             <cv-dropdown
               :value="locale"
               v-model="locale"
@@ -374,6 +399,9 @@ export default {
       mail_module: "",
       mail_domain: "",
       mail_modules_id: [],
+      ejabberd_module: "",
+      ejabberd_domain: "",
+      ejabberd_modules_id: [],
       accepted_timezone_list: [],
       locale: "",
       timezone: "",
@@ -400,6 +428,7 @@ export default {
         hostname: "",
         request_https_certificate: "",
         mail_module: "",
+        ejabberd_module: "",
         locale: "",
         timezone: "",
         limit_min: "",
@@ -483,6 +512,20 @@ export default {
     listWidgetOptionsCompleted(taskContext, taskResult) {
       const config = taskResult.output;
       this.mail_modules_id = config.mail_modules_id;
+      // Extract hostnames from mail_module_id values
+      const mailHostnames = config.mail_modules_id.map(item => item.value.split(',')[1]);
+
+      // Filter ejabberd_module_id based on matching hostnames
+       this.ejabberd_modules_id = config.ejabberd_modules_id.filter(item => {
+          const ejabberdHostname = item.value.split(',')[1];
+          return mailHostnames.includes(ejabberdHostname);
+      });
+
+      this.ejabberd_modules_id.unshift({
+        name: "-",
+        label: this.$t("settings.no_ejabberd_server"),
+        value: "-",
+      });
       this.accepted_timezone_list = config.accepted_timezone_list;
       this.getConfiguration();
       this.loading.getDefaults = false;
@@ -549,6 +592,13 @@ export default {
         } else {
           this.mail_module = "";
         }
+        const ejabberd_module_tmp = config.ejabberd_module;
+        const ejabberd_domain_tmp = config.ejabberd_domain;
+        if (ejabberd_module_tmp && ejabberd_domain_tmp) {
+          this.ejabberd_module = ejabberd_module_tmp + ',' + ejabberd_domain_tmp;
+        } else {
+          this.ejabberd_module = "-";
+        }
         this.timezone = config.timezone;
       });
       this.loading.getConfiguration = false;
@@ -574,6 +624,7 @@ export default {
         }
         isValidationOk = false;
       }
+
       if (parseInt(this.webapp.min_memory) > parseInt(this.webapp.max_memory)) {
         this.error.limit_min = "error.choose_min_webapp_memory_MB";
         this.webapp.min_memory = this.webapp.max_memory;
@@ -629,6 +680,9 @@ export default {
       const tmparray = this.mail_module.split(',');
       const mail_module_tmp = tmparray[0];
       const mail_domain_tmp = tmparray[1];
+      const tmp_ejabberd = this.ejabberd_module.split(',');
+      const ejabberd_module_tmp = tmp_ejabberd[0] !== '-' ? tmp_ejabberd[0] || "" : "";
+      const ejabberd_domain_tmp = tmp_ejabberd[1] || "";
       const res = await to(
         this.createModuleTaskForApp(this.instanceName, {
           action: taskAction,
@@ -637,6 +691,8 @@ export default {
             request_https_certificate: this.isLetsEncryptEnabled,
             mail_module: mail_module_tmp,
             mail_domain: mail_domain_tmp,
+            ejabberd_module: ejabberd_module_tmp,
+            ejabberd_domain: ejabberd_domain_tmp,
             locale: this.locale,
             timezone: this.timezone,
             webapp: {

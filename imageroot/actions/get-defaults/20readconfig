@@ -15,6 +15,7 @@ rdb = agent.redis_connect() # full read-only access on every key
 modules=[]
 accepted_timezone_list = []
 list_of_timezone_widget = []
+ejabberd = []
 
 # we query about all mail server to use it inside the user interface
 for key in agent.list_service_providers(rdb,'imap','tcp'):
@@ -38,8 +39,18 @@ for value in accepted_timezone_list:
         "value": value,
     })
 
+# Retrieve all ejabberd servers among the cluster
+for key in agent.list_service_providers(rdb,'xmpp','tcp'):
+    obj = {
+        "name": key['module_id'],
+        "label": f"{key['ejabberd_hostname']} (node: {key['node']})",
+        "value": key['module_id']+','+key['ejabberd_hostname']
+    }
+    ejabberd.append(obj)
+
 config={
         "mail_modules_id": modules,
+        "ejabberd_modules_id": ejabberd,
         "accepted_timezone_list": list_of_timezone_widget
         }
 
