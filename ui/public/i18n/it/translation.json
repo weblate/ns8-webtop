@@ -60,7 +60,11 @@
         "LOG_EMERGENCY": "EMERGENCY",
         "LOG_NOTICE": "NOTICE",
         "domain_already_used_in_traefik": "Questo dominio è già utilizzato in Traefik",
-        "advanced": "Avanzate"
+        "advanced": "Avanzate",
+        "ejabberd_server": "Ejabberd/Chat server",
+        "choose_the_ejabberd_server_to_use": "Refer to WebTop documentation to enable the Chat integration, the WebTop mail domain must match the Ejabberd domain",
+        "choose_ejabberd_server": "Choose an Ejabberd/Chat server in the list",
+        "no_ejabberd_server": "No Ejabberd/Chat server"
     },
     "action": {
         "get-name": "Visualizza nome",
