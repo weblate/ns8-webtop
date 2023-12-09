@@ -43,7 +43,7 @@
         "ejabberd_server": "Ejabberd/Servidor de chat",
         "choose_the_ejabberd_server_to_use": "Consulta la documentación de WebTop para habilitar la integración del Chat. El dominio del correo de WebTop debe coincidir con el dominio de Ejabberd",
         "choose_ejabberd_server": "Elige un Ejabberd/Servidor de chat de la lista",
-        "no_ejabberd_server": "No Ejabberd/Chat server"
+        "no_ejabberd_server": "Ningún servidor Ejabberd/Chat"
     },
     "error": {
         "403": "Operación no autorizada",
