@@ -41,7 +41,7 @@
         "LOG_CRITICAL": "CRÍTICO",
         "select_locale": "Configuración regional por defecto",
         "ejabberd_server": "Ejabberd/Servidor de chat",
-        "choose_the_ejabberd_server_to_use": "Consulte la documentación de WebTop para habilitar la integración del Chat. El dominio del correo de WebTop debe coincidir con el dominio de Ejabberd.",
+        "choose_the_ejabberd_server_to_use": "Consulta la documentación de WebTop para habilitar la integración del Chat. El dominio del correo de WebTop debe coincidir con el dominio de Ejabberd",
         "choose_ejabberd_server": "Elige un Ejabberd/Servidor de chat de la lista",
         "no_ejabberd_server": "No Ejabberd/Chat server"
     },
@@ -84,10 +84,10 @@
         "title": "Acerca de"
     },
     "action": {
-        "list-backup-repositories": "Lista de repositorios de la copia de seguridad",
+        "list-backup-repositories": "Mostrar repositorios de la copia de seguridad",
         "get-module-info": "Obtener información del módulo",
         "list-installed-modules": "Lista de módulos instalados",
-        "list-backups": "Lista de las copias de seguridad",
+        "list-backups": "Mostrar las copias de seguridad",
         "get-status": "Obtener el estado",
         "configure-module": "Configurar módulo",
         "get-configuration": "Obtener la configuración",
