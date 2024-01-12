@@ -430,7 +430,7 @@ export default {
         mail_module: "",
         ejabberd_module: "",
         locale: "",
-        timezone: "",
+        accepted_timezone_list: "",
         limit_min: "",
         limit_max: "",
         webapp: {
@@ -599,7 +599,7 @@ export default {
         } else {
           this.ejabberd_module = "-";
         }
-        this.timezone = config.timezone;
+        this.timezone = config.timezone === '-' ? '' : config.timezone;
       });
       this.loading.getConfiguration = false;
       this.focusElement("hostname");
@@ -621,6 +621,14 @@ export default {
 
         if (isValidationOk) {
           this.focusElement("mail_module");
+        }
+        isValidationOk = false;
+      }
+      if (!this.timezone) {
+        this.error.accepted_timezone_list = "common.required";
+
+        if (isValidationOk) {
+          this.focusElement("accepted_timezone_list");
         }
         isValidationOk = false;
       }
