@@ -7,7 +7,7 @@
 
 import agent
 
-agent.set_env('WEBTOP_TIMEZONE', 'Etc/UTC')
+agent.set_env('WEBTOP_TIMEZONE', '-')
 agent.set_env('WEBTOP_LOCALE', 'en_US')
 agent.set_env('WEBTOP_REQUEST_HTTPS_CERTIFICATE', 'False')
 agent.set_env('WEBDAV_DEBUG', 'False')
