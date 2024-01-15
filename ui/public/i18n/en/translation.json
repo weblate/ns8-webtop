@@ -36,7 +36,7 @@
     "default_locale_for_webtop_users": "Default locale for WebTop users",
     "timezone":"Default timezone",
     "default_timezone_for_webtop_users": "Default timezone for WebTop users",
-    "choose_timezone": "Choose the timezone for WebTop users",
+    "choose_timezone": "Start to type the timezone name, e.g. Europe/Rome",
     "webapp_debug": "Debug mode for WebTop",
     "min_webapp_memory":"Minimum memory for WebTop",
     "max_webapp_memory": "Maximum memory for WebTop",
