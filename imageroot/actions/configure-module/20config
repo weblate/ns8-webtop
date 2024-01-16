@@ -262,7 +262,8 @@ if "mail_module" in data and "mail_domain" in data:
         user_domain = agent.ldapproxy.Ldapproxy().get_domain(user_domain_name) or {}
 
         domain_setup(mail_domain, user_domain)
-
+        # Bind the new domain, overriding previous values (unbind)
+        agent.bind_user_domains([user_domain_name])
         agent.set_env("MAIL_MODULE", mail_module)
         agent.set_env("MAIL_DOMAIN", mail_domain)
         agent.set_env("RESTART_WEBAPP", "1")
