@@ -15,7 +15,7 @@ def configure_module(mail_module, penv):
         "locale": penv['WEBTOP_LOCALE'],
         "timezone": penv['WEBTOP_TIMEZONE'],
         "mail_module": mail_module,
-        "ejabberd_module": penv['EJABBERD_MODULE'],
+        "ejabberd_module": os.getenv('EJABBERD_MODULE',''),
         "webapp": {
             "debug": penv['WEBAPP_JS_DEBUG'] == 'True',
             "min_memory": int(penv['WEBAPP_MIN_MEMORY']),
