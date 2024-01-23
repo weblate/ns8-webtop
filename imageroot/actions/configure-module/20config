@@ -259,11 +259,10 @@ if "mail_module" in data and "mail_domain" in data:
         agent.assert_exp(psql.returncode == 0) # check the command is succesfull
 
         user_domain_name = rdb.hget(f"module/{mail_module}/srv/tcp/imap", "user_domain") or ""
-        user_domain = agent.ldapproxy.Ldapproxy().get_domain(user_domain_name) or {}
-
-        domain_setup(mail_domain, user_domain)
         # Bind the new domain, overriding previous values (unbind)
         agent.bind_user_domains([user_domain_name])
+        user_domain = agent.ldapproxy.Ldapproxy().get_domain(user_domain_name) or {}
+        domain_setup(mail_domain, user_domain)
         agent.set_env("MAIL_MODULE", mail_module)
         agent.set_env("MAIL_DOMAIN", mail_domain)
         agent.set_env("RESTART_WEBAPP", "1")
@@ -274,6 +273,7 @@ if "MAIL_MODULE" in os.environ and ("mail_module" not in data or data["mail_modu
     user_domain = agent.ldapproxy.Ldapproxy().get_domain(user_domain_name) or {}
 
     if user_domain["port"] != os.environ["USER_DOMAIN_PORT"]:
+        agent.bind_user_domains([user_domain_name])
         domain_setup(user_domain_name, user_domain)
         agent.set_env("RESTART_WEBAPP", "1")
 
