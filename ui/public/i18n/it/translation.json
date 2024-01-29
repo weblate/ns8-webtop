@@ -14,7 +14,7 @@
         "services": "Servizio | Servizi",
         "size": "Dimensione",
         "no_images": "Nessuna immagine",
-        "installation_node": "Nodo",
+        "installation_node": "Nodo di installazione",
         "app_images": "Immagine app|Immagini app",
         "app_instance": "Istanza app",
         "name": "Nome",
@@ -73,7 +73,7 @@
         "list-backups": "Elenca backup",
         "get-status": "Visualizza stato",
         "get-configuration": "Visualizza configurazione",
-        "list-installed-modules": "Elenco moduli installati",
+        "list-installed-modules": "Elenca moduli installati",
         "get-module-info": "Visualizza info modulo"
     },
     "error": {
