@@ -600,6 +600,16 @@ export default {
           this.ejabberd_module = "-";
         }
         this.timezone = config.timezone === '-' ? '' : config.timezone;
+        // if mail_modules_id is empty, set default value
+        if (this.mail_modules_id.length === 0) {
+          this.mail_modules_id.push({
+            label: this.$t("settings.no_available_mail_domain_check_users"),
+            value: "",
+            name: ""
+          });
+          // we want to avoid to save the form, there is no users set in the mail domain
+          this.mail_module = "";
+        }
       });
       this.loading.getConfiguration = false;
       this.focusElement("hostname");
