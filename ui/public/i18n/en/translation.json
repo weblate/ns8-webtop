@@ -64,7 +64,9 @@
     "ejabberd_server": "Ejabberd/Chat server",
     "choose_ejabberd_server": "Choose an Ejabberd/Chat server in the list",
     "choose_the_ejabberd_server_to_use": "Refer to WebTop documentation to enable the Chat integration, the WebTop mail domain must match the Ejabberd domain",
-    "no_ejabberd_server": "No Ejabberd/Chat server"
+    "no_ejabberd_server": "No Ejabberd/Chat server",
+    "no_available_mail_domain_check_users": "Make sure the mail domain you intend to use has \"Add user addresses from user domain\" checkbox enabled",
+    "mail_module_misconfigured": "No mail domain available"
   },
   "about": {
     "title": "About"
