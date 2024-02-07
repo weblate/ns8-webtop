@@ -43,7 +43,9 @@
         "ejabberd_server": "Ejabberd/Servidor de chat",
         "choose_the_ejabberd_server_to_use": "Consulta la documentación de WebTop para habilitar la integración del Chat. El dominio del correo de WebTop debe coincidir con el dominio de Ejabberd",
         "choose_ejabberd_server": "Elige un Ejabberd/Servidor de chat de la lista",
-        "no_ejabberd_server": "Ningún servidor Ejabberd/Chat"
+        "no_ejabberd_server": "Ningún servidor Ejabberd/Chat",
+        "no_available_mail_domain_check_users": "Make sure the mail domain you intend to use has \"Add user addresses from user domain\" checkbox enabled",
+        "mail_module_misconfigured": "No mail domain available"
     },
     "error": {
         "403": "Operación no autorizada",
