@@ -14,7 +14,7 @@
         "services": "Servizio | Servizi",
         "size": "Dimensione",
         "no_images": "Nessuna immagine",
-        "installation_node": "Nodo",
+        "installation_node": "Nodo di installazione",
         "app_images": "Immagine app|Immagini app",
         "app_instance": "Istanza app",
         "name": "Nome",
@@ -26,7 +26,7 @@
         "LOCALE_de_DE": "de_DE",
         "LOCALE_es_ES": "es_ES",
         "LOCALE_hr_HR": "hr_HR",
-        "mail_server_fqdn": "Server di posta (FQDN)",
+        "mail_server_fqdn": "Mail server",
         "default_timezone_for_webtop_users": "Fuso orario predefinito per gli utenti di WebTop",
         "enabled": "Abilitato",
         "select_webdav_loglevel": "Livello di log WebDAV",
@@ -53,7 +53,7 @@
         "choose_mail_server": "Scegliere un server di posta nell'elenco",
         "title": "Impostazioni",
         "LOG_DEBUG": "DEBUG",
-        "configuring": "Configurazione",
+        "configuring": "Configuring",
         "webapp_debug": "Modalità di debug per WebTop",
         "disabled": "Disabilitato",
         "choose_the_mail_server_to_use": "WebTop deve essere collegato a un server di posta del cluster; scegliere un server di posta valido nell'elenco",
@@ -64,7 +64,9 @@
         "ejabberd_server": "Ejabberd/Chat server",
         "choose_the_ejabberd_server_to_use": "Refer to WebTop documentation to enable the Chat integration, the WebTop mail domain must match the Ejabberd domain",
         "choose_ejabberd_server": "Choose an Ejabberd/Chat server in the list",
-        "no_ejabberd_server": "No Ejabberd/Chat server"
+        "no_ejabberd_server": "No Ejabberd/Chat server",
+        "no_available_mail_domain_check_users": "Make sure the mail domain you intend to use has \"Add user addresses from user domain\" checkbox enabled",
+        "mail_module_misconfigured": "No mail domain available"
     },
     "action": {
         "get-name": "Visualizza nome",
@@ -73,7 +75,7 @@
         "list-backups": "Elenca backup",
         "get-status": "Visualizza stato",
         "get-configuration": "Visualizza configurazione",
-        "list-installed-modules": "Elenco moduli installati",
+        "list-installed-modules": "Elenca moduli installati",
         "get-module-info": "Visualizza info modulo"
     },
     "error": {
