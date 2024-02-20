@@ -67,7 +67,8 @@
     "no_ejabberd_server": "No Ejabberd/Chat server",
     "no_available_mail_domain_check_users": "Make sure the mail domain you intend to use has \"Add user addresses from user domain\" checkbox enabled",
     "mail_module_misconfigured": "No mail domain available",
-    "hostname_pattern": "must be a valid fully qualified domain name"
+    "hostname_pattern": "Must be a valid fully qualified domain name",
+    "hostname_format": "Must be a valid fully qualified domain name"
   },
   "about": {
     "title": "About"

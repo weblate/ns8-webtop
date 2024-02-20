@@ -17,7 +17,7 @@
     "properties": {
         "hostname": {
             "type": "string",
-            "format": "idn-hostname",
+            "format": "hostname",
             "pattern": "\\.",
             "title": "Hostname of the WebTop instance",
             "examples": [
