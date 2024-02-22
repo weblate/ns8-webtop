@@ -18,6 +18,7 @@
         "hostname": {
             "type": "string",
             "format": "hostname",
+            "pattern": "\\.",
             "title": "Hostname of the WebTop instance",
             "examples": [
                 "example.com"
