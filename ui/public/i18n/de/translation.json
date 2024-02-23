@@ -1,24 +1,24 @@
 {
     "common": {
-        "required": "Required",
-        "work_in_progress": "Work in progress",
-        "processing": "Processing..."
+        "required": "Erforderlich",
+        "work_in_progress": "in Arbeit",
+        "processing": "Verarbeite..."
     },
     "status": {
-        "created": "Created",
-        "size": "Size",
+        "created": "Erstellt",
+        "size": "Größe",
         "name": "Name",
-        "no_images": "No images",
-        "no_services": "No services",
-        "app_volumes": "App volume | App volumes",
-        "services": "Service | Services",
-        "app_images": "App image | App images",
-        "app_instance": "App instance",
-        "mount": "Mount",
+        "no_images": "Keine Abbilder",
+        "no_services": "Keine Dienste",
+        "app_volumes": "App Volumen | App Volumen",
+        "services": "Dienst | Dienste",
+        "app_images": "App Abbild | App Abbilder",
+        "app_instance": "App-Instanz",
+        "mount": "Einhängepunkt",
         "title": "Status",
-        "installation_node": "Installation node",
-        "node": "Node",
-        "no_volumes": "No volumes"
+        "installation_node": "Installations-Knoten",
+        "node": "Knoten",
+        "no_volumes": "Keine Volumen"
     },
     "settings": {
         "LOCALE_it_IT": "it_IT",
@@ -31,10 +31,10 @@
         "timezone": "Default timezone",
         "LOG_EMERGENCY": "EMERGENCY",
         "configuring": "Configuring",
-        "disabled": "Disabled",
+        "disabled": "Deaktiviert",
         "no_available_mail_domain_check_users": "Make sure the mail domain you intend to use has \"Add user addresses from user domain\" checkbox enabled",
         "select_webdav_loglevel": "WebDAV log level",
-        "instance_configuration": "Configure {instance}",
+        "instance_configuration": "{instance} konfigurieren",
         "default_locale_for_webtop_users": "Default locale for WebTop users",
         "LOCALE_hr_HR": "hr_HR",
         "LOG_ALERT": "ALERT",
@@ -55,13 +55,13 @@
         "ejabberd_server": "Ejabberd/Chat server",
         "mail_module_misconfigured": "No mail domain available",
         "default_timezone_for_webtop_users": "Default timezone for WebTop users",
-        "save": "Save",
+        "save": "Speichern",
         "choose_the_ejabberd_server_to_use": "Refer to WebTop documentation to enable the Chat integration, the WebTop mail domain must match the Ejabberd domain",
-        "enabled": "Enabled",
+        "enabled": "Aktiviert",
         "domain_already_used_in_traefik": "This domain is already used in Traefik",
         "debug_loglevel": "Debug level can affect the size of logs",
         "select_zpush_loglevel": "Z-Push log level",
-        "title": "Settings",
+        "title": "Einstellungen",
         "choose_ejabberd_server": "Choose an Ejabberd/Chat server in the list",
         "LOG_DEBUG": "DEBUG",
         "LOCALE_hu_HU": "hu_HU",
@@ -71,33 +71,33 @@
         "select_locale": "Default locale"
     },
     "error": {
-        "403": "Operation not authorized",
-        "cannot_retrieve_installed_modules": "Cannot retrieve installed modules",
-        "401": "Invalid authentication",
-        "cannot_retrieve_module_info": "Cannot retrieve module info",
-        "generic_error": "Something went wrong",
-        "error": "Error",
-        "network_timeout": "Network timeout",
-        "404": "Resource not found",
+        "403": "Operation nicht genehmigt",
+        "cannot_retrieve_installed_modules": "Installierte Module können nicht abgerufen werden",
+        "401": "Ungültige Authentifizierung",
+        "cannot_retrieve_module_info": "Modul-Info kann nicht abgerufen werden",
+        "generic_error": "Etwas ist schief gegangen",
+        "error": "Fehler",
+        "network_timeout": "Netzwerk-Zeitüberschreitung",
+        "404": "Ressource nicht gefunden",
         "choose_min_webapp_memory_MB": "Must be less than maximum memory",
         "cannot_retrieve_UI_options": "Cannot retrieve defaults",
-        "network_error": "Network error",
-        "validation_error": "Validation error"
+        "network_error": "Netzwerk-Fehler",
+        "validation_error": "Überprüfungsfehler"
     },
     "about": {
-        "title": "About"
+        "title": "Über"
     },
     "action": {
-        "list-backup-repositories": "List backup repositories",
-        "get-module-info": "Get module info",
-        "list-installed-modules": "List installed modules",
-        "list-backups": "List backups",
-        "get-status": "Get status",
-        "configure-module": "Configure module",
-        "get-configuration": "Get configuration",
-        "get-name": "Get name"
+        "list-backup-repositories": "Datensicherungs-Ziele auflisten",
+        "get-module-info": "Modul-Info abrufen",
+        "list-installed-modules": "installierte Modules auflisten",
+        "list-backups": "Datensicherungen auflisten",
+        "get-status": "Status abrufen",
+        "configure-module": "Modul konfigurieren",
+        "get-configuration": "Konfiguration abrufen",
+        "get-name": "Namen abrufen"
     },
     "task": {
-        "cannot_create_task": "Cannot create task {action}"
+        "cannot_create_task": "Aufgabe {action} kann nicht erstellt werden"
     }
 }
