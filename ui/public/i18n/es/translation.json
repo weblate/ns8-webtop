@@ -46,8 +46,8 @@
         "no_ejabberd_server": "Ningún servidor Ejabberd/Chat",
         "no_available_mail_domain_check_users": "Asegúrate de que el dominio de correo que deseas utilizar tenga habilitada la casilla de verificación \"Agregar direcciones de usuario desde el dominio de usuario\"",
         "mail_module_misconfigured": "No hay dominio de correo disponible",
-        "hostname_pattern": "Must be a valid fully qualified domain name",
-        "hostname_format": "Must be a valid fully qualified domain name"
+        "hostname_pattern": "Debe ser un nombre de dominio válido y completo",
+        "hostname_format": "Debe ser un nombre de dominio válido y completo"
     },
     "error": {
         "403": "Operación no autorizada",
