@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2024 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+podman exec -i postgres bash -s <<'EOF'
+query='SELECT EXISTS (SELECT * FROM ns8_webtop_init WHERE initialized = 1);'
+while true; do
+  psql -q -U postgres webtop5 -tA -c "$query" 2> /dev/null  | grep -q t
+  db_check=$?
+  (( attempt++ ))
+  if [[ ${db_check} == 0 ]]; then
+    break
+  elif ((attempt > 100)); then
+    echo "DB initialization did not complete. Aborting..." 1>&2
+    exit 1
+  fi
+  sleep 3s
+done
+exit 0
+EOF

@@ -13,6 +13,9 @@ Environment=PODMAN_SYSTEMD_UNIT=%n
 EnvironmentFile=%S/state/environment
 WorkingDirectory=%S/state
 Restart=always
+# wait-postgres-init should complete in 5 minutes,
+# this sets an larger safeguard limit:
+TimeoutStartSec=600s
 ExecStartPre=/bin/rm -f %t/postgres.pid %t/postgres.ctr-id
 ExecStart=/usr/bin/podman run \
     --pod=webtop \
@@ -23,6 +26,7 @@ ExecStart=/usr/bin/podman run \
     --volume=pgdata:/var/lib/postgresql/data \
     --replace --name=%N \
     ${WEBTOP_POSTGRES_IMAGE}
+ExecStartPost=runagent wait-postgres-init
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/postgres.ctr-id -t 10
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/postgres.ctr-id
 PIDFile=%t/postgres.pid

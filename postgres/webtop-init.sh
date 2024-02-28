@@ -5,6 +5,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
+# create a flag table, to check initialization
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<'EOF'
+CREATE TABLE ns8_webtop_init ( initialized INTEGER );
+EOF
+
 # initialize postgres requisites
 for psql in `find /docker-entrypoint-initdb.d/postgres -name \*.sql | sort`
 do
@@ -34,3 +39,8 @@ do
     echo "Loading: $dsql ..."
     psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" < $dsql >/dev/null
 done
+
+# add the flag record, to check that the initialization is complete
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<'EOF'
+INSERT INTO ns8_webtop_init (initialized) VALUES (1);
+EOF
