@@ -1,26 +1,20 @@
 #!/bin/bash
 
 #
-# Copyright (C) 2022 Nethesis S.r.l.
+# Copyright (C) 2024 Nethesis S.r.l.
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# Redirect any output to the journal (stderr)
 
 set -e
 
-exec 1>&2
+exec 1>&2 # Redirect any output to the journal (stderr)
 
-systemctl --user start postgres
-
-podman exec -i postgres sh -s <<'EOF'
-query="SELECT EXISTS ( SELECT * FROM pg_tables WHERE schemaname = 'core' AND tablename  = 'settings');"
-psql -q -U postgres webtop5 -tA -c "$query" 2> /dev/null | grep -q t
-db_check=$?
-c=10
-while [ "$db_check" -ne 0 -o $c -eq 0 ]; do
-  sleep 1s
-  psql -q -U postgres webtop5 -tA -c "$query" 2> /dev/null  | grep -q t
-  db_check=$?
-  c=$(expr $c - 1 )
-done
-EOF
+# The postgres service requirement implicitly starts the whole pod.
+# Note that:
+# 1. systemctl blocks until postgres initialization completes.
+# 2. if postgres init fails, we must explicitly stop the whole pod,
+#    otherwise Systemd restarts it!
+if ! systemctl --user -T start postgres.service ; then
+   systemctl --user -T stop webtop
+   exit 1
+fi

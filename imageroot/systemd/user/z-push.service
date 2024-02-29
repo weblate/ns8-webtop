@@ -3,7 +3,7 @@
 # Most parts of this file come from podman-generate-systemd.
 #
 [Unit]
-Description=WeTop Z-Push server
+Description=WebTop Z-Push server
 PartOf=webtop.service
 
 [Service]

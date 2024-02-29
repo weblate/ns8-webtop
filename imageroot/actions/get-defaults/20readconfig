@@ -30,7 +30,7 @@ for key in agent.list_service_providers(rdb,'imap','tcp'):
             }
             modules.append(obj)
 # we query about all known timezone and we build a widget
-accepted_timezone_list = subprocess.check_output(['podman', 'run', '--rm', os.environ["WEBTOP_WEBAPP_IMAGE"], 'java', '-classpath', '/usr/share/webtop/', 'ListTimeZones'], text=True).splitlines()
+accepted_timezone_list = subprocess.check_output(['podman', 'run', '--log-driver=none', '--replace', '--name', 'list-timezones', '--rm', os.environ["WEBTOP_WEBAPP_IMAGE"], 'java', '-classpath', '/usr/share/webtop/', 'ListTimeZones'], text=True).splitlines()
 
 for value in accepted_timezone_list:
     list_of_timezone_widget.append({

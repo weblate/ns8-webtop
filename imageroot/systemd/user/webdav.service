@@ -3,7 +3,7 @@
 # Most parts of this file come from podman-generate-systemd.
 #
 [Unit]
-Description=WeTop WebDAV server
+Description=WebTop WebDAV server
 PartOf=webtop.service
 
 [Service]
