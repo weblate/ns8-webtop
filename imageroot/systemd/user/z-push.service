@@ -4,6 +4,7 @@
 #
 [Unit]
 Description=WebTop Z-Push server
+After=webapp.service
 PartOf=webtop.service
 
 [Service]

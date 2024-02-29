@@ -4,6 +4,7 @@
 #
 [Unit]
 Description=WebTop WebDAV server
+After=webapp.service
 PartOf=webtop.service
 
 [Service]
