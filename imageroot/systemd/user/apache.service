@@ -3,7 +3,7 @@
 # Most parts of this file come from podman-generate-systemd.
 #
 [Unit]
-Description=WeTop apache
+Description=WebTop apache
 PartOf=webtop.service
 
 [Service]

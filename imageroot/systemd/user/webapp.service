@@ -3,7 +3,7 @@
 # Most parts of this file come from podman-generate-systemd.
 #
 [Unit]
-Description=WeTop webapp
+Description=WebTop webapp
 Wants=postgres.service
 After=postgres.service
 PartOf=webtop.service
