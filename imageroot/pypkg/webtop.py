@@ -15,6 +15,7 @@ def configure_module(mail_module, penv):
         "locale": penv['WEBTOP_LOCALE'],
         "timezone": penv['WEBTOP_TIMEZONE'],
         "mail_module": mail_module,
+        "mail_domain": penv['MAIL_DOMAIN'],
         "ejabberd_module": penv.get('EJABBERD_MODULE',''),
         "webapp": {
             "debug": penv['WEBAPP_JS_DEBUG'] == 'True',
