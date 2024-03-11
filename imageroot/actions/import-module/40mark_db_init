@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2024 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+set -e -o pipefail
+exec 1>&2 # Redirect any output to the journal (stderr)
+
+# Add our "flag table" to the provisioning set. The table is used by
+# postgres.service Systemd unit to know when DB initialization is
+# complete.
+mkdir -vp initdb.d
+cat - >initdb.d/zzz_mark_db_init.sql <<'EOQ'
+CREATE TABLE ns8_webtop_init ( initialized INTEGER );
+INSERT INTO ns8_webtop_init (initialized) VALUES (1);
+EOQ
+
