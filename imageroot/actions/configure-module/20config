@@ -26,7 +26,7 @@ def domain_setup(mail_domain, user_domain):
             "userIdField": "uid",
             "userFirstnameField": "givenName",
             "userLastnameField": "sn",
-            "userDisplayNameField": "gecos",
+            "userDisplayNameField": "displayName",
             }
 
     if user_domain["schema"] == "ad":
