@@ -50,7 +50,7 @@
         "select_locale": "Default locale"
     },
     "common": {
-        "required": "Required",
+        "required": "Beharrezkoa",
         "work_in_progress": "Work in progress",
         "processing": "Processing..."
     },
@@ -85,7 +85,7 @@
         "no_volumes": "No volumes"
     },
     "about": {
-        "title": "About"
+        "title": "Honi buruz"
     },
     "action": {
         "list-backup-repositories": "List backup repositories",

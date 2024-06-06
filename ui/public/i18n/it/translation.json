@@ -2,7 +2,7 @@
     "common": {
         "required": "Obbligatorio",
         "work_in_progress": "In lavorazione",
-        "processing": "Elaborazione in corso..."
+        "processing": "In elaborazione…"
     },
     "status": {
         "node": "Nodo",
