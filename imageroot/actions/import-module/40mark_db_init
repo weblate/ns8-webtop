@@ -16,4 +16,7 @@ cat - >initdb.d/zzz_mark_db_init.sql <<'EOQ'
 CREATE TABLE ns8_webtop_init ( initialized INTEGER );
 INSERT INTO ns8_webtop_init (initialized) VALUES (1);
 EOQ
-
+cat - >initdb.d/zzz_domainsuffix_policy_override.sql <<'EOQ'
+DELETE FROM "core"."settings" WHERE service_id = 'com.sonicle.webtop.mail' AND key = 'acl.domainsuffix.policy.override';
+INSERT INTO "core"."settings" (service_id, key, value) VALUES ('com.sonicle.webtop.mail', 'acl.domainsuffix.policy.override', 'strip');
+EOQ
