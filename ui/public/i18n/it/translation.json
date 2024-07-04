@@ -98,6 +98,6 @@
         "title": "Informazioni"
     },
     "task": {
-        "cannot_create_task": "Impossibile eseguire task {action}"
+        "cannot_create_task": "Impossibile eseguire il task {action}"
     }
 }
