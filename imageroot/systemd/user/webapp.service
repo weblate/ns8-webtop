@@ -30,6 +30,7 @@ ExecStart=/usr/bin/podman run \
     --cgroups=no-conmon \
     --replace --name=%N \
     ${WEBTOP_WEBAPP_IMAGE}
+ExecStartPost=/usr/bin/podman exec --detach webapp /usr/share/pecbridge/bin/run.sh
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/webapp.ctr-id -t 10
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/webapp.ctr-id
 PIDFile=%t/webapp.pid

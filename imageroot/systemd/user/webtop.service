@@ -20,6 +20,7 @@ ExecStartPre=/usr/bin/podman pod create \
     --publish=${TCP_PORT}:8081 \
     --network=slirp4netns:allow_host_loopback=true \
     --add-host=accountprovider:10.0.2.2 \
+    --add-host=mailnode:${Z_PUSH_IMAP_SERVER} \
     --replace
 ExecStart=/usr/bin/podman pod start --pod-id-file %t/webtop.pod-id
 ExecStop=/usr/bin/podman pod stop --ignore --pod-id-file %t/webtop.pod-id -t 10
