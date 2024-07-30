@@ -1,0 +1,5 @@
+<sonicle-pec-bridge port="10125">
+    <default host="localhost" port="25" debug="false" />
+    <webtop-api basePath="http://localhost:8080/webtop/api/com.sonicle.webtop.core/v1" bearer="WEBAPP_API_TOKEN" iddomain="NethServer" />
+    <fetch delay="60" />
+</sonicle-pec-bridge>

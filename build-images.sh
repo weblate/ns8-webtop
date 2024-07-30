@@ -12,6 +12,12 @@ repobase="${REPOBASE:-ghcr.io/nethserver}"
 #Get WebTop version
 webtop_version=$(cat ${PWD}/webtop5-build/VERSION)
 
+# Download of external deps and CHECKSUM verification:
+if [[ ! -f pecbridge-5.4.0.tar.gz ]]; then
+    curl -n --fail -O https://www.sonicle.com/nethesis/commercial/pecbridge/pecbridge-5.4.0.tar.gz
+fi
+sha256sum -c CHECKSUM
+
 # Reuse existing webtopbuilder container, to speed up builds
 if ! buildah containers --format "{{.ContainerName}}" | grep -q webtopbuilder; then
     echo "Pulling maven runtime..."
@@ -53,6 +59,9 @@ cleanup_list+=("${webapp_tmp_dir}")
     python -mzipfile -e  ${PWD}/webtop5-build/webtop-webapp-$webtop_version.war "${webapp_tmp_dir}/webtop/"
 )
 
+pecbridge_tmp_dir=$(mktemp -d)
+cleanup_list+=("${pecbridge_tmp_dir}")
+tar -C "${pecbridge_tmp_dir}" -x -v -z -f pecbridge-*.tar.gz
 
 #Create webtop-webapp container
 reponame="webtop-webapp"
@@ -63,6 +72,7 @@ buildah add ${container} ${PWD}/webtop5-build/ListTimeZones.class /usr/share/web
 buildah add ${container} ${PWD}/webtop5-build/WebtopPassEncode.class /usr/share/webtop/
 buildah add ${container} ${PWD}/zfaker/wrappers/php /usr/share/webtop/bin/php
 buildah add ${container} ${PWD}/zfaker/wrappers/z-push-admin-wapper /usr/share/webtop/bin/z-push-admin-wrapper
+buildah add ${container} ${pecbridge_tmp_dir}/pecbridge /usr/share/pecbridge
 buildah add ${container} ${PWD}/webapp/ /
 # Commit the image
 buildah commit --rm "${container}" "${repobase}/${reponame}"
