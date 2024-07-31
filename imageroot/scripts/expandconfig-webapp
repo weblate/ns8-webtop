@@ -7,17 +7,36 @@
 
 set -e
 
+shopt -s nullglob
+
 source webapp.env
 
-cat <<EOF > webtop.properties
-webtop.log.target=console
-webtop.session.forcesecurecookie=true
-webtop.js.debug=$WEBAPP_JS_DEBUG
-webtop.home=/var/lib/nethserver/webtop
-webtop.provisioning.api.token=$WEBAPP_API_TOKEN
-webtop.mailbridge.mode=api
-webtop.mailbridge.smtp.host=127.0.0.1
-webtop.mailbridge.smtp.port=10125
-webtop.mailbridge.smtp.auth=true
-mail.smtp.timeout=170000
-EOF
+target_file="webtop.properties"
+custom_dir="webtop.properties.d"
+
+# All output to template expansion buffer
+exec > "${target_file}".tmp
+
+# Add application builtin fragments to the initial fragment list
+fragments=()
+for appbuiltin in "${AGENT_INSTALL_DIR:?}/templates/${custom_dir}"/*; do
+    fragments+=("${custom_dir}/$(basename "${appbuiltin}")")
+done
+
+# Add contents of optional directory for override fragments:
+if [[ -d "${custom_dir}" ]]; then
+    fragments+=("${custom_dir}"/*)
+fi
+
+# Template expansion. Fragments are sorted and deduplicated:
+for template in $(printf '%s\n' "${fragments[@]}" | sort | uniq); do
+    if [[ -e "${template}" ]]; then
+        echo "${target_file}: add custom fragment ${template}" 1>&2
+        envsubst <"${template}"
+    else
+        echo "${target_file}: use builtin fragment ${template}" 1>&2
+        envsubst <"${AGENT_INSTALL_DIR}"/templates/"${template}"
+    fi
+done
+
+mv -v "${target_file}".tmp "${target_file}" 1>&2
