@@ -1,0 +1,27 @@
+[Unit]
+Description=WebTop Pecbridge
+Requires=webapp.service
+After=webapp.service
+
+[Service]
+Type=forking
+Environment=PODMAN_SYSTEMD_UNIT=%n
+EnvironmentFile=%S/state/environment
+WorkingDirectory=%S/state
+Restart=always
+ExecStartPre=/bin/rm -f %t/pecbridge.pid %t/pecbridge.ctr-id
+ExecStart=/usr/bin/podman run \
+    --pod=webtop \
+    --detach \
+    --conmon-pidfile=%t/pecbridge.pid \
+    --cidfile=%t/pecbridge.ctr-id \
+    --cgroups=no-conmon \
+    --replace --name=%N \
+    --env-file webapp.env \
+    --volume=./webtop.properties:/etc/webtop/webtop.properties:z \
+    --entrypoint=/usr/share/pecbridge/bin/run.sh \
+    ${WEBTOP_WEBAPP_IMAGE}
+SuccessExitStatus=143
+ExecStop=/usr/bin/podman stop --ignore --cidfile %t/pecbridge.ctr-id -t 10
+ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/pecbridge.ctr-id
+PIDFile=%t/pecbridge.pid

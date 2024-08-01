@@ -4,8 +4,8 @@
 #
 [Unit]
 Description=WebTop pod service
-Wants=webapp.service postgres.service apache.service webdav.service z-push.service
-Before=webapp.service postgres.service apache.service webdav.service z-push.service
+Wants=webapp.service postgres.service apache.service webdav.service z-push.service pecbridge.service
+Before=webapp.service postgres.service apache.service webdav.service z-push.service pecbridge.service
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n

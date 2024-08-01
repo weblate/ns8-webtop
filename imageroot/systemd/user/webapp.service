@@ -22,7 +22,7 @@ ExecStart=/usr/bin/podman run \
 			 -Dmail.mime.address.strict=false -Dwebtop.etc.dir=/etc/webtop \
 			 -Duser.timezone=${WEBTOP_TIMEZONE}" \
     --volume=webtop-home:/var/lib/nethserver/webtop \
-    --volume=./webtop.properties:/etc/webtop/webtop.properties:Z \
+    --volume=./webtop.properties:/etc/webtop/webtop.properties:z \
     --pod=webtop \
     --detach \
     --conmon-pidfile=%t/webapp.pid \
@@ -30,7 +30,6 @@ ExecStart=/usr/bin/podman run \
     --cgroups=no-conmon \
     --replace --name=%N \
     ${WEBTOP_WEBAPP_IMAGE}
-ExecStartPost=/usr/bin/podman exec --detach webapp /usr/share/pecbridge/bin/run.sh
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/webapp.ctr-id -t 10
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/webapp.ctr-id
 PIDFile=%t/webapp.pid
