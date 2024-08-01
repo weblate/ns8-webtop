@@ -13,8 +13,8 @@ repobase="${REPOBASE:-ghcr.io/nethserver}"
 webtop_version=$(cat ${PWD}/webtop5-build/VERSION)
 
 # Download of external deps and CHECKSUM verification:
-if [[ ! -f pecbridge-5.4.0.tar.gz ]]; then
-    curl -n --fail -O https://www.sonicle.com/nethesis/commercial/pecbridge/pecbridge-5.4.0.tar.gz
+if ! compgen -G "pecbridge-*.tar.gz"; then
+    curl --netrc --fail -O "https://www.sonicle.com/nethesis/commercial/pecbridge/pecbridge-5.4.0.tar.gz"
 fi
 sha256sum -c CHECKSUM
 
