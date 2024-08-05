@@ -19,7 +19,7 @@ def domain_setup(mail_domain, user_domain):
     user_domain_password = subprocess.check_output(
         [
             'podman', 'run', '--rm', '-i', os.environ["WEBTOP_WEBAPP_IMAGE"],
-            'bash', '-c', "java -classpath /usr/share/webtop/ WebtopPassEncode"
+            "java", "-classpath", "/usr/share/webtop/", "WebtopPassEncode"
         ],
         input=user_domain["bind_password"],
         text=True
