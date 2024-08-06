@@ -16,7 +16,14 @@ def domain_setup(mail_domain, user_domain):
     user_domain_uri = "ldapneth://accountprovider" + ":" + user_domain["port"]
     user_domain_admin = user_domain["bind_dn"]
 
-    user_domain_password = subprocess.check_output(['podman', 'run', '--rm', os.environ["WEBTOP_WEBAPP_IMAGE"], 'bash', '-c', "echo -n " + user_domain["bind_password"] + " | java -classpath /usr/share/webtop/ WebtopPassEncode"], text=True).splitlines().pop()
+    user_domain_password = subprocess.check_output(
+        [
+            'podman', 'run', '--replace', '--name', 'webtop-pass-encode', '--rm', '-i', os.environ["WEBTOP_WEBAPP_IMAGE"],
+            "java", "-classpath", "/usr/share/webtop/", "WebtopPassEncode"
+        ],
+        input=user_domain["bind_password"],
+        text=True
+    ).strip()
 
     user_domain_parameters = {
             "loginDn": user_domain["base_dn"],
