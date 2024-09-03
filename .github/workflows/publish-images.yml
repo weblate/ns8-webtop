@@ -9,6 +9,6 @@ permissions:
 jobs:
   publish-images:
     if: github.run_number > 1
-    uses: NethServer/ns8-github-actions/.github/workflows/publish-branch.yml@main
+    uses: NethServer/ns8-github-actions/.github/workflows/publish-branch.yml@v1
     secrets:
         netrcb64: ${{ secrets.NETRCB64 }}
