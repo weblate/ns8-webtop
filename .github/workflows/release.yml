@@ -17,7 +17,7 @@ jobs:
     - name: Set new version
       run: echo "wt-${{ github.event.inputs.version }}" > webtop5-build/VERSION
     - name: Create/Update pull request
-      uses: peter-evans/create-pull-request@v3
+      uses: peter-evans/create-pull-request@v7
       with:
         branch: ${{ steps.get_version.outputs.version }}-next
         title: Update to upstream release wt-${{ github.event.inputs.version }}
