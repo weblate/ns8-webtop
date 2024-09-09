@@ -15,6 +15,7 @@ webtop.session.forcesecurecookie=true
 webtop.js.debug=$WEBAPP_JS_DEBUG
 webtop.home=/var/lib/nethserver/webtop
 webtop.provisioning.api.token=$WEBAPP_API_TOKEN
+webtop.mailbridge.mode=api
 webtop.mailbridge.smtp.host=127.0.0.1
 webtop.mailbridge.smtp.port=10125
 webtop.mailbridge.smtp.auth=true
