@@ -1,0 +1,5 @@
+webtop.mailbridge.mode=api
+webtop.mailbridge.smtp.host=127.0.0.1
+webtop.mailbridge.smtp.port=10125
+webtop.mailbridge.smtp.auth=true
+mail.smtp.timeout=170000

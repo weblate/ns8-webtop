@@ -2,3 +2,4 @@ webtop.log.target=console
 webtop.session.forcesecurecookie=true
 webtop.js.debug=${WEBAPP_JS_DEBUG}
 webtop.home=/var/lib/nethserver/webtop
+webtop.provisioning.api.token=${WEBAPP_API_TOKEN}
