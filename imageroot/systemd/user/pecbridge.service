@@ -18,6 +18,7 @@ ExecStart=/usr/bin/podman run \
     --cgroups=no-conmon \
     --replace --name=%N \
     --env-file webapp.env \
+    --env PECBRIDGE_ADMIN_MAIL \
     --volume=./webtop.properties:/etc/webtop/webtop.properties:z \
     --entrypoint=/usr/share/pecbridge/bin/run.sh \
     ${WEBTOP_WEBAPP_IMAGE}
