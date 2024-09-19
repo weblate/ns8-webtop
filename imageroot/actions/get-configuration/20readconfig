@@ -30,6 +30,7 @@ config={
         "zpush": {
             "loglevel": os.environ["Z_PUSH_LOG_LEVEL"],
             },
+        "pecbridge_admin_mail": os.getenv("PECBRIDGE_ADMIN_MAIL", ""),
         }
 
 json.dump(config, fp=sys.stdout)
