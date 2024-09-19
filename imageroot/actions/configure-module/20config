@@ -307,3 +307,7 @@ if "zpush" in data:
     if "loglevel" in data["zpush"] and data["zpush"]["loglevel"] != os.getenv("Z_PUSH_LOG_LEVEL"):
             agent.set_env("Z_PUSH_LOG_LEVEL", data["zpush"]["loglevel"])
             agent.set_env("RESTART_Z_PUSH", "1")
+
+if "pecbridge_admin_mail" in data and data["pecbridge_admin_mail"] != os.getenv("PECBRIDGE_ADMIN_MAIL"):
+    agent.set_env("PECBRIDGE_ADMIN_MAIL", data["pecbridge_admin_mail"])
+    agent.set_env("RESTART_PEC_BRIDGE", "1")

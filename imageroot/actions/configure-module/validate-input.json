@@ -144,6 +144,20 @@
                     ]
                 }
             }
+        },
+        "pecbridge_admin_mail": {
+            "anyOf": [
+                {
+                    "type": "string",
+                    "title": "PEC bridge admin mail",
+                    "description": "Email address of the PEC bridge administrator",
+                    "format": "email"
+                },
+                {
+                  "const": "",
+                  "description": "Accept an empty string to clear the setting"
+                }
+            ]
         }
     }
 }

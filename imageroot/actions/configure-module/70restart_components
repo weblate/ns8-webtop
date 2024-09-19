@@ -11,6 +11,7 @@ import os
 restart_webapp = os.environ.get('RESTART_WEBAPP','')
 restart_webdav = os.environ.get('RESTART_WEBDAV','')
 restart_z_push = os.environ.get('RESTART_Z_PUSH','')
+restart_pec_bridge = os.environ.get('RESTART_PEC_BRIDGE','')
 
 if restart_webapp == '1':
     agent.run_helper('systemctl','--user','restart','webapp').check_returncode()
@@ -19,6 +20,10 @@ if restart_webdav == '1':
 if restart_z_push == '1':
     agent.run_helper('systemctl','--user','restart','z-push').check_returncode()
 
+if restart_pec_bridge == '1':
+    agent.run_helper('systemctl','--user','restart','pecbridge').check_returncode()
+
 agent.unset_env("RESTART_WEBAPP")
 agent.unset_env("RESTART_WEBDAV")
 agent.unset_env("RESTART_Z_PUSH")
+agent.unset_env("RESTART_PEC_BRIDGE")
