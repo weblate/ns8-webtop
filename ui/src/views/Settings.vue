@@ -344,6 +344,23 @@
                       $t("settings.LOG_WARNING")
                     }}</cv-dropdown-item>
                   </cv-dropdown>
+                  <NsTextInput
+                    :label="$t('settings.pecbridge_admin_mail')"
+                    :placeholder="$t('settings.pecbridge_admin_mail_placeholder')"
+                    v-model.trim="pecbridge_admin_mail"
+                    class="mg-bottom"
+                    :invalid-message="$t(error.pecbridge_admin_mail)"
+                    :disabled="
+                      loading.getConfiguration ||
+                      loading.configureModule ||
+                      loading.getDefaults
+                    "
+                    ref="pecbridge_admin_mail"
+                  >
+                    <template #tooltip>{{
+                      $t("settings.pecbridge_admin_mail_tooltip")
+                    }}</template>
+                  </NsTextInput>
                 </template>
               </cv-accordion-item>
             </cv-accordion>
@@ -427,6 +444,7 @@ export default {
       zpush: {
         loglevel: "ERROR",
       },
+      pecbridge_admin_mail: "",
       loading: {
         getConfiguration: false,
         configureModule: false,
@@ -455,6 +473,7 @@ export default {
         zpush: {
           loglevel: "",
         },
+        pecbridge_admin_mail: "",
       },
     };
   },
@@ -593,6 +612,7 @@ export default {
       this.webdav = config.webdav;
       this.zpush = config.zpush;
       this.locale = config.locale;
+      this.pecbridge_admin_mail = config.pecbridge_admin_mail;
       // force to reload value after dom update
       this.$nextTick(() => {
         const mail_module_tmp = config.mail_module;
@@ -730,6 +750,7 @@ export default {
             zpush: {
               loglevel: this.zpush.loglevel,
             },
+            pecbridge_admin_mail: this.pecbridge_admin_mail,
           },
           extra: {
             title: this.$t("settings.instance_configuration", {
