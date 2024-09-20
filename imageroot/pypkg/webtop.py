@@ -28,5 +28,6 @@ def configure_module(mail_module, penv):
         },
         "zpush": {
             "loglevel": penv['Z_PUSH_LOG_LEVEL'],
-        }
+        },
+        "pecbridge_admin_mail": penv.get('PECBRIDGE_ADMIN_MAIL',''),
     })
