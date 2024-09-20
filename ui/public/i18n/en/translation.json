@@ -69,11 +69,10 @@
         "mail_module_misconfigured": "No mail domain available",
         "hostname_pattern": "Must be a valid fully qualified domain name",
         "hostname_format": "Must be a valid fully qualified domain name",
-        "pecbridge_admin_mail": "PECBridge admin mail",
-        "pecbridge_admin_mail_placeholder": "Enter the PECBridge admin mail",
-        "pecbridge_admin_mail_tooltip": "The PECBridge admin mail is used to send notifications to the PECBridge administrator",
-        "pecbridge_admin_mail_format": "Must be a valid email address",
-        "pecbridge_admin_mail_pattern": "Must be a valid email address"
+        "pecbridge_admin_mail": "PEC Bridge notify address (optional)",
+        "pecbridge_admin_mail_placeholder": "E.g. mail-admin@example.org",
+        "pecbridge_admin_mail_tooltip": "If an email address is set, PEC Bridge will send a copy of notifications to it.",
+        "pecbridge_admin_mail_format": "Must be a valid email address"
     },
     "about": {
         "title": "About"
