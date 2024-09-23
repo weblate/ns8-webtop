@@ -47,7 +47,11 @@
         "no_available_mail_domain_check_users": "Asegúrate de que el dominio de correo que deseas utilizar tenga habilitada la casilla de verificación \"Agregar direcciones de usuario desde el dominio de usuario\"",
         "mail_module_misconfigured": "No hay dominio de correo disponible",
         "hostname_pattern": "Debe ser un nombre de dominio válido y completo",
-        "hostname_format": "Debe ser un nombre de dominio válido y completo"
+        "hostname_format": "Debe ser un nombre de dominio válido y completo",
+        "pecbridge_admin_mail": "PEC Bridge notify address (optional)",
+        "pecbridge_admin_mail_placeholder": "E.g. mail-admin@example.org",
+        "pecbridge_admin_mail_format": "Must be a valid email address",
+        "pecbridge_admin_mail_tooltip": "If an email address is set, PEC Bridge will send a copy of notifications to it."
     },
     "error": {
         "403": "Operación no autorizada",

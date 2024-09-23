@@ -68,7 +68,11 @@
         "no_available_mail_domain_check_users": "Assicuratevi che il dominio di posta elettronica che intendete utilizzare abbia \"Add user addresses from user domain\" casella di controllo abilitata",
         "mail_module_misconfigured": "Nessun dominio di posta disponibile",
         "hostname_pattern": "Deve essere un nome di dominio pienamente qualificato valido",
-        "hostname_format": "Deve essere un nome di dominio pienamente qualificato valido"
+        "hostname_format": "Deve essere un nome di dominio pienamente qualificato valido",
+        "pecbridge_admin_mail": "Indirizzo di notifica PEC Bridge (opzionale)",
+        "pecbridge_admin_mail_placeholder": "Es. mail-admin@example.org",
+        "pecbridge_admin_mail_format": "Deve essere un indirizzo email valido",
+        "pecbridge_admin_mail_tooltip": "Se è impostato un indirizzo email, PEC Bridge spedirà ad esso una copia delle notifiche."
     },
     "action": {
         "get-name": "Visualizza nome",

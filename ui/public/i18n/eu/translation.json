@@ -47,7 +47,11 @@
         "no_ejabberd_server": "No Ejabberd/Chat server",
         "hostname_format": "Must be a valid fully qualified domain name",
         "LOG_CRITICAL": "CRITICAL",
-        "select_locale": "Default locale"
+        "select_locale": "Default locale",
+        "pecbridge_admin_mail": "PEC Bridge notify address (optional)",
+        "pecbridge_admin_mail_placeholder": "E.g. mail-admin@example.org",
+        "pecbridge_admin_mail_format": "Must be a valid email address",
+        "pecbridge_admin_mail_tooltip": "If an email address is set, PEC Bridge will send a copy of notifications to it."
     },
     "common": {
         "required": "Beharrezkoa",

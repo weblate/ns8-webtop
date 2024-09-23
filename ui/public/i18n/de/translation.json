@@ -68,7 +68,11 @@
         "no_ejabberd_server": "Kein Ejabberd/Chat-Server",
         "hostname_format": "Voll-qualifizierter Domänen-Name (FQDN) erforderlich",
         "LOG_CRITICAL": "KRITISCH",
-        "select_locale": "Standard-Sprache"
+        "select_locale": "Standard-Sprache",
+        "pecbridge_admin_mail": "PEC Bridge notify address (optional)",
+        "pecbridge_admin_mail_placeholder": "E.g. mail-admin@example.org",
+        "pecbridge_admin_mail_format": "Must be a valid email address",
+        "pecbridge_admin_mail_tooltip": "If an email address is set, PEC Bridge will send a copy of notifications to it."
     },
     "error": {
         "403": "Vorgang nicht autorisiert",
