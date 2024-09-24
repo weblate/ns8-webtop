@@ -166,3 +166,8 @@ INSERT INTO core.settings (service_id, key, value) VALUES ('com.sonicle.webtop.m
 -- Strip domain suffix when applying IMAP ACL
 -- -----------------------------------------
 INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicle.webtop.mail', 'acl.domainsuffix.policy.override', 'strip');
+
+-- ----------------------------------------
+-- Enable PEC Bridge management
+-- ----------------------------------------
+INSERT INTO "core"."settings" ("service_id","key","value") VALUES ('com.sonicle.webtop.core','config.pecbridge.management','true');
