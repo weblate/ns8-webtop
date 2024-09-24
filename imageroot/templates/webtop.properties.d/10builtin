@@ -3,3 +3,5 @@ webtop.session.forcesecurecookie=true
 webtop.js.debug=${WEBAPP_JS_DEBUG}
 webtop.home=/var/lib/nethserver/webtop
 webtop.provisioning.api.token=${WEBAPP_API_TOKEN}
+webtop.admin.mode.singledomain=true
+webtop.admin.logviewer.enabled=false
