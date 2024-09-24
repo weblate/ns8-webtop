@@ -65,9 +65,11 @@ if [ "$base_branch" == "release" -o  "$base_branch" == "develop" ]; then
     USE_LFS=0 \
     DEFAULT_CLONE_BASEURL=https://bitbucket.org/sonicle \
     DEFAULT_MVNTOOLS_CLONE_BASEURL=https://bitbucket.org/sonicle \
-    DEFAULT_BASE_BRANCH=$base_branch
+    DEFAULT_BASE_BRANCH=$base_branch \
+    COMPONENTS_COM=webtop-nethesis-laf \
+    MOD_FLAGS.webtop-nethesis-laf=git-develop,git-release
 else
-  make setup USE_LFS=0
+  make setup USE_LFS=0 COMPONENTS_COM=webtop-nethesis-laf MOD_FLAGS.webtop-nethesis-laf=git-develop,git-release
   make checkout-tag TAG=$tag_name
 fi
 
@@ -86,7 +88,10 @@ pushd webtop-gate
 echo
 echo "Building..."
 echo
-make build
+make build \
+    COMPONENTS_COM=webtop-nethesis-laf \
+    MOD_FLAGS.webtop-nethesis-laf=git-develop,git-release \
+    MOD_BUILDS_ARGS.webtop-webapp.default="-P bundle-nethesis-theme"
 
 echo
 echo "Extracting sql scripts..."
