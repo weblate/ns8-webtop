@@ -176,3 +176,8 @@ INSERT INTO "core"."settings" ("service_id","key","value") VALUES ('com.sonicle.
 -- Set default startup service
 -- ----------------------------------------
 INSERT INTO "core"."settings" ("service_id","key","value") VALUES ('com.sonicle.webtop.core','default.startup.service','com.sonicle.webtop.mail');
+
+-- ------------------------------------------------------------
+-- Set default calendar scheduler time resolution to 15 minutes
+-- ------------------------------------------------------------
+INSERT INTO "core"."settings" ("service_id","key","value") VALUES ('com.sonicle.webtop.calendar','default.scheduler.timeresolution','15');
