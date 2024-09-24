@@ -171,3 +171,8 @@ INSERT INTO "core"."settings" ("service_id", "key", "value") VALUES ('com.sonicl
 -- Enable PEC Bridge management
 -- ----------------------------------------
 INSERT INTO "core"."settings" ("service_id","key","value") VALUES ('com.sonicle.webtop.core','config.pecbridge.management','true');
+
+-- ----------------------------------------
+-- Set default startup service
+-- ----------------------------------------
+INSERT INTO "core"."settings" ("service_id","key","value") VALUES ('com.sonicle.webtop.core','default.startup.service','com.sonicle.webtop.mail');
