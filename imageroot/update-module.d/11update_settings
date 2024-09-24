@@ -16,5 +16,7 @@ with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-qU', 'postg
     print("INSERT INTO ns8_webtop_init (initialized) SELECT 1 WHERE NOT EXISTS (SELECT 1 FROM ns8_webtop_init);\n", file=psql.stdin)
     print("DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.core' AND key = 'config.pecbridge.management';\n", file=psql.stdin)
     print("INSERT INTO \"core\".\"settings\" (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'config.pecbridge.management', 'true');\n", file=psql.stdin)
+    print("DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.core' AND key = 'default.startup.service';\n", file=psql.stdin)
+    print("INSERT INTO \"core\".\"settings\" (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.startup.service', 'com.sonicle.webtop.mail');\n", file=psql.stdin)
 
 agent.assert_exp(psql.returncode == 0) # check the command is succesfull
