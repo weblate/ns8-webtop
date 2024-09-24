@@ -1,1 +1,3 @@
+webtop.ui.layouts=default
+webtop.ui.layout.forced=default
 webtop.login.template.vars=login_people:show
