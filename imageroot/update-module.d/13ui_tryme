@@ -1,0 +1,30 @@
+#!/usr/bin/env python3
+
+#
+# Copyright (C) 2024 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+import os
+import agent
+import semver
+
+
+# Extract prevous version from the image tag of PREV_IMAGE_URL environment variable
+prev_image = os.environ.get('PREV_IMAGE_URL')
+
+if prev_image is not None:
+    # Extract the image tag from the URL
+    prev_tag= prev_image.split(':')[-1]
+    try:
+        prev_version = semver.VersionInfo.parse(prev_tag)
+        # Check if the previous version is less than or equal to 1.0.21
+        if prev_version <= semver.VersionInfo.parse('1.0.21'):
+            # Create the directory webtop.properties.d in the module state directory
+            os.makedirs(f'{os.environ["AGENT_STATE_DIR"]}/webtop.properties.d', exist_ok=True)
+            # Write the 31theme into the webtop.properties.d directory to enable the tryme on Netesis theme
+            with open(f'{os.environ["AGENT_STATE_DIR"]}/webtop.properties.d/31theme', 'w') as f:
+                f.write('webtop.ui.presets.extra=nethesis:Nethesis|nethesis|nethesis\n')
+                f.write('webtop.ui.preset.tryme=nethesis\n')
+    except ValueError:
+        pass
