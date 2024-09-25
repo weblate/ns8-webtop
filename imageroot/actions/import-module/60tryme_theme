@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2024 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+set -e
+
+mkdir -p ${AGENT_STATE_DIR}/webtop.properties.d
+cat <<EOF > ${AGENT_STATE_DIR}/webtop.properties.d/31theme
+webtop.ui.presets.extra=nethesis:Nethesis|nethesis|nethesis
+webtop.ui.preset.tryme=nethesis
+EOF
