@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="none" />
+
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    />
+
+    <title>NethService Collaboration</title>
+    <#if baseUrl??><base href="${baseUrl}" target="_blank"></#if>
+
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="${coreResourcesImagesUrl}/favicon.ico"
+    />
+
+    <!-- Fallback favicon in case a browser does not support the SVG version -->
+    <link rel="alternate icon" type="image/x-icon" href="${coreResourcesImagesUrl}/favicon.png">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="${coreResourcesVendorUrl}/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="${coreResourcesVendorUrl}/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      body {
+        background-image: url(${coreResourcesImagesUrl}/sfondo_service.svg);
+        background-size: cover;
+        background-repeat: no-repeat;
+        overflow-x: hidden; /* Nasconde la scrollbar orizzontale */
+      }
+
+      html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+
+    <!-- Jquery -->
+    <script
+      src="https://code.jquery.com/jquery-2.2.4.min.js"
+      integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+      crossorigin="anonymous"
+    ></script>
+    <script type="text/javascript">
+      $(function () {
+        setTimeout(function () {
+          $("#wtusername").focus();
+        }, 100);
+        $("#wtsubmit").bind("click tap", function () {
+          $("#location").val(window.location);
+          $('form[name="login"]').submit();
+          $(this).prop("disabled", true);
+        });
+        $('.svg-inline--fa').on('click', function() {
+          var input = $("#wtpassword");
+          if (input.attr('type') === "password") {
+            input.attr('type', 'text');
+            $(this).find('path').attr('d', 'M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z');
+          } else {
+            input.attr('type', 'password');
+            $(this).find('path').attr('d', 'M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c8.4-19.3 10.6-41.4 4.8-63.3c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zM373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5L373 389.9z');
+          }
+        });
+      });
+    </script>
+  </head>
+
+  <body class="">
+    <div
+      id="login"
+      class=""
+      style="font-family: 'Poppins', sans-serif"
+    >
+      <div class='absolute inset-0 z-[-5] hidden lg:block'>
+        <#if custom.login_people == 'show'>
+        <img
+          src="${coreResourcesImagesUrl}/action_service.svg"
+          alt="background image"
+          class=' w-full h-full object-contain transform -translate-x-[-20rem] xl:-translate-x-[-23rem] lg:scale-[40%] xl:scale-[60%] 2xl:scale-75'/>
+        </#if>
+      </div>
+      <div class="w-1/2">
+        <div class='absolute top-1/2 left-1/2 lg:left-40 transform -translate-y-1/2 -translate-x-1/2 lg:-translate-x-0'>
+          <div class='border-gray-200 rounded-lg bg-gray-50 p-10'>
+            <div class="max-w-sm sm:w-96">
+              <div class='flex flex-col items-center justify-center'>
+                <img
+                  src="${coreResourcesImagesUrl}/nethserviceLogo.svg"
+                  alt="logo"
+                  class="mx-auto w-auto items-center object-contain object-bottom"
+                  style="min-width: 300px; min-height: 36px; margin-bottom: 4px"
+                />
+                <div class="flex items-center justify-center text-orange-700 pt-4">
+                  Collaboration
+                </div>
+              </div>
+              <div>
+                <div class='relative py-4'>
+                    <div class='absolute inset-0 flex items-center justify-center' aria-hidden='true'>
+                        <div class='w-full border-t border-gray-300' style="max-width: 180px;"></div>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <img src="${coreResourcesImagesUrl}/login.png" alt="logo" class="mx-auto w-auto items-center object-contain object-bottom" style="max-height: 40px;">
+                </div>
+              </div>
+              <div>
+                <form name="login" method="post" action="login" class="space-y-6">
+                  <input id="location" name="location" type="hidden">
+                  <#if showFailure>
+                    <div class="border-l-4 rounded-md p-4 w-full flex border-rose-500 bg-rose-100">
+                      <div class="flex-shrink-0" style="margin-top: 4px;">
+                        <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-xmark" class="svg-inline--fa fa-circle-xmark h-4 w-4 relative -top-0.5 text-rose-700" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"></path></svg>
+                      </div>
+                      <div class="ml-3">
+                        <div class="text-sm text-rose-700">
+                          <p>${failureMessage}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </#if>
+                  <div>
+                    <label
+                        for="email"
+                        class="block text-sm font-medium text-gray-700 pb-2"
+                        >Username</label
+                      >
+                    <div>
+                      <div class="text-left w-full">
+                        <div class="relative">
+                          <input
+                            id="wtusername"
+                            name="wtusername"
+                            type="text"
+                            placeholder="${usernamePlaceholder}"
+                            class="block w-full relative focus:z-[8] disabled:cursor-not-allowed bg-white text-gray-900 disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 rounded-md px-3 py-2 sm:text-sm ring-gray-300 ring-1 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-orange-500 placeholder:text-gray-500 <#if showFailure>ring-rose-500 focus:border-rose-500 focus:ring-rose-500</#if>"
+                            required="true"
+                            autocomplete="username"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="space-y-1">
+                    <label
+                        for="password"
+                        class="block text-sm font-medium text-gray-700 pb-1"
+                        >Password</label
+                      >
+                    <div>
+                      <div class="text-left w-full">
+                        <div class="relative">
+                          <div
+                            class="absolute flex items-center z-[9] inset-y-0 right-0 pr-3"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              focusable="false"
+                              data-prefix="fas"
+                              data-icon="eye-slash"
+                              class="svg-inline--fa fa-eye-slash h-5 w-5 text-gray-700 cursor-pointer"
+                              role="img"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 640 512"
+                            >
+                              <path
+                                fill="currentColor"
+                                d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c8.4-19.3 10.6-41.4 4.8-63.3c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zM373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5L373 389.9z"
+                              ></path>
+                            </svg>
+                          </div>
+                          <input
+                            id="wtpassword"
+                            name="wtpassword"
+                            type="password"
+                            placeholder="${passwordPlaceholder}"
+                            class="block w-full relative focus:z-[8] disabled:cursor-not-allowed bg-white text-gray-900 disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 rounded-md px-3 py-2 sm:text-sm ring-gray-300 ring-1 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-orange-500 placeholder:text-gray-500 <#if showFailure>ring-rose-500 focus:border-rose-500 focus:ring-rose-500</#if>"
+                            required="true"
+                            autocomplete="current-password"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group" <#if !showDomain>style="display: none;"</#if>
+                      <div class="input-group">
+                         <div class="input-group-addon">${domainLabel}</div>
+                         <select class="form-control" id="wtdomain" name="wtdomain">
+                             <#list domains as domain>
+                             <option value="${domain.getValue()}" >${domain.getDescription()}</option>
+                             </#list>
+                         </select>
+                      </div>
+                  </div>
+                  <div class="py-2">
+                    <button
+                    id="wtsubmit"
+                    class="inline-flex content-center items-center justify-center font-medium tracking-wide transition-colors duration-200 transform focus:outline-none focus:ring-2 focus:z-20 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed border border-transparent bg-orange-700 text-gray-50 focus:ring-orange-500 px-4 py-2 text-sm rounded-md w-full h-full"
+                    type="submit"
+                  >
+                    ${submitLabel}
+                  </button>
+                  </div>
+                </form>
+              </div>
+              <div class="mb-4 mt-6">
+                <div class="flex justify-center">
+                  <img
+                    src="${coreResourcesImagesUrl}/poweredby 2.png"
+                    alt="logo"
+                    class="mx-auto w-auto items-center object-contain object-bottom"
+                  />
+                </div>
+                <div>
+                  <h5 class="text-center"><small>${versionString}</small></h5>
+                  <#if serverInfo??>
+                  <h6 class="serverinfo text-center"><small>${serverInfo}</small></h6>
+                  </#if>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </body>
+</html>
