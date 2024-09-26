@@ -5,6 +5,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
+# WARNING: This step is executed also in the `configure-module` action on step
+# `21upate_settings, be aware of that.
+
 import sys
 import agent
 import subprocess
