@@ -181,3 +181,8 @@ INSERT INTO "core"."settings" ("service_id","key","value") VALUES ('com.sonicle.
 -- Set default calendar scheduler time resolution to 15 minutes
 -- ------------------------------------------------------------
 INSERT INTO "core"."settings" ("service_id","key","value") VALUES ('com.sonicle.webtop.calendar','default.scheduler.timeresolution','15');
+
+-- ----------------
+-- Disable WhatsNew
+-- ----------------
+INSERT INTO core.settings(service_id,key,value) VALUES ('com.sonicle.webtop.core','whatsnew.enabled','false');
