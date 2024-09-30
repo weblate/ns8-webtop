@@ -23,5 +23,7 @@ with subprocess.Popen(['podman', 'exec', '-i', 'postgres', 'psql', '-qU', 'postg
     print("INSERT INTO \"core\".\"settings\" (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'default.startup.service', 'com.sonicle.webtop.mail');\n", file=psql.stdin)
     print("DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.calendar' AND key = 'default.scheduler.timeresolution';\n", file=psql.stdin)
     print("INSERT INTO \"core\".\"settings\" (service_id, key, value) VALUES ('com.sonicle.webtop.calendar', 'default.scheduler.timeresolution', '15');\n", file=psql.stdin)
+    print("DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.core' AND key = 'whatsnew.enabled';\n", file=psql.stdin)
+    print("INSERT INTO \"core\".\"settings\" (service_id, key, value) VALUES ('com.sonicle.webtop.core', 'whatsnew.enabled', 'false');\n", file=psql.stdin)
 
 agent.assert_exp(psql.returncode == 0) # check the command is succesfull
