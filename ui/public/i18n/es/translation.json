@@ -48,10 +48,10 @@
         "mail_module_misconfigured": "No hay dominio de correo disponible",
         "hostname_pattern": "Debe ser un nombre de dominio válido y completo",
         "hostname_format": "Debe ser un nombre de dominio válido y completo",
-        "pecbridge_admin_mail": "PEC Bridge notify address (optional)",
-        "pecbridge_admin_mail_placeholder": "E.g. mail-admin@example.org",
-        "pecbridge_admin_mail_format": "Must be a valid email address",
-        "pecbridge_admin_mail_tooltip": "If an email address is set, PEC Bridge will send a copy of notifications to it."
+        "pecbridge_admin_mail": "Dirección de notificación del puente PEC (opcional)",
+        "pecbridge_admin_mail_placeholder": "Por ejemplo: mail-admin@example.org",
+        "pecbridge_admin_mail_format": "Debe ser una dirección de correo electrónico válida",
+        "pecbridge_admin_mail_tooltip": "Si se configura una dirección de correo electrónico, PEC Bridge le enviará una copia de las notificaciones."
     },
     "error": {
         "403": "Operación no autorizada",
