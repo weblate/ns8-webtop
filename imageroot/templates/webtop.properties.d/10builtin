@@ -1,3 +1,4 @@
+webtop.uuid=${MODULE_UUID}
 webtop.log.target=console
 webtop.session.forcesecurecookie=true
 webtop.js.debug=${WEBAPP_JS_DEBUG}
