@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+
+#
+# Copyright (C) 2024 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+import sys
+import json
+import os
+import webtop
+import agent
+
+
+event_input = json.load(sys.stdin)
+
+rdb = agent.redis_connect(use_replica=True)
+
+providers = agent.list_service_providers(rdb, 'imap', 'tcp', {
+    'module_uuid': os.environ.get('MAIL_MODULE_UUID', '')
+})
+
+user_domain = providers[0]['user_domain']
+
+if event_input.get('domain') == user_domain:
+    webtop.configure_module(providers[0]['module_id'], os.environ)
