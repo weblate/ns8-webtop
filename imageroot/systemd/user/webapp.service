@@ -15,6 +15,7 @@ WorkingDirectory=%S/state
 Restart=always
 ExecStartPre=/bin/rm -f %t/webapp.pid %t/webapp.ctr-id
 ExecStartPre=/usr/local/bin/runagent %S/scripts/expandconfig-webapp
+ExecStartPre=/usr/local/bin/runagent discover-ldap
 ExecStart=/usr/bin/podman run \
     --env=CATALINA_OPTS="-server -Xms${WEBAPP_MIN_MEMORY}m -Xmx${WEBAPP_MAX_MEMORY}m \
                          -Djava.security.egd=file:/dev/./urandom -Dfile.encoding=UTF8 \
