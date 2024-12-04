@@ -71,7 +71,7 @@ user_domain = agent.ldapproxy.Ldapproxy().get_domain(user_domain_name) or {
         'bind_password': 'invalid',
     }
 
-domain_setup(user_domain_name, user_domain)
+domain_setup(os.getenv("MAIL_DOMAIN"), user_domain)
 
 if user_domain_name and user_domain['bind_password'] != 'invalid':
     agent.bind_user_domains([user_domain_name])
