@@ -209,7 +209,7 @@
                     v-model="webapp.min_memory"
                     :label="$t('settings.min_webapp_memory')"
                     min="256"
-                    max="4096"
+                    :max="ram_mb"
                     step="1"
                     stepMultiplier="1023"
                     minLabel=""
@@ -230,7 +230,7 @@
                     v-model="webapp.max_memory"
                     :label="$t('settings.max_webapp_memory')"
                     min="256"
-                    max="4096"
+                    :max="ram_mb"
                     step="1"
                     stepMultiplier="1023"
                     minLabel=""
@@ -430,6 +430,7 @@ export default {
       ejabberd_domain: "",
       ejabberd_modules_id: [],
       accepted_timezone_list: [],
+      ram_mb: "4096",
       locale: "",
       timezone: "",
       webapp: {
@@ -556,6 +557,7 @@ export default {
         value: "-",
       });
       this.accepted_timezone_list = config.accepted_timezone_list;
+      this.ram_mb = String(config.ram_mb);
       this.getConfiguration();
       this.loading.getDefaults = false;
     },

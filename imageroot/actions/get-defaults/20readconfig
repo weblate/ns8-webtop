@@ -48,10 +48,20 @@ for key in agent.list_service_providers(rdb,'xmpp','tcp'):
     }
     ejabberd.append(obj)
 
+# determine the amount of RAM available on the system
+try:
+    with open('/proc/meminfo', 'r') as f:
+        for line in f:
+            if line.startswith('MemTotal:'):
+                ram_mb = int(line.split()[1]) // 1024  # Convert kB to MB
+except Exception:
+    ram_mb = 4096
+
 config={
         "mail_modules_id": modules,
         "ejabberd_modules_id": ejabberd,
-        "accepted_timezone_list": list_of_timezone_widget
+        "accepted_timezone_list": list_of_timezone_widget,
+        "ram_mb": ram_mb,
         }
 
 json.dump(config, fp=sys.stdout)
