@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+
+#
+# Copyright (C) 2025 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+import os
+import agent
+import subprocess
+
+rdb = agent.redis_connect(privileged=False)
+
+subscription = rdb.hgetall('cluster/subscription')
+
+with open('subscription.env', 'w') as env:
+    if subscription:
+        env.write("TMCE_PLUGIN=--volume=./webtop-tmceplugins.jar:/usr/local/tomcat/webapps/webtop/WEB-INF/lib/webtop-tmceplugins.jar:z\n")
+        subprocess.run(['gpg', '--batch', '--yes', '--passphrase', 'subscription', '-d', '-o', 'webtop-tmceplugins.jar', '../plugins/webtop-tmceplugins.jar.gpg'])
+    else:
+        try:
+            os.remove("webtop-tmceplugins.jar")
+        except:
+            pass
+        env.write(f"TMCE_PLUGIN=--volume=../plugins/webtop-tmceplugins.jar.gpg:/usr/local/tomcat/webapps/webtop/WEB-INF/lib/webtop-tmceplugins.jar.gpg:z\n")

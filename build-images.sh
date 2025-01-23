@@ -160,6 +160,16 @@ fi
 echo "Build static UI files with node..."
 buildah run --env="NODE_OPTIONS=--openssl-legacy-provider" nodebuilder-webtop sh -c "cd /usr/src/ui && yarn install && yarn build"
 
+# Download tmce plugin jar: plugin is encrypted with GPG, the password is 'subscription'
+tmce_jar_url="https://distfeed.nethserver.org/webtop/webtop-tmceplugins-6.3.1.0.jar.gpg"
+tmce_jar_path="${PWD}/webtop-tmceplugins-6.3.1.0.jar.gpg"
+echo "Downloading encrypted tmce plugin jar from ${tmce_jar_url}..."
+curl --fail -L -o "${tmce_jar_path}" "${tmce_jar_url}"
+
+# Add tmce plugin jar to the image
+mkdir -p imageroot/plugins
+mv "${tmce_jar_path}" imageroot/plugins/webtop-tmceplugins.jar.gpg
+
 # Add imageroot directory to the container image
 buildah add "${container}" imageroot /imageroot
 buildah add "${container}" ui/dist /ui
