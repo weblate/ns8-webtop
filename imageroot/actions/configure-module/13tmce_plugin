@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+
+#
+# Copyright (C) 2025 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+import os
+import agent
+import shutil
+import requests
+import subprocess
+
+rpm_name = "webtop-tmceplugins-0.2.0-1.ns7.noarch.rpm"
+rdb = agent.redis_connect(privileged=False)
+subscription = rdb.hgetall('cluster/subscription')
+system_id = subscription.get('system_id', None)
+env = open('subscription.env', 'w') 
+
+if system_id:
+    try:
+        # Download tcme plugin
+        if not os.path.exists("webtop-tmceplugins.jar"):
+            url = f"https://u2.nethesis.it/autoupdate/{system_id}/7.9.2009/nethesis-updates/x86_64/Packages/{rpm_name}"
+            response = requests.get(url)
+            with open(rpm_name, "wb") as file:
+                file.write(response.content)
+            # Warning: this command will work only on RHEL-like systems        
+            subprocess.run(f"rpm2cpio {rpm_name} | cpio -idmv", shell=True)
+            os.rename("./var/lib/tomcats/webtop/lib/webtop-tmceplugins.jar", "webtop-tmceplugins.jar")
+            shutil.rmtree('./var')
+        env.write("TMCE_PLUGIN=--volume=./webtop-tmceplugins.jar:/usr/local/tomcat/webapps/webtop/WEB-INF/lib/webtop-tmceplugins.jar:z\n")
+    except:
+        # Mount a fake volume to avoid errors
+        env.write("TMCE_PLUGIN=--volume=./subscription.env:/subscription.env\n")
+else:
+    # Mount a fake volume to avoid errors
+    env.write("TMCE_PLUGIN=--volume=./subscription.env:/subscription.env\n")
+    try:
+        # Remove the plugin if the system is not subscribed
+        os.remove("webtop-tmceplugins.jar")
+        os.remove(rpm_name)
+    except:
+        # do not fail if the file does not exist
+        pass
