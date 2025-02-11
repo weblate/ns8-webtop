@@ -68,7 +68,7 @@ reponame="webtop-webapp"
 container=$(buildah from docker.io/library/tomcat:8-jre8)
 buildah add ${container} ${webapp_tmp_dir}/webtop /usr/local/tomcat/webapps/webtop/
 buildah add ${container} ${PWD}/webtop5-build/webtop-login/ /usr/local/tomcat/webapps/webtop/WEB-INF/classes/
-buildah add ${container} ${jcharset_tmp_dir}/jcharset-2.0.jar /usr/local/tomcat/webapps/webtop/lib/
+buildah add ${container} ${jcharset_tmp_dir}/jcharset-2.0.jar /opt/java/openjdk/lib/ext/
 buildah add ${container} ${PWD}/webtop5-build/ListTimeZones.class /usr/share/webtop/
 buildah add ${container} ${PWD}/webtop5-build/WebtopPassEncode.class /usr/share/webtop/
 buildah add ${container} ${PWD}/zfaker/wrappers/php /usr/share/webtop/bin/php
