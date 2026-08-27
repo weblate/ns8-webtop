@@ -66,7 +66,7 @@ tar -C "${pecbridge_tmp_dir}" -x -v -z -f pecbridge-*.tar.gz
 
 #Create webtop-webapp container
 reponame="webtop-webapp"
-container=$(buildah from docker.io/library/tomcat:9.0.120-jre8)
+container=$(buildah from docker.io/library/tomcat:9.0.121-jre8)
 buildah add ${container} ${webapp_tmp_dir}/webtop /usr/local/tomcat/webapps/webtop/
 buildah add ${container} ${PWD}/webtop5-build/context.xml /usr/local/tomcat/webapps/webtop/META-INF/context.xml
 buildah add ${container} ${PWD}/webtop5-build/webtop-login/ /usr/local/tomcat/webapps/webtop/WEB-INF/classes/
