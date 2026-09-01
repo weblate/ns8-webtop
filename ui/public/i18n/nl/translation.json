@@ -92,7 +92,7 @@
         "configure-module": "Module configureren",
         "get-configuration": "Configuratie ophalen",
         "get-name": "Naam ophalen",
-        "get-defaults": "Get defaults"
+        "get-defaults": "Standaardwaarden ophalen"
     },
     "error": {
         "error": "Fout",
